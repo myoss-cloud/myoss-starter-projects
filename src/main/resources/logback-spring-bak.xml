@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="600 seconds" debug="false">
+    <property name="logging.level" value="INFO"/>
+    <property name="project.name" value="phoenix-core"/>
+    <if condition='",test,pre,prd".indexOf(property("DEPLOY_ENV")) > 0'>
+        <then>
+            <!-- 测试/预发/生产环境 -->
+            <property name="logging.path" value="/data1/admin/${project.name}/logs"/>
+        </then>
+        <else>
+            <!-- 本地开发环境，兼容 unix/windows 系统权限的问题 -->
+            <property name="logging.path" value="${user.home}/logs/${project.name}"/>
+        </else>
+    </if>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/all-${project.name}_all.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/all-${project.name}_all-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出 infoAppender 的日志 -->
+    <!-- AsyncAppender并不处理日志，只是将日志缓冲到一个BlockingQueue里面去，并在内部创建一个工作线程从队列头部获取日志，之后将获取的日志
+    循环记录到附加的其他appender上去，从而达到不阻塞主线程的效果。因此AsyncAppender仅仅充当事件转发器，必须引用另一个appender来做事。-->
+    <appender name="infoAppenderAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 包含调用者信息,默认是false,官方提到如果开启会有性能上的损失,开启用于输出[%F:%L]等信息 -->
+        <includeCallerData>true</includeCallerData>
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>2048</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="infoAppender"/>
+    </appender>
+
+    <!-- 客户端请求的审计日志 -->
+    <appender name="requestInfoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/requestInfo-${project.name}_info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/requestInfo-${project.name}_info-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - [%X{method}]
+                [%X{requestURIWithQueryString}] [%X{startTime}] [%X{costTime}] [%X{status}] [ip=%X{remoteAddr},
+                ref=%X{referrer}, ua=%X{userAgent}, sid=%X{cookie.JSESSIONID}] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出 requestInfoAppender 的日志 -->
+    <appender name="requestInfoAppenderAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>true</includeCallerData>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>2048</queueSize>
+        <appender-ref ref="requestInfoAppender"/>
+    </appender>
+
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/error-${project.name}_error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 过滤日志级别最低为 ERROR -->
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/error-${project.name}_error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出 errorAppender 的日志 -->
+    <appender name="errorAppenderAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>true</includeCallerData>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>2048</queueSize>
+        <appender-ref ref="errorAppender"/>
+    </appender>
+
+    <logger name="org.apache">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="WebRequest" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="requestInfoAppenderAsync"/>
+    </logger>
+
+    <root>
+        <level value="${logging.level}"/>
+        <appender-ref ref="errorAppenderAsync"/>
+        <appender-ref ref="infoAppenderAsync"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

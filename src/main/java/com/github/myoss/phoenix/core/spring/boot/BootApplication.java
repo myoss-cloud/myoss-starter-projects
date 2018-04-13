@@ -97,7 +97,7 @@ public class BootApplication {
      * @param args the application arguments (usually passed from a Java main
      *            method)
      * @return the running {@link ApplicationContext}
-     * @see SpringApplication#run(Object, String...)
+     * @see SpringApplication#run(Class, String...)
      */
     public static ConfigurableApplicationContext run(Logger logger, boolean setDeployEnv, String deployEnvValue,
                                                      Class<?> source, String... args) {
@@ -139,7 +139,7 @@ public class BootApplication {
      * @param args the application arguments (usually passed from a Java main
      *            method)
      * @return the running {@link ApplicationContext}
-     * @see SpringApplication#run(Object, String...)
+     * @see SpringApplication#run(Class, String...)
      */
     public static ConfigurableApplicationContext run(Logger logger, Class<?> source, String... args) {
         return run(logger, true, null, source, args);
@@ -163,7 +163,7 @@ public class BootApplication {
      * @param args the application arguments (usually passed from a Java main
      *            method)
      * @return the running {@link ApplicationContext}
-     * @see SpringApplication#run(Object, String...)
+     * @see SpringApplication#run(Class, String...)
      */
     public static ConfigurableApplicationContext run(Logger logger, String deployEnvValue, Class<?> source,
                                                      String... args) {
@@ -188,7 +188,7 @@ public class BootApplication {
      * @param args the application arguments (usually passed from a Java main
      *            method)
      * @return the running {@link ApplicationContext}
-     * @see SpringApplication#run(Object, String...)
+     * @see SpringApplication#run(Class, String...)
      */
     public static ConfigurableApplicationContext run(Logger logger, boolean setDeployEnv, Class<?> source,
                                                      String... args) {

@@ -43,6 +43,9 @@ import com.google.common.collect.Lists;
 public class FastJsonAutoConfiguration {
     /**
      * Fast Json的全局配置
+     *
+     * @return 默认启用 {@link SerializerFeature#DisableCircularReferenceDetect} 和
+     *         {@link SerializerFeature#WriteMapNullValue}，并设置 charset 为 UTF-8
      */
     public static FastJsonConfig fastJsonConfig() {
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
@@ -60,9 +63,12 @@ public class FastJsonAutoConfiguration {
      * <p>
      * 如果直接注入，此转换器会添加在“转换器集合”的最前面，在输出/输入String类型的数据的时候，会将<code>"</code>添加转义符
      * <p>
-     * 正因为添加了转义符，导致“网关”将String类型的数据发送给“业务系统”、回写给“客户端”，出现了本不应该出现的转义符
+     * 正因为添加了转义符，导致“服务端响应”将String类型的数据发送给“业务系统”、回写给“客户端”，出现了本不应该出现的转义符
      * <p>
      * 解决办法：不直接注入，使用 {@link AbstractWebMvcConfigurer#extendMessageConverters} 添加
+     *
+     * @param fastJsonConfig Fast Json的配置信息
+     * @return Fast Json SpringMVC转换器
      */
     public static FastJsonHttpMessageConverter fastJsonHttpMessageConverter(FastJsonConfig fastJsonConfig) {
         FastJsonHttpMessageConverter jsonHttpMessageConverter = new FastJsonHttpMessageConverter();
@@ -75,6 +81,8 @@ public class FastJsonAutoConfiguration {
 
     /**
      * Fast Json的全局配置，使用 spring 管理，方便项目中替换或者获取此对象
+     *
+     * @return Fast Json的配置信息
      */
     @ConditionalOnMissingBean(name = "defaultFastJsonConfig")
     @Bean(name = "defaultFastJsonConfig")

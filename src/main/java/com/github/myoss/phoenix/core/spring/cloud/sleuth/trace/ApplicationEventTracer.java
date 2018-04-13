@@ -24,23 +24,17 @@ import static com.github.myoss.phoenix.core.constants.PhoenixConstants.TRACE_ID_
 
 import org.slf4j.MDC;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.cloud.sleuth.autoconfig.SleuthProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import zipkin2.reporter.Reporter;
 import brave.internal.HexCodec;
 import brave.internal.Nullable;
 import brave.internal.Platform;
-import brave.propagation.CurrentTraceContext;
-import brave.propagation.Propagation.Factory;
-import brave.sampler.Sampler;
 
 /**
  * 应用事件调用链
  *
  * @author Jerry.Chen 2018年4月12日 下午1:50:20
- * @see org.springframework.cloud.sleuth.autoconfig.TraceAutoConfiguration#tracing(String,
- *      Factory, CurrentTraceContext, Reporter, Sampler, SleuthProperties)
+ * @see org.springframework.cloud.sleuth.autoconfig.TraceAutoConfiguration
  * @see org.springframework.cloud.sleuth.log.SleuthLogAutoConfiguration
  * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
  */
@@ -48,6 +42,8 @@ public class ApplicationEventTracer {
     /**
      * Generates a new 64-bit ID, taking care to dodge zero which can be
      * confused with absent
+     *
+     * @return 64-bit ID
      */
     public long nextId() {
         long nextId = Platform.get().randomLong();
@@ -85,6 +81,8 @@ public class ApplicationEventTracer {
 
     /**
      * 开始记录应用启动事件
+     *
+     * @return 生成的traceId信息
      */
     public String startApplication() {
         String traceId = HexCodec.toLowerHex(nextId());
@@ -105,6 +103,14 @@ public class ApplicationEventTracer {
 
     /**
      * 获取当前线程中保存的spanId
+     * <p>
+     * 优先取
+     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#LEGACY_SPAN_ID_NAME}
+     * <p>
+     * 如果没有上面这个key，才取这个key的值
+     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#SPAN_ID_NAME}
+     *
+     * @return MDC中的spanId信息
      */
     public static String getSpanId() {
         String spanId = MDC.get(LEGACY_SPAN_ID_NAME);
@@ -113,6 +119,14 @@ public class ApplicationEventTracer {
 
     /**
      * 获取当前线程中保存的traceId
+     * <p>
+     * 优先取
+     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#LEGACY_TRACE_ID_NAME}
+     * <p>
+     * 如果没有上面这个key，才取这个key的值
+     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#TRACE_ID_NAME}
+     *
+     * @return MDC中的traceId信息
      */
     public static String getTraceId() {
         String traceId = MDC.get(LEGACY_TRACE_ID_NAME);

@@ -19,6 +19,8 @@ package com.github.myoss.phoenix.core.spring.config;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -52,9 +54,12 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
     /**
      * 注册 {@link ReaderBodyHttpServletRequestFilter} Filter
+     *
+     * @return 可以多次读取 {@link HttpServletRequest#getReader()} 和
+     *         {@link HttpServletRequest#getInputStream()} 中的内容
      */
     @Bean
-    public FilterRegistrationBean readerBodyHttpServletRequestFilter() {
+    public FilterRegistrationBean<ReaderBodyHttpServletRequestFilter> readerBodyHttpServletRequestFilter() {
         FilterRegistrationBean<ReaderBodyHttpServletRequestFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new ReaderBodyHttpServletRequestFilter());
         return registration;
@@ -62,9 +67,11 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
 
     /**
      * 注册 {@link LogWebRequestFilter} Filter
+     *
+     * @return 记录web请求的日志信息过滤器
      */
     @Bean
-    public FilterRegistrationBean webRequestLogFilter() {
+    public FilterRegistrationBean<LogWebRequestFilter> webRequestLogFilter() {
         FilterRegistrationBean<LogWebRequestFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogWebRequestFilter(true, true));
         registration.setOrder(100);

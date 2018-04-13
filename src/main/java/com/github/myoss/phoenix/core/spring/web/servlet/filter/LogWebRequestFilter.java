@@ -47,7 +47,7 @@ import com.github.myoss.phoenix.core.constants.PhoenixConstants;
 /**
  * 记录web请求的日志信息，设置请求的信息 到 {@link MDC Mapped Diagnostic Context(映射调试上下文)}
  * 中，用于输出到日志文件中。
- * <table border="1" cellpadding="5">
+ * <table border="1" cellpadding="5" summary="MDC上下文中的属性">
  * <tr>
  * <td colspan="2"><strong>请求信息</strong></td>
  * </tr>
@@ -203,6 +203,9 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
 
     /**
      * 设置内容到MDC中
+     *
+     * @param request 客户端请求信息
+     * @param startTime 请求开始时间
      */
     protected void putMDC(HttpServletRequest request, String startTime) {
         Map<String, String> mdc = getMDCCopy();
@@ -288,8 +291,9 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
 
     /**
      * 取得当前MDC map的复本。
+     *
+     * @return MDC上下文中的信息
      */
-    @SuppressWarnings("unchecked")
     protected Map<String, String> getMDCCopy() {
         Map<String, String> mdc = MDC.getCopyOfContextMap();
         if (mdc == null) {
@@ -299,10 +303,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     }
 
     /**
-     * 清除MDC。
-     * <p>
-     * 只有当前对象自己设置的MDC才能被清除。
-     * </p>
+     * 清除MDC下文中设置的信息，只有当前对象自己设置的MDC才能被清除。
      */
     public void clearMDC() {
         MDC.remove(MDC_START_TIME);

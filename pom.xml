@@ -11,16 +11,19 @@
 
     <groupId>com.github.myoss</groupId>
     <artifactId>phoenix-core</artifactId>
-    <name>phoenix-core</name>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
+    <name>phoenix-core</name>
+    <description>myoss open source project, phoenix core written in Java</description>
     <url>https://github.com/myoss/phoenix-core</url>
     <inceptionYear>2018</inceptionYear>
+
     <scm>
         <url>https://github.com/myoss/phoenix-core</url>
         <connection>scm:git:https://github.com/myoss/phoenix-core.git</connection>
     </scm>
+
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -29,6 +32,14 @@
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Jerry.Chen</name>
+            <email>jerry.myoss@gmail.com</email>
+            <organizationUrl>https://github.com/myoss</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <java.version>1.8</java.version>
@@ -143,17 +154,48 @@
     <build>
         <plugins>
             <plugin>
-                <!-- generate source code -->
+                <!-- generate sources code attachments -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <attach>true</attach>
-                </configuration>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- generate javadoc attachments -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- GPG Signed Components -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>

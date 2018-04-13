@@ -64,6 +64,8 @@ public @interface EnableAopLogMethod {
      * <li>{@link LogMethodAround}
      * <li>{@link LogUnMonitor}
      * </ul>
+     *
+     * @return 默认开启
      */
     boolean enableAopLogMethod() default true;
 

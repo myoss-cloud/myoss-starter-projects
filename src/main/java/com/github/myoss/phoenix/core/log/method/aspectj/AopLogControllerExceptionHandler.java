@@ -83,6 +83,10 @@ public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHan
 
     /**
      * 不在页面暴露具体的异常信息
+     * 
+     * @param ex 异常信息
+     * @param request 客户端请求信息
+     * @return 服务端返回信息
      */
     @ExceptionHandler(Throwable.class)
     @ResponseBody
@@ -109,6 +113,12 @@ public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHan
 
     /**
      * 对外的错误异常统一输出JSON字符串，并且包含traceId，方便跟踪错误日志
+     *
+     * @param ex 异常信息
+     * @param headers 服务端返回的HttpHeaders信息
+     * @param status 服务端返回的状态码
+     * @param servletRequest 客户端请求信息
+     * @return 服务端返回信息
      */
     protected ResponseEntity<Object> outputException(Throwable ex, HttpHeaders headers, HttpStatus status,
                                                      HttpServletRequest servletRequest) {

@@ -9,7 +9,7 @@
         <version>2.0.0.RELEASE</version>
     </parent>
 
-    <groupId>io.myoss</groupId>
+    <groupId>com.github.myoss</groupId>
     <artifactId>phoenix-core</artifactId>
     <name>phoenix-core</name>
     <version>1.0.0</version>

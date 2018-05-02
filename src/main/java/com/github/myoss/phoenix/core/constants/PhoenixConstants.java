@@ -85,4 +85,9 @@ public interface PhoenixConstants {
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
     String  LEGACY_SPAN_ID_NAME    = "X-B3-SpanId";
+
+    /**
+     * 下划线
+     */
+    String  UNDERLINE              = "_";
 }

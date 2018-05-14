@@ -125,7 +125,7 @@ public class ResultTests {
     public void constructorTest4() {
         Result<Long> result = new Result<>("NONE", "it's ok");
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"00\",\"errorMsg\":\"it's ok\",\"success\":false}";
+        String expected = "{\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\",\"success\":false}";
         Assert.assertEquals(expected, toString);
     }
 

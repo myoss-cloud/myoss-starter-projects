@@ -136,7 +136,8 @@ public class TransformValuePageTests {
         Assert.assertFalse(source.isSuccess());
         Assert.assertEquals(source.getErrorCode(), "blankValue");
         Assert.assertEquals(source.getErrorMsg(), "error code: blankValue");
-        Assert.assertTrue(source.getValue().get(0));
+        Assert.assertTrue(source.getParam());
+        Assert.assertNull(source.getValue());
         Assert.assertEquals(source.getExtraInfo(), Maps.newHashMap("key", "value"));
     }
 }

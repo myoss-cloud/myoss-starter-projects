@@ -90,4 +90,12 @@ public interface PhoenixConstants {
      * 下划线
      */
     String  UNDERLINE              = "_";
+    /**
+     * 字符串常量: Y
+     */
+    String  Y                      = "Y";
+    /**
+     * 字符串常量: N
+     */
+    String  N                      = "N";
 }

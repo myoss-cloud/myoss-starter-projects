@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>phoenix-core</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>phoenix-core</name>
@@ -84,11 +84,6 @@
         <!-- spring cloud dependency end -->
 
         <!-- utils start -->
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
-        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

@@ -17,6 +17,8 @@
 
 package com.github.myoss.phoenix.core.lang.base;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 封装字符串常用操作方法
  *
@@ -24,49 +26,39 @@ package com.github.myoss.phoenix.core.lang.base;
  */
 public class StringUtil {
     /**
+     * 用于判断单词的第一个字符是否为字母
+     *
+     * @param word 单词
+     * @return true：是字母；false: 不是字母
+     */
+    public static boolean startsWithLetter(String word) {
+        return word.length() > 0 && Character.isLetter(word.charAt(0));
+    }
+
+    /**
      * 将字符串转换为驼峰格式
      *
      * @param source 原始字符串
      * @param firstCharacterUppercase 首字母是否转换为大写
      * @return 转换之后的字符串
      */
-    public static String toCamelCase(CharSequence source, boolean firstCharacterUppercase) {
-        StringBuilder sb = new StringBuilder();
+    public static String toCamelCase(String source, boolean firstCharacterUppercase) {
+        String output = source.replace("-", "_").replace(".", "_");
+        String[] words = StringUtils.splitByCharacterTypeCamelCase(output);
 
-        boolean nextUpperCase = false;
-        for (int i = 0; i < source.length(); i++) {
-            char c = source.charAt(i);
-
-            switch (c) {
-                case '_':
-                case '-':
-                case '@':
-                case '$':
-                case '#':
-                case ' ':
-                case '/':
-                case '&':
-                    if (sb.length() > 0) {
-                        nextUpperCase = true;
-                    }
-                    break;
-
-                default:
-                    if (nextUpperCase) {
-                        sb.append(Character.toUpperCase(c));
-                        nextUpperCase = false;
-                    } else {
-                        sb.append(Character.toLowerCase(c));
-                    }
-                    break;
+        boolean firstWordNotFound = true;
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            if (firstWordNotFound && startsWithLetter(word)) {
+                words[i] = firstCharacterUppercase ? StringUtils.capitalize(word.toLowerCase()) : word.toLowerCase();
+                firstWordNotFound = false;
+            } else {
+                words[i] = StringUtils.capitalize(word.toLowerCase());
             }
         }
 
-        if (firstCharacterUppercase) {
-            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-        }
-
-        return sb.toString();
+        output = StringUtils.join(words).replaceAll("[\\s_]", "");
+        return output;
     }
 
     /**
@@ -75,7 +67,7 @@ public class StringUtil {
      * @param source 原始字符串
      * @return 转换后的字符串
      */
-    public static String toCamelCase(CharSequence source) {
+    public static String toCamelCase(String source) {
         return toCamelCase(source, false);
     }
 
@@ -85,7 +77,7 @@ public class StringUtil {
      * @param source 原始字符串
      * @return 转换后的字符串
      */
-    public static String toPascalCase(CharSequence source) {
+    public static String toPascalCase(String source) {
         return toCamelCase(source, true);
     }
 }

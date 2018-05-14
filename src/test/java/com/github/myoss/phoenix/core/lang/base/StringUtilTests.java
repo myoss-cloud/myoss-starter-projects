@@ -51,6 +51,24 @@ public class StringUtilTests {
     }
 
     @Test
+    public void toCamelCaseTest5() {
+        String userName = StringUtil.toCamelCase("_USER-NAME_");
+        Assert.assertEquals("userName", userName);
+    }
+
+    @Test
+    public void toCamelCaseTest6() {
+        String userName = StringUtil.toCamelCase("userName");
+        Assert.assertEquals("userName", userName);
+    }
+
+    @Test
+    public void toCamelCaseTest7() {
+        String userName = StringUtil.toCamelCase("UserName");
+        Assert.assertEquals("userName", userName);
+    }
+
+    @Test
     public void toPascalCaseTest1() {
         String userName = StringUtil.toPascalCase("user_name");
         Assert.assertEquals("UserName", userName);
@@ -71,6 +89,24 @@ public class StringUtilTests {
     @Test
     public void toPascalCaseTest4() {
         String userName = StringUtil.toPascalCase("_USER_NAME_");
+        Assert.assertEquals("UserName", userName);
+    }
+
+    @Test
+    public void toPascalCaseTest5() {
+        String userName = StringUtil.toPascalCase("_USER-NAME_");
+        Assert.assertEquals("UserName", userName);
+    }
+
+    @Test
+    public void toPascalCaseTest6() {
+        String userName = StringUtil.toPascalCase("userName");
+        Assert.assertEquals("UserName", userName);
+    }
+
+    @Test
+    public void toPascalCaseTest7() {
+        String userName = StringUtil.toPascalCase("UserName");
         Assert.assertEquals("UserName", userName);
     }
 }

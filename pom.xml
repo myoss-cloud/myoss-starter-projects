@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>phoenix-core</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
 
     <name>phoenix-core</name>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>24.1-jre</version>
+            <version>25.0-jre</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>

@@ -98,4 +98,8 @@ public interface PhoenixConstants {
      * 字符串常量: N
      */
     String  N                      = "N";
+    /**
+     * 字符串常量: system
+     */
+    String  SYSTEM                 = "system";
 }

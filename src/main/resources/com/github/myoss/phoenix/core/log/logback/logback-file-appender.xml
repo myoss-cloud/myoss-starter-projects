@@ -1,16 +1,63 @@
+<!--
+  ~ Copyright 2018-2018 https://github.com/myoss
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<!--  必须的配置
+<property name="logging.level" value="INFO"/>
+<property name="project.name" value="phoenix-core"/>
+-->
+
+<!--  可选的配置
+<property name="logging.path" value="${user.home}/logs/${project.name}-test"/>
+<property name="logging.rootPath" value="${user.home}/logs/${project.name}"/>
+-->
+
+<!-- logback.xml 使用示例:
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="600 seconds" debug="false">
     <property name="logging.level" value="INFO"/>
     <property name="project.name" value="phoenix-core"/>
-    <if condition='",test,pre,prd".indexOf(property("DEPLOY_ENV")) > 0'>
+
+    <include resource="com/github/myoss/phoenix/core/log/logback/logback-file-appender.xml"/>
+
+    <root>
+        <level value="${logging.level}"/>
+        <appender-ref ref="errorAppenderAsync"/>
+        <appender-ref ref="infoAppenderAsync"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
+-->
+
+<included>
+    <!-- logging.path: 自己控制日志文件目录 -->
+    <!-- logging.rootPath: 自己控制日志文件根目录 -->
+    <if condition='property("logging.path").length() == 0'>
         <then>
-            <!-- 测试/预发/生产环境 -->
-            <property name="logging.path" value="/data1/admin/${project.name}/logs"/>
+            <if condition='",test,pre,prd".indexOf(property("DEPLOY_ENV")) > 0'>
+                <then>
+                    <!-- 测试/预发/生产环境 -->
+                    <property name="logging.path" value="${logging.rootPath}/logs/${project.name}"/>
+                </then>
+                <else>
+                    <!-- 本地开发环境，兼容 unix/windows 系统用户文件权限的问题 -->
+                    <property name="logging.path" value="${user.home}/logs/${project.name}"/>
+                </else>
+            </if>
         </then>
-        <else>
-            <!-- 本地开发环境，兼容 unix/windows 系统权限的问题 -->
-            <property name="logging.path" value="${user.home}/logs/${project.name}"/>
-        </else>
     </if>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -56,10 +103,7 @@
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - [%X{method}]
-                [%X{requestURIWithQueryString}] [%X{startTime}] [%X{costTime}] [%X{status}] [ip=%X{remoteAddr},
-                ref=%X{referrer}, ua=%X{userAgent}, sid=%X{cookie.JSESSIONID}] %msg%n
-            </pattern>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - [%X{method}] [%X{requestURIWithQueryString}] [%X{startTime}] [%X{costTime}] [%X{status}] [ip=%X{remoteAddr}, ref=%X{referrer}, ua=%X{userAgent}, sid=%X{cookie.JSESSIONID}] %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -107,11 +151,4 @@
         <level value="INFO"/>
         <appender-ref ref="requestInfoAppenderAsync"/>
     </logger>
-
-    <root>
-        <level value="${logging.level}"/>
-        <appender-ref ref="errorAppenderAsync"/>
-        <appender-ref ref="infoAppenderAsync"/>
-        <appender-ref ref="STDOUT"/>
-    </root>
-</configuration>
+</included>

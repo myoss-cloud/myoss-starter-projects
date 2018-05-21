@@ -1,5 +1,6 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+com.github.myoss.phoenix.core.spring.boot.config.CommonAutoConfiguration,\
 com.github.myoss.phoenix.core.spring.boot.config.FastJsonAutoConfiguration,\
 com.github.myoss.phoenix.core.spring.boot.config.http.RestTemplate4OkHttp3ClientAutoConfiguration,\
 com.github.myoss.phoenix.core.cache.redis.RedisLockServiceAutoConfiguration

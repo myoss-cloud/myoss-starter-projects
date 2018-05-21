@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.myoss.phoenix.core.spring.config;
+package com.github.myoss.phoenix.core.spring.boot.config;
 
 import java.util.List;
 

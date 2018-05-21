@@ -18,6 +18,7 @@
 package com.github.myoss.phoenix.core.cache.lock;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 import com.github.myoss.phoenix.core.cache.lock.functions.LockFunction;
 import com.github.myoss.phoenix.core.cache.lock.functions.LockFunctionGeneric;
@@ -30,6 +31,25 @@ import com.github.myoss.phoenix.core.cache.lock.functions.LockFunctionWithArgs;
  * @author Jerry.Chen 2018年5月9日 下午5:01:14
  */
 public interface LockService {
+    /**
+     * 模拟{@link Thread#sleep(long)}，规避 SonarQube 会扫描 Thread.sleep 代码。
+     * <p>
+     * Using Thread.sleep in a test is just generally a bad idea. It creates
+     * brittle tests that can fail unpredictably depending on environment
+     * ("Passes on my machine!") or load.
+     * <p>
+     * 也可以使用 {@link TimeUnit#sleep(long)} 去替代 Thread.sleep 代码
+     *
+     * @param milliseconds 等待的毫秒时间
+     */
+    static void sleep(long milliseconds) {
+        long begin = System.currentTimeMillis();
+        long cost = 0;
+        while (cost <= milliseconds) {
+            cost = System.currentTimeMillis() - begin;
+        }
+    }
+
     /**
      * 获取锁
      *

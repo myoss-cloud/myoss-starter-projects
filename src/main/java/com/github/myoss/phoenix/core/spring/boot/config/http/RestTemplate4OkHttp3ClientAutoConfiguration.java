@@ -54,8 +54,6 @@ import com.github.myoss.phoenix.core.spring.boot.config.FastJsonAutoConfiguratio
  * <pre>
  * phoenix.ok-http3.connection-pool.enabled = false
  * </pre>
- * 
- * </p>
  *
  * @author Jerry.Chen 2018年5月21日 上午11:06:44
  * @see OkHttp3ConnectionPoolProperties

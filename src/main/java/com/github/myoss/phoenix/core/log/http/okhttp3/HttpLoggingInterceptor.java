@@ -145,6 +145,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
      * Change the level at which this interceptor logs.
      *
      * @param level log level
+     * @return HttpLoggingInterceptor
      */
     public HttpLoggingInterceptor setLevel(Level level) {
         if (level == null) {

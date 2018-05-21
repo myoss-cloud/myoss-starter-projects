@@ -60,6 +60,27 @@
         </then>
     </if>
 
+    <!-- logging.infoAppender.fileName: info日志文件名 -->
+    <if condition='property("logging.infoAppender.fileName").length() == 0'>
+        <then>
+            <property name="logging.infoAppender.fileName" value="all-${project.name}_all"/>
+        </then>
+    </if>
+
+    <!-- logging.requestInfoAppender.fileName: web request info日志文件名 -->
+    <if condition='property("logging.requestInfoAppender.fileName").length() == 0'>
+        <then>
+            <property name="logging.requestInfoAppender.fileName" value="requestInfo-${project.name}_info"/>
+        </then>
+    </if>
+
+    <!-- logging.errorAppender.fileName: 错误日志文件名 -->
+    <if condition='property("logging.errorAppender.fileName").length() == 0'>
+        <then>
+            <property name="logging.errorAppender.fileName" value="error-${project.name}_error"/>
+        </then>
+    </if>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder>
@@ -69,9 +90,9 @@
     </appender>
 
     <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logging.path}/all-${project.name}_all.log</file>
+        <file>${logging.path}/${logging.infoAppender.fileName}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logging.path}/all-${project.name}_all-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${logging.path}/${logging.infoAppender.fileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>365</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -96,9 +117,9 @@
 
     <!-- 客户端请求的审计日志 -->
     <appender name="requestInfoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logging.path}/requestInfo-${project.name}_info.log</file>
+        <file>${logging.path}/${logging.requestInfoAppender.fileName}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logging.path}/requestInfo-${project.name}_info-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${logging.path}/${logging.requestInfoAppender.fileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -116,13 +137,13 @@
     </appender>
 
     <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logging.path}/error-${project.name}_error.log</file>
+        <file>${logging.path}/${logging.errorAppender.fileName}.log</file>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <!-- 过滤日志级别最低为 ERROR -->
             <level>ERROR</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logging.path}/error-${project.name}_error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${logging.path}/${logging.errorAppender.fileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>365</maxHistory>
         </rollingPolicy>
         <encoder>

@@ -127,5 +127,12 @@
             <optional>true</optional>
         </dependency>
         <!-- redis end -->
+
+        <dependency>
+            <!-- Memory Cache -->
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

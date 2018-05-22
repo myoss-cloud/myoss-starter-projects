@@ -22,9 +22,11 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -33,9 +35,9 @@ import org.springframework.data.redis.core.RedisTemplate;
  *
  * @author Jerry.Chen 2018年5月21日 下午1:33:14
  */
+@Import(RedisAutoConfiguration.class)
 @EnableConfigurationProperties(RedisProperties.class)
 @ConditionalOnClass(RedisOperations.class)
-@ConditionalOnBean(RedisTemplate.class)
 @Configuration
 public class RedisLockServiceAutoConfiguration {
     private RedisProperties redisProperties;
@@ -44,6 +46,7 @@ public class RedisLockServiceAutoConfiguration {
         this.redisProperties = redisProperties;
     }
 
+    @ConditionalOnBean(name = "redisTemplate")
     @ConditionalOnMissingBean
     @Bean
     public RedisLockServiceImpl redisLockService(RedisTemplate<Object, Object> redisTemplate) {

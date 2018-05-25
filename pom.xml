@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>phoenix-core</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.7</version>
     <packaging>jar</packaging>
 
     <name>phoenix-core</name>

@@ -25,7 +25,8 @@ import com.github.myoss.phoenix.core.spring.context.SpringContextHolder;
 /**
  * 通用的自动配置
  *
- * @author Jerry.Chen 2018年5月21日 下午2:32:29
+ * @author Jerry.Chen
+ * @since 2018年5月21日 下午2:32:29
  */
 @Import(SpringContextHolder.class)
 @Configuration

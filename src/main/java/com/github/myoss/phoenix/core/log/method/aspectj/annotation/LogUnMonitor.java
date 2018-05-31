@@ -26,7 +26,8 @@ import java.lang.annotation.Target;
 /**
  * 不输出log，放在class上排除所有的Method，放在Method上排除当前方法
  *
- * @author Jerry.Chen 2018年4月11日 上午11:07:46
+ * @author Jerry.Chen
+ * @since 2018年4月11日 上午11:07:46
  * @see LogMethodBefore
  * @see LogMethodAfter
  * @see LogMethodAround

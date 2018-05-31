@@ -27,7 +27,8 @@ import com.github.myoss.phoenix.core.spring.boot.config.FastJsonAutoConfiguratio
 /**
  * Fast JSON 扩展API
  *
- * @author Jerry.Chen 2018年3月26日 下午10:01:14
+ * @author Jerry.Chen
+ * @since 2018年3月26日 下午10:01:14
  */
 public class FastJsonUtils {
     /**

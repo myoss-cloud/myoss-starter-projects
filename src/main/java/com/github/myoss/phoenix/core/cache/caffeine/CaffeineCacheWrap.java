@@ -23,7 +23,8 @@ import org.springframework.cache.support.NullValue;
  * Caffeine Cache包装类, Caffeine Cache不允许保存null值，会将 {@code null} 值转换为
  * {@link NullValue#INSTANCE} 放进缓存中，这样后续的操作就不会进入到缓存中
  *
- * @author Jerry.Chen 2018年5月23日 上午1:06:17
+ * @author Jerry.Chen
+ * @since 2018年5月23日 上午1:06:17
  */
 public class CaffeineCacheWrap extends org.springframework.cache.caffeine.CaffeineCache {
     public CaffeineCacheWrap(String name, com.github.benmanes.caffeine.cache.Cache<Object, Object> cache) {

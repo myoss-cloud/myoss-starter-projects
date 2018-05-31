@@ -30,7 +30,8 @@ import org.junit.Test;
 /**
  * {@link DateTimeFormatUtils} 测试类
  *
- * @author Jerry.Chen 2018年5月23日 上午1:41:48
+ * @author Jerry.Chen
+ * @since 2018年5月23日 上午1:41:48
  */
 public class DateTimeFormatUtilsTests {
     /**

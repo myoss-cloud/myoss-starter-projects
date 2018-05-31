@@ -28,7 +28,8 @@ import com.github.myoss.phoenix.core.cache.lock.functions.LockFunctionWithArgs;
 /**
  * 缓存锁服务接口
  *
- * @author Jerry.Chen 2018年5月9日 下午5:01:14
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午5:01:14
  */
 public interface LockService {
     /**

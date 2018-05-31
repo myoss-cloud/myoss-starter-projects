@@ -22,7 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 封装字符串常用操作方法
  *
- * @author Jerry.Chen 2018年5月14日 上午10:58:02
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午10:58:02
  */
 public class StringUtil {
     /**

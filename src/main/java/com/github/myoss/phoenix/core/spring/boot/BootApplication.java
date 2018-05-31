@@ -21,9 +21,6 @@ import static com.github.myoss.phoenix.core.constants.PhoenixConstants.DEPLOY_EN
 
 import java.util.Arrays;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -34,10 +31,14 @@ import org.springframework.util.ClassUtils;
 import com.github.myoss.phoenix.core.constants.PhoenixConstants;
 import com.github.myoss.phoenix.core.spring.cloud.sleuth.trace.ApplicationEventTracer;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * Spring Boot Application 启动的时候一些常用方法封装
  *
- * @author Jerry.Chen 2018年4月12日 下午1:46:07
+ * @author Jerry.Chen
+ * @since 2018年4月12日 下午1:46:07
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BootApplication {

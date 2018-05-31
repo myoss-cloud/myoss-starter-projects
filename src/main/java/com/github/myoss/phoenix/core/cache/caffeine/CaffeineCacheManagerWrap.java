@@ -23,7 +23,8 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 /**
  * {@link CaffeineCacheManager} 包装类
  *
- * @author Jerry.Chen 2018年5月23日 上午1:06:51
+ * @author Jerry.Chen
+ * @since 2018年5月23日 上午1:06:51
  */
 public class CaffeineCacheManagerWrap extends CaffeineCacheManager {
     @Override

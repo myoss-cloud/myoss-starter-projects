@@ -22,8 +22,6 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpHeaders;
@@ -49,6 +47,8 @@ import com.github.myoss.phoenix.core.log.method.aspectj.annotation.EnableAopLogM
 import com.github.myoss.phoenix.core.spring.cloud.sleuth.trace.ApplicationEventTracer;
 import com.github.myoss.phoenix.core.spring.web.servlet.support.EmptyBodyCheckingHttpInputMessage;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 全局Controller异常处理器
  * <p>
@@ -62,7 +62,8 @@ import com.github.myoss.phoenix.core.spring.web.servlet.support.EmptyBodyCheckin
  * <p>
  * 如果要禁用掉此功能，{@link EnableAopLogMethod#enableAopLogControllerException()}
  *
- * @author Jerry.Chen 2018年4月11日 下午12:10:23
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午12:10:23
  * @see ResponseEntityExceptionHandler
  * @see EnableAopLogMethod
  */
@@ -83,7 +84,7 @@ public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHan
 
     /**
      * 不在页面暴露具体的异常信息
-     * 
+     *
      * @param ex 异常信息
      * @param request 客户端请求信息
      * @return 服务端返回信息

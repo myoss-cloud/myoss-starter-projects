@@ -30,7 +30,8 @@ import org.springframework.util.StreamUtils;
 /**
  * 检查HTTP input message 的 {@linkplain #getBody() body}，如果body中没有值，则返回{@code null}
  *
- * @author Jerry.Chen 2018年4月11日 下午3:00:24
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午3:00:24
  */
 public class EmptyBodyCheckingHttpInputMessage implements HttpInputMessage {
     private final HttpHeaders headers;

@@ -26,7 +26,8 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * 记录方法入参和返回值的基类
  *
- * @author Jerry.Chen 2018年3月31日 下午10:56:32
+ * @author Jerry.Chen
+ * @since 2018年3月31日 下午10:56:32
  */
 public abstract class AbstractMonitorMethod {
     @Autowired

@@ -27,7 +27,8 @@ import com.github.myoss.phoenix.core.lang.serializer.SerializationException;
 /**
  * Java Serialization, Generic Object to byte[] (and back) serializer
  *
- * @author Jerry.Chen 2018年5月25日 下午4:52:33
+ * @author Jerry.Chen
+ * @since 2018年5月25日 下午4:52:33
  */
 public class JdkSerialization implements Serialization<Object> {
     private Converter<Object, byte[]> serializer   = new SerializingConverter();

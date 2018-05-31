@@ -20,7 +20,8 @@ package com.github.myoss.phoenix.core.lang.concurrent;
 /**
  * 异步任务回调接口，和JDK的 {@link java.util.concurrent.Callable} 类似，但是不会强制抛出异常
  *
- * @author Jerry.Chen 2018年5月9日 下午5:18:39
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午5:18:39
  * @see java.util.concurrent.Callable
  */
 @FunctionalInterface

@@ -7,7 +7,8 @@ import org.junit.Test;
 /**
  * {@link NameStyle} 测试类
  *
- * @author Jerry.Chen 2018年5月2日 上午9:53:36
+ * @author Jerry.Chen
+ * @since 2018年5月2日 上午9:53:36
  */
 public class NameStyleTests {
     @Test

@@ -19,8 +19,6 @@ package com.github.myoss.phoenix.core.log.method.aspectj;
 
 import java.lang.reflect.Method;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -33,12 +31,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAfter;
 import com.github.myoss.phoenix.core.log.method.aspectj.annotation.MonitorMethodAdvice;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 记录方法的返回值，使用注解： {@link LogMethodAfter}
  * <p>
  * 非private/final的方法，非AOP调用的方法也是不支持的
  *
- * @author Jerry.Chen 2018年4月11日 下午12:14:56
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午12:14:56
  * @see LogMethodAfter
  */
 @Slf4j(topic = "MonitorMethod")

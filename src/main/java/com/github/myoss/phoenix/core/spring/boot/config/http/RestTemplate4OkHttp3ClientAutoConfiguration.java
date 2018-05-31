@@ -23,11 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.ConnectionPool;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.OkHttpClient.Builder;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -46,16 +41,22 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.github.myoss.phoenix.core.constants.PhoenixConstants;
 import com.github.myoss.phoenix.core.spring.boot.config.FastJsonAutoConfiguration;
 
+import okhttp3.ConnectionPool;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.OkHttpClient.Builder;
+
 /**
  * 自动配置RestTemplate，使用 OkHttp3 连接池。
  * <p>
  * 需要在项目中的 {@code application.yml} 中添加下面的属性启用此配置<br>
- * 
+ *
  * <pre>
  * phoenix.ok-http3.connection-pool.enabled = false
  * </pre>
  *
- * @author Jerry.Chen 2018年5月21日 上午11:06:44
+ * @author Jerry.Chen
+ * @since 2018年5月21日 上午11:06:44
  * @see OkHttp3ConnectionPoolProperties
  */
 @ConditionalOnClass({ ConnectionPool.class, RestTemplate.class })

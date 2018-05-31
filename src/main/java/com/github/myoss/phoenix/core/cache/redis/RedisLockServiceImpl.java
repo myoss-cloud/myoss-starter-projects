@@ -21,9 +21,6 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.github.myoss.phoenix.core.cache.lock.LockService;
@@ -32,10 +29,14 @@ import com.github.myoss.phoenix.core.cache.lock.functions.LockFunctionGeneric;
 import com.github.myoss.phoenix.core.cache.lock.functions.LockFunctionGenericWithArgs;
 import com.github.myoss.phoenix.core.cache.lock.functions.LockFunctionWithArgs;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * Redis 缓存锁实现
  *
- * @author Jerry.Chen 2018年5月21日 下午1:13:16
+ * @author Jerry.Chen
+ * @since 2018年5月21日 下午1:13:16
  */
 @Data
 @AllArgsConstructor

@@ -40,7 +40,8 @@ import com.github.myoss.phoenix.core.exception.BizRuntimeException;
 /**
  * JavaBeans 常用方法封装
  *
- * @author Jerry.Chen 2018年5月10日 上午11:08:14
+ * @author Jerry.Chen
+ * @since 2018年5月10日 上午11:08:14
  */
 public class BeanUtil {
     /**

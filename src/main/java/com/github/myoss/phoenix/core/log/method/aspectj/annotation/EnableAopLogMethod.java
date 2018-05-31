@@ -48,7 +48,8 @@ import com.github.myoss.phoenix.core.log.method.aspectj.MonitorMethodProperties;
  * }
  * </pre>
  *
- * @author Jerry.Chen 2018年3月31日 下午10:53:18
+ * @author Jerry.Chen
+ * @since 2018年3月31日 下午10:53:18
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

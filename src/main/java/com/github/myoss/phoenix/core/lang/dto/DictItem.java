@@ -21,14 +21,15 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Data;
-
 import com.alibaba.fastjson.JSONObject;
+
+import lombok.Data;
 
 /**
  * 封装字典选项值
  *
- * @author Jerry.Chen 2018年5月9日 下午4:33:50
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午4:33:50
  */
 @Data
 public class DictItem<T extends Serializable> implements Serializable {

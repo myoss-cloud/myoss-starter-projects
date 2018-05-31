@@ -28,7 +28,8 @@ import java.lang.annotation.Target;
  * <p>
  * 和{@link LogUnMonitor}互斥关系，如果两者都存在，将会排除{@link LogUnMonitor}匹配的方法
  *
- * @author Jerry.Chen 2018年4月11日 上午11:07:07
+ * @author Jerry.Chen
+ * @since 2018年4月11日 上午11:07:07
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

@@ -33,7 +33,8 @@ import brave.internal.Platform;
 /**
  * 应用事件调用链
  *
- * @author Jerry.Chen 2018年4月12日 下午1:50:20
+ * @author Jerry.Chen
+ * @since 2018年4月12日 下午1:50:20
  * @see org.springframework.cloud.sleuth.autoconfig.TraceAutoConfiguration
  * @see org.springframework.cloud.sleuth.log.SleuthLogAutoConfiguration
  * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext

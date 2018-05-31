@@ -33,7 +33,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 /**
  * Redis 缓存锁服务自动配置
  *
- * @author Jerry.Chen 2018年5月21日 下午1:33:14
+ * @author Jerry.Chen
+ * @since 2018年5月21日 下午1:33:14
  */
 @Import(RedisAutoConfiguration.class)
 @EnableConfigurationProperties(RedisProperties.class)

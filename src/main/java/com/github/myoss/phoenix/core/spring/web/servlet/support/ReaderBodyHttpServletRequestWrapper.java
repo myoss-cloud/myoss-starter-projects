@@ -39,7 +39,8 @@ import com.github.myoss.phoenix.core.constants.PhoenixConstants;
  * {@link HttpServletRequestWrapper#getInputStream()} 方法的流的读取指向 {@code byte[]}，
  * 使这两个方法支持多次读取，默认只能读取一次。并且能支持 {@link InputStream#reset()} 操作，把pos的指针的位置重置为起始位置。
  *
- * @author Jerry.Chen 2018年4月11日 下午3:05:20
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午3:05:20
  * @see ByteArrayServletInputStream
  */
 public class ReaderBodyHttpServletRequestWrapper extends HttpServletRequestWrapper {

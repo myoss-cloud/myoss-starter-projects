@@ -17,14 +17,15 @@
 
 package com.github.myoss.phoenix.core.spring.boot.config.http;
 
-import lombok.Data;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
 
 /**
  * OkHttp3连接池属性配置
  *
- * @author Jerry.Chen 2018年5月21日 上午11:08:41
+ * @author Jerry.Chen
+ * @since 2018年5月21日 上午11:08:41
  */
 @Data
 @ConfigurationProperties(prefix = "phoenix.ok-http3.connection-pool")

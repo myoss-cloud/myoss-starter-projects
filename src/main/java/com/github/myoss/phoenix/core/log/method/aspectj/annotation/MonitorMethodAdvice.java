@@ -26,7 +26,8 @@ import java.lang.annotation.Target;
 /**
  * Indicates the annotated class assists a "MonitorMethod".
  *
- * @author Jerry.Chen 2018年4月11日 上午11:57:12
+ * @author Jerry.Chen
+ * @since 2018年4月11日 上午11:57:12
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

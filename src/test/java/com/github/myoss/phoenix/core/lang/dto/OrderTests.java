@@ -27,7 +27,8 @@ import org.junit.rules.ExpectedException;
 /**
  * {@link Order} 测试类
  *
- * @author Jerry.Chen 2018年5月14日 上午11:13:57
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午11:13:57
  */
 public class OrderTests {
     @Rule

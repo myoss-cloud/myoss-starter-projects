@@ -35,7 +35,8 @@ import com.github.myoss.phoenix.core.spring.web.servlet.filter.ReaderBodyHttpSer
 /**
  * Spring Web MVC配置基类
  *
- * @author Jerry.Chen 2018年4月12日 下午5:18:07
+ * @author Jerry.Chen
+ * @since 2018年4月12日 下午5:18:07
  */
 public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
     @Autowired

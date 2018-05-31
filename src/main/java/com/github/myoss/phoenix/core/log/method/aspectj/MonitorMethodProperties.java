@@ -23,8 +23,6 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
-import lombok.Data;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -32,10 +30,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ClassUtils;
 
+import lombok.Data;
+
 /**
  * 使用slf4j记录方法的入参和出参，属性配置
  *
- * @author Jerry.Chen 2018年4月13日 下午12:15:37
+ * @author Jerry.Chen
+ * @since 2018年4月13日 下午12:15:37
  */
 @Data
 @ConfigurationProperties(prefix = "phoenix.log.method")

@@ -28,7 +28,8 @@ import com.alibaba.fastjson.TypeReference;
 /**
  * {@link DictItem} 测试类
  *
- * @author Jerry.Chen 2018年5月14日 上午11:12:18
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午11:12:18
  */
 public class DictItemTests {
     @Test

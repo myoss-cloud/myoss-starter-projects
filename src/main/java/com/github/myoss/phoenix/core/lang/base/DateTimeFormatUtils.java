@@ -32,7 +32,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 日期时间格式化工具类
  *
- * @author Jerry.Chen 2018年5月23日 上午1:41:48
+ * @author Jerry.Chen
+ * @since 2018年5月23日 上午1:41:48
  */
 public class DateTimeFormatUtils {
     public static final String             YYYY_MM_DD_HH_MM_SS    = "yyyy-MM-dd HH:mm:ss";

@@ -26,7 +26,8 @@ import com.alibaba.fastjson.TypeReference;
 /**
  * {@link Result} 测试类
  *
- * @author Jerry.Chen 2018年5月14日 上午11:14:43
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午11:14:43
  */
 public class ResultTests {
     @Test

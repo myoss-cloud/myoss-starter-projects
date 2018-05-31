@@ -19,16 +19,16 @@ package com.github.myoss.phoenix.core.spring.context;
 
 import java.util.Objects;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用静态方法的方式获取 Spring 容器中管理的Bean
@@ -42,7 +42,8 @@ import org.springframework.stereotype.Component;
  * }
  * </pre>
  *
- * @author Jerry.Chen 2018年5月21日 下午2:14:24
+ * @author Jerry.Chen
+ * @since 2018年5月21日 下午2:14:24
  */
 @Slf4j
 @Component
@@ -73,7 +74,7 @@ public class SpringContextHolder {
 
     /**
      * 从Spring applicationContext中取得Bean, 自动转型为所赋值对象的类型.
-     * 
+     *
      * @param name bean name
      * @param <T> bean class type
      * @return bean instance

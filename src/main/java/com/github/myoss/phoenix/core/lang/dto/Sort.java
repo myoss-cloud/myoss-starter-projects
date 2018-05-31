@@ -38,7 +38,8 @@ import com.github.myoss.phoenix.core.lang.dto.Sort.ModelValueDeserializer;
  * sort for that must not include {@literal null} or empty strings. The
  * direction defaults to {@link Sort#DEFAULT_DIRECTION}.
  *
- * @author Jerry.Chen 2018年5月9日 下午3:27:19
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午3:27:19
  */
 @JSONType(deserializer = ModelValueDeserializer.class)
 public class Sort implements Iterable<Order>, Serializable {

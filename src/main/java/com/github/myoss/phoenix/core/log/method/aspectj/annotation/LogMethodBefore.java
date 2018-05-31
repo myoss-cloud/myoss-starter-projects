@@ -30,7 +30,8 @@ import java.lang.annotation.Target;
  * <p>
  * 和{@link LogMethodAround}互斥关系，如果两者都存在，将会使用{@link LogMethodAround}匹配的方法
  *
- * @author Jerry.Chen 2018年4月11日 上午11:04:32
+ * @author Jerry.Chen
+ * @since 2018年4月11日 上午11:04:32
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

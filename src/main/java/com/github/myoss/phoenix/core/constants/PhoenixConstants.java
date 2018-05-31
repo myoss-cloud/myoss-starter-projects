@@ -22,7 +22,8 @@ import java.nio.charset.Charset;
 /**
  * 项目常量
  *
- * @author Jerry.Chen 2018年4月11日 下午3:08:26
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午3:08:26
  */
 public interface PhoenixConstants {
     /**

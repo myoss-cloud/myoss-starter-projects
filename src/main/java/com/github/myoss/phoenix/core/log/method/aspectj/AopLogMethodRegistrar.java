@@ -34,7 +34,8 @@ import com.github.myoss.phoenix.core.log.method.aspectj.annotation.MonitorMethod
 /**
  * 扫描当前package下的 {@link org.springframework.stereotype.Component}，并进行 Bean 的自动注册
  *
- * @author Jerry.Chen 2018年4月11日 下午12:07:23
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午12:07:23
  */
 public class AopLogMethodRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
     private ResourceLoader resourceLoader;

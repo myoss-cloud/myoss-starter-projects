@@ -19,14 +19,15 @@ package com.github.myoss.phoenix.core.cache.redis;
 
 import java.util.concurrent.TimeUnit;
 
-import lombok.Data;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
 
 /**
  * Redis 缓存的配置
  *
- * @author Jerry.Chen 2018年5月21日 下午1:41:21
+ * @author Jerry.Chen
+ * @since 2018年5月21日 下午1:41:21
  */
 @Data
 @ConfigurationProperties(prefix = "phoenix.cache.redis")

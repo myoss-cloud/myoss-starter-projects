@@ -26,7 +26,8 @@ import javax.servlet.ServletInputStream;
  * 实现{@link ServletInputStream}，使用 {@link ByteArrayInputStream} 支持多次读取
  * {@code byte[]}
  *
- * @author Jerry.Chen 2018年4月11日 下午2:59:17
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午2:59:17
  * @see ReaderBodyHttpServletRequestWrapper
  */
 public class ByteArrayServletInputStream extends ServletInputStream {

@@ -28,7 +28,8 @@ import org.springframework.boot.test.rule.OutputCapture;
 /**
  * {@link Direction} 测试类
  *
- * @author Jerry.Chen 2018年5月14日 上午11:13:13
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午11:13:13
  */
 public class DirectionTests {
     @Rule

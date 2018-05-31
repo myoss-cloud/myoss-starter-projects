@@ -26,10 +26,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,10 +42,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.github.myoss.phoenix.core.constants.PhoenixConstants;
 import com.github.myoss.phoenix.core.exception.BizRuntimeException;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Rest API工具类
  *
- * @author Jerry.Chen 2018年3月31日 下午7:24:50
+ * @author Jerry.Chen
+ * @since 2018年3月31日 下午7:24:50
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

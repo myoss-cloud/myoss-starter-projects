@@ -19,14 +19,15 @@ package com.github.myoss.phoenix.core.utils;
 
 import static com.github.myoss.phoenix.core.constants.PhoenixConstants.UNDERLINE;
 
-import lombok.AllArgsConstructor;
-
 import org.apache.commons.lang3.StringUtils;
+
+import lombok.AllArgsConstructor;
 
 /**
  * 字段命名风格
  *
- * @author Jerry.Chen 2018年4月26日 下午4:25:20
+ * @author Jerry.Chen
+ * @since 2018年4月26日 下午4:25:20
  */
 @AllArgsConstructor
 public enum NameStyle {

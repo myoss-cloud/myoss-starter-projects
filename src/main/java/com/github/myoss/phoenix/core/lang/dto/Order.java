@@ -19,16 +19,17 @@ package com.github.myoss.phoenix.core.lang.dto;
 
 import java.io.Serializable;
 
+import org.springframework.util.StringUtils;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import org.springframework.util.StringUtils;
 
 /**
  * PropertyPath implements the pairing of an {@link Direction} and a property.
  * It is used to provide input for {@link Sort}
  *
- * @author Jerry.Chen 2018年5月9日 下午3:21:58
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午3:21:58
  */
 @Getter
 @EqualsAndHashCode

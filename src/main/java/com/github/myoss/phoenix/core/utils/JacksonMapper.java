@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 
-import lombok.Getter;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -36,11 +34,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.github.myoss.phoenix.core.exception.BizRuntimeException;
 
+import lombok.Getter;
+
 /**
  * 简单封装Jackson，实现{@code JSON String<->Java Object} 的Mapper. 封装不同的输出风格,
  * 使用不同的builder函数创建实例.
  *
- * @author Jerry.Chen 2018年5月4日 下午6:43:13
+ * @author Jerry.Chen
+ * @since 2018年5月4日 下午6:43:13
  */
 public class JacksonMapper {
     public static TypeReference<SortedMap<String, String>> SORTED_MAP_S2S_TYPE_REFERENCE = new TypeReference<SortedMap<String, String>>() {

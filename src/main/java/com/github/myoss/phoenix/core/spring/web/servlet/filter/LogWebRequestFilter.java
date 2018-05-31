@@ -32,17 +32,16 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.github.myoss.phoenix.core.constants.PhoenixConstants;
+
 import brave.internal.HexCodec;
 import brave.propagation.TraceContext;
-
-import com.github.myoss.phoenix.core.constants.PhoenixConstants;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 记录web请求的日志信息，设置请求的信息 到 {@link MDC Mapped Diagnostic Context(映射调试上下文)}
@@ -104,7 +103,8 @@ import com.github.myoss.phoenix.core.constants.PhoenixConstants;
  * </tr>
  * </table>
  *
- * @author Jerry.Chen 2018年4月11日 下午12:39:20
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午12:39:20
  */
 @Slf4j(topic = "WebRequest")
 public class LogWebRequestFilter extends OncePerRequestFilter {

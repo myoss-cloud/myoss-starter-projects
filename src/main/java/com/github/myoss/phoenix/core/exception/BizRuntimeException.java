@@ -22,7 +22,8 @@ import lombok.Getter;
 /**
  * 业务运行时异常
  *
- * @author Jerry.Chen 2018年5月2日 上午1:13:57
+ * @author Jerry.Chen
+ * @since 2018年5月2日 上午1:13:57
  */
 public class BizRuntimeException extends RuntimeException {
     private static final long serialVersionUID = 7634892282599474024L;

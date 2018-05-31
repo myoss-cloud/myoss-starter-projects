@@ -21,17 +21,18 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import com.alibaba.fastjson.JSONObject;
-
 /**
  * 封装方法返回参数
  *
- * @author Jerry.Chen 2018年5月9日 下午2:55:11
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午2:55:11
  */
 @AllArgsConstructor
 @Accessors(chain = true)

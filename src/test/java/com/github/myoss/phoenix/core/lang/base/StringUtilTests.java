@@ -23,7 +23,8 @@ import org.junit.Test;
 /**
  * {@link StringUtil} 测试类
  *
- * @author Jerry.Chen 2018年5月14日 上午11:50:10
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午11:50:10
  */
 public class StringUtilTests {
     @Test

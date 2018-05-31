@@ -20,7 +20,8 @@ package com.github.myoss.phoenix.core.cache.lock.functions;
 /**
  * 使用锁执行方法的时候，使用的回调函数
  *
- * @author Jerry.Chen 2018年5月9日 下午4:55:33
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午4:55:33
  */
 public interface LockFunction extends BaseLockFunction {
     /**

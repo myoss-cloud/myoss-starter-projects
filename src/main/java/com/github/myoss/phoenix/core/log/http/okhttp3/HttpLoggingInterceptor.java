@@ -22,9 +22,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import okhttp3.Connection;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -39,8 +40,6 @@ import okio.Buffer;
 import okio.BufferedSource;
 import okio.GzipSource;
 
-import org.slf4j.Logger;
-
 /**
  * An OkHttp interceptor which logs request and response information. Can be
  * applied as an {@linkplain OkHttpClient#interceptors() application
@@ -51,7 +50,8 @@ import org.slf4j.Logger;
  * and may change slightly between releases. If you need a stable logging
  * format, use your own interceptor.
  *
- * @author Jerry.Chen 2018年5月21日 上午11:16:45
+ * @author Jerry.Chen
+ * @since 2018年5月21日 上午11:16:45
  */
 @Slf4j(topic = "HttpLoggingInterceptor")
 public final class HttpLoggingInterceptor implements Interceptor {
@@ -71,7 +71,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
          * <pre>
          * {@code
          * --> POST http/1.1 (3-byte body)
-         * 
+         *
          * <-- 200 OK (22ms, 6-byte body)
          * }
          * </pre>
@@ -82,7 +82,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
          * <p>
          * Example:
          * </p>
-         * 
+         *
          * <pre>
          * {@code
          * --> POST http/1.1
@@ -90,7 +90,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
          * Content-Type: plain/text
          * Content-Length: 3
          * --> END POST
-         * 
+         *
          * <-- 200 OK (22ms)
          * Content-Type: plain/text
          * Content-Length: 6
@@ -105,21 +105,21 @@ public final class HttpLoggingInterceptor implements Interceptor {
          * <p>
          * Example:
          * </p>
-         * 
+         *
          * <pre>
          * {@code
          * --> POST http/1.1
          * Host: example.com
          * Content-Type: plain/text
          * Content-Length: 3
-         * 
+         *
          * Hi?
          * --> END POST
-         * 
+         *
          * <-- 200 OK (22ms)
          * Content-Type: plain/text
          * Content-Length: 6
-         * 
+         *
          * Hello!
          * <-- END HTTP
          * }

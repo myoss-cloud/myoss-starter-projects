@@ -28,7 +28,8 @@ import org.junit.Test;
 /**
  * {@link TransformValue} 测试类
  *
- * @author Jerry.Chen 2018年5月14日 上午11:19:39
+ * @author Jerry.Chen
+ * @since 2018年5月14日 上午11:19:39
  */
 public class TransformValueResultTests {
     @Test

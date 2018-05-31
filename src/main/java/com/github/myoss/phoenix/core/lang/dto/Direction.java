@@ -24,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 排序枚举类
  *
- * @author Jerry.Chen 2018年5月9日 下午3:22:33
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午3:22:33
  */
 @Slf4j
 public enum Direction {

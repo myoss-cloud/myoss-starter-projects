@@ -22,16 +22,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import com.alibaba.fastjson.JSONObject;
-
 /**
  * 封装分页查询参数
  *
- * @author Jerry.Chen 2018年5月9日 下午3:50:31
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午3:50:31
  */
 @Accessors(chain = true)
 @Data

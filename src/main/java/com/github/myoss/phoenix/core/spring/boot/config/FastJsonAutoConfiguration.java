@@ -35,7 +35,8 @@ import com.google.common.collect.Lists;
 /**
  * Fast Json的全局自动配置
  *
- * @author Jerry.Chen 2018年4月12日 下午5:27:16
+ * @author Jerry.Chen
+ * @since 2018年4月12日 下午5:27:16
  */
 @ConditionalOnClass({ FastJsonConfig.class })
 @ConditionalOnWebApplication

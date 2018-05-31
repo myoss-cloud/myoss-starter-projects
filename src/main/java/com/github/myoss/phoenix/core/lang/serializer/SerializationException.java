@@ -22,7 +22,8 @@ import org.springframework.core.NestedRuntimeException;
 /**
  * Generic exception indicating a serialization/deserialization error.
  *
- * @author Jerry.Chen 2018年5月25日 下午4:52:33
+ * @author Jerry.Chen
+ * @since 2018年5月25日 下午4:52:33
  */
 public class SerializationException extends NestedRuntimeException {
     private static final long serialVersionUID = 2611759036802666316L;

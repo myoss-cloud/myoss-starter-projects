@@ -21,15 +21,16 @@ import static com.github.myoss.phoenix.core.constants.PhoenixConstants.DEPLOY_EN
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 服务部署的环境变量
  *
- * @author Jerry.Chen 2018年4月12日 下午2:04:43
+ * @author Jerry.Chen
+ * @since 2018年4月12日 下午2:04:43
  * @see PhoenixConstants#DEPLOY_ENV
  */
 @AllArgsConstructor

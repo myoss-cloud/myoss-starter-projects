@@ -24,7 +24,8 @@ package com.github.myoss.phoenix.core.cache.lock.functions;
  * <li>回调函数有入参
  * </ul>
  *
- * @author Jerry.Chen 2018年5月9日 下午5:02:32
+ * @author Jerry.Chen
+ * @since 2018年5月9日 下午5:02:32
  */
 public interface LockFunctionGenericWithArgs<T> extends BaseLockFunction {
     /**

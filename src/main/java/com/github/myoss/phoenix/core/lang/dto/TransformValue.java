@@ -22,7 +22,8 @@ import java.util.List;
 /**
  * 转移对象中的值，或者快速设置对象中的值
  *
- * @author Jerry.Chen 2018年5月10日 下午2:08:13
+ * @author Jerry.Chen
+ * @since 2018年5月10日 下午2:08:13
  */
 public class TransformValue {
     /**

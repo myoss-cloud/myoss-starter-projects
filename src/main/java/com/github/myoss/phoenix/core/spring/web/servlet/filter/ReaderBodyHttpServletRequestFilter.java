@@ -37,7 +37,8 @@ import com.github.myoss.phoenix.core.spring.web.servlet.support.ReaderBodyHttpSe
  * <li> {@link ReaderBodyHttpServletRequestWrapper#getInputStream()}
  * </ul>
  *
- * @author Jerry.Chen 2018年4月11日 下午3:06:41
+ * @author Jerry.Chen
+ * @since 2018年4月11日 下午3:06:41
  * @see ReaderBodyHttpServletRequestWrapper
  */
 public class ReaderBodyHttpServletRequestFilter extends OncePerRequestFilter {

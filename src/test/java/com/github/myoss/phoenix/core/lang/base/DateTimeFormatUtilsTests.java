@@ -17,10 +17,13 @@
 
 package com.github.myoss.phoenix.core.lang.base;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -34,6 +37,23 @@ import org.junit.Test;
  * @since 2018年5月23日 上午1:41:48
  */
 public class DateTimeFormatUtilsTests {
+
+    @Test
+    public void autoConvertTest1() {
+        LocalDateTime now = LocalDateTime.now();
+        Date date1 = DateTimeFormatUtils.toDate(now);
+        LocalDateTime localDateTime = DateTimeFormatUtils.toLocalDateTime(date1);
+        Assert.assertEquals(now, localDateTime);
+        Assert.assertEquals(date1, DateTimeFormatUtils.toDate(localDateTime));
+
+        LocalDate localDate = now.toLocalDate();
+        Assert.assertEquals(localDate, DateTimeFormatUtils.toLocalDate(date1));
+
+        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+        Calendar calendar = DateTimeFormatUtils.toCalendar(zonedDateTime);
+        Assert.assertEquals(zonedDateTime, DateTimeFormatUtils.toZonedDateTime(calendar));
+    }
+
     /**
      * 夏令/冬令的日期测试
      */
@@ -90,7 +110,7 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.print2Date(null2));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 0, 0, 0, 0);
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals("2016-08-08", DateTimeFormatUtils.print2Date(date));
         Assert.assertEquals("2016-08-08", DateTimeFormatUtils.print2Date(dateTime));
     }
@@ -103,7 +123,7 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.parseToDate(null));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 0, 0, 0, 0);
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals(date, DateTimeFormatUtils.parse2Date("2016-08-08"));
         Assert.assertEquals(dateTime.toLocalDate(), DateTimeFormatUtils.parseToDate("2016-08-08"));
     }
@@ -116,7 +136,7 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.print2DateEN(null2));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 0, 0, 0, 0);
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals("20160808", DateTimeFormatUtils.print2DateEN(date));
         Assert.assertEquals("20160808", DateTimeFormatUtils.print2DateEN(dateTime));
     }
@@ -127,7 +147,7 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.parseToDateEN(null));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 0, 0, 0, 0);
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals(date, DateTimeFormatUtils.parse2DateEN("20160808"));
         Assert.assertEquals(dateTime, DateTimeFormatUtils.parseToDateEN("20160808"));
     }
@@ -140,7 +160,7 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.print2DateTimeEN(null2));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 10, 20, 30, 40);
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals("20160808102030", DateTimeFormatUtils.print2DateTimeEN(date));
         Assert.assertEquals("20160808102030", DateTimeFormatUtils.print2DateTimeEN(dateTime));
     }
@@ -151,7 +171,7 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.parseToDateTimeEN(null));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 10, 20, 30, 0);
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals(date, DateTimeFormatUtils.parse2DateTimeEN("20160808102030"));
         Assert.assertEquals(dateTime, DateTimeFormatUtils.parseToDateTimeEN("20160808102030"));
     }
@@ -166,10 +186,10 @@ public class DateTimeFormatUtilsTests {
         Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
         Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(
-                srcEffectiveTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), srcExpiryTime
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), targetEffectiveTime.toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                targetExpiryTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -182,10 +202,10 @@ public class DateTimeFormatUtilsTests {
         Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
         Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(
-                srcEffectiveTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), srcExpiryTime
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), targetEffectiveTime.toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                targetExpiryTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -198,10 +218,10 @@ public class DateTimeFormatUtilsTests {
         Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
         Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(
-                srcEffectiveTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), srcExpiryTime
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), targetEffectiveTime.toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                targetExpiryTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -214,10 +234,10 @@ public class DateTimeFormatUtilsTests {
         Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
         Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(
-                srcEffectiveTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), srcExpiryTime
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), targetEffectiveTime.toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                targetExpiryTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -230,10 +250,10 @@ public class DateTimeFormatUtilsTests {
         Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
         Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(
-                srcEffectiveTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), srcExpiryTime
-                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), targetEffectiveTime.toInstant()
-                        .atZone(ZoneId.systemDefault()).toLocalDateTime(),
-                targetExpiryTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -241,8 +261,8 @@ public class DateTimeFormatUtilsTests {
         LocalDateTime dateTime = LocalDateTime.of(2017, 3, 23, 16, 20, 47);
         LocalDateTime excepted = LocalDateTime.of(2017, 3, 23, 0, 0, 0);
 
-        Date date = Date.from(dateTime.atZone(ZoneOffset.systemDefault()).toInstant());
-        Date exceptedDate = Date.from(excepted.atZone(ZoneOffset.systemDefault()).toInstant());
+        Date date = DateTimeFormatUtils.toDate(dateTime);
+        Date exceptedDate = DateTimeFormatUtils.toDate(excepted);
 
         Assert.assertEquals(exceptedDate, DateTimeFormatUtils.withTimeAtStartOfDay(date));
         Assert.assertEquals(exceptedDate, DateTimeFormatUtils.withTimeAtStartOfDay(dateTime));

@@ -22,10 +22,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,6 +47,70 @@ public class DateTimeFormatUtils {
     private static final DateTimeFormatter DATE_TIME_FORMATTER_EN = DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS);
     private static final DateTimeFormatter DATE_FORMATTER_EN      = DateTimeFormatter.ofPattern(YYYYMMDD);
     private static final DateTimeFormatter TIME_FORMATTER         = DateTimeFormatter.ofPattern(HH_MM_SS);
+
+    /**
+     * 将 {@link LocalDateTime} 按默认时区转换为 {@link Date}
+     *
+     * @param localDateTime 表示与时区无关的日期和时间信息，不直接对应时刻，需要通过时区转换
+     * @return Java 1.8 日期与时间
+     */
+    public static Date toDate(LocalDateTime localDateTime) {
+        return Date.from((localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+    }
+
+    /**
+     * 将 {@link LocalDate} 按默认时区转换为 {@link Date}
+     *
+     * @param localDate 表示与时区无关的日期，只有日期信息，没有时间信息
+     * @return Java 1.8 日期与时间
+     */
+    public static Date toDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * 将 {@link ZonedDateTime} 按时区转换为 {@link Calendar}
+     *
+     * @param zonedDateTime 表示特定时区的日期和时间
+     * @return Java 1.8 以前的日历
+     */
+    public static Calendar toCalendar(ZonedDateTime zonedDateTime) {
+        TimeZone timeZone = TimeZone.getTimeZone(zonedDateTime.getZone());
+        Calendar calendar = Calendar.getInstance(timeZone);
+        calendar.setTimeInMillis(zonedDateTime.toInstant().toEpochMilli());
+        return calendar;
+    }
+
+    /**
+     * 将 {@link Date} 按默认时区转换为 {@link LocalDateTime}
+     *
+     * @param date Java 1.8 以前的日期
+     * @return 表示与时区无关的日期和时间信息，不直接对应时刻，需要通过时区转换
+     */
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    /**
+     * 将 {@link Date} 按默认时区转换为 {@link LocalDate}
+     *
+     * @param date Java 1.8 以前的日期
+     * @return 表示与时区无关的日期，只有日期信息，没有时间信息
+     */
+    public static LocalDate toLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * 将 {@link ZonedDateTime} 按时区转换为 {@link Calendar}
+     *
+     * @param calendar Java 1.8 以前的日历
+     * @return 表示特定时区的日期和时间
+     */
+    public static ZonedDateTime toZonedDateTime(Calendar calendar) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(calendar.getTimeInMillis()), calendar.getTimeZone()
+                .toZoneId());
+    }
 
     /**
      * 转换日期为：yyyy-MM-dd HH:mm:ss
@@ -77,11 +142,8 @@ public class DateTimeFormatUtils {
         if (StringUtils.isBlank(date)) {
             return null;
         }
-        ZoneId zoneId = ZoneOffset.systemDefault();
         LocalDateTime localDateTime = LocalDateTime.parse(date, DATE_TIME_FORMATTER_CN);
-        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
-        Instant instant = zonedDateTime.toInstant();
-        return Date.from(instant);
+        return toDate(localDateTime);
     }
 
     /**
@@ -124,11 +186,8 @@ public class DateTimeFormatUtils {
         if (StringUtils.isBlank(date)) {
             return null;
         }
-        ZoneId zoneId = ZoneOffset.systemDefault();
         LocalDate localDate = LocalDate.parse(date, DATE_FORMATTER);
-        ZonedDateTime zonedDateTime = localDate.atStartOfDay(zoneId);
-        Instant instant = zonedDateTime.toInstant();
-        return Date.from(instant);
+        return toDate(localDate);
     }
 
     /**
@@ -171,11 +230,8 @@ public class DateTimeFormatUtils {
         if (StringUtils.isBlank(date)) {
             return null;
         }
-        ZoneId zoneId = ZoneOffset.systemDefault();
         LocalDateTime localDateTime = LocalDateTime.parse(date, DATE_TIME_FORMATTER_EN);
-        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
-        Instant instant = zonedDateTime.toInstant();
-        return Date.from(instant);
+        return toDate(localDateTime);
     }
 
     /**
@@ -228,11 +284,8 @@ public class DateTimeFormatUtils {
         if (StringUtils.isBlank(date)) {
             return null;
         }
-        ZoneId zoneId = ZoneOffset.systemDefault();
         LocalDate localDateTime = LocalDate.parse(date, DATE_FORMATTER_EN);
-        ZonedDateTime zonedDateTime = localDateTime.atStartOfDay().atZone(zoneId);
-        Instant instant = zonedDateTime.toInstant();
-        return Date.from(instant);
+        return toDate(localDateTime);
     }
 
     /**
@@ -308,8 +361,7 @@ public class DateTimeFormatUtils {
      */
     public static Date withTimeAtStartOfDay(Date date) {
         LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay();
-        Instant instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-        return Date.from(instant);
+        return toDate(localDateTime);
     }
 
     /**

@@ -52,7 +52,7 @@ public class DateTimeFormatUtils {
      * 将 {@link LocalDateTime} 按默认时区转换为 {@link Date}
      *
      * @param localDateTime 表示与时区无关的日期和时间信息，不直接对应时刻，需要通过时区转换
-     * @return Java 1.8 日期与时间
+     * @return Java 1.8 以前的日期
      */
     public static Date toDate(LocalDateTime localDateTime) {
         return Date.from((localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
@@ -62,10 +62,31 @@ public class DateTimeFormatUtils {
      * 将 {@link LocalDate} 按默认时区转换为 {@link Date}
      *
      * @param localDate 表示与时区无关的日期，只有日期信息，没有时间信息
-     * @return Java 1.8 日期与时间
+     * @return Java 1.8 以前的日期
      */
     public static Date toDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * 将 {@link LocalDateTime} 按默认时区转换为 {@link Calendar}
+     *
+     * @param localDateTime 表示与时区无关的日期和时间信息，不直接对应时刻，需要通过时区转换
+     * @return Java 1.8 以前的日历
+     */
+    public static Calendar toCalendar(LocalDateTime localDateTime) {
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        return toCalendar(zonedDateTime);
+    }
+
+    /**
+     * 将 {@link LocalDate} 按默认时区转换为 {@link Calendar}
+     *
+     * @param localDate 表示与时区无关的日期，只有日期信息，没有时间信息
+     * @return Java 1.8 以前的日历
+     */
+    public static Calendar toCalendar(LocalDate localDate) {
+        return toCalendar(localDate.atStartOfDay());
     }
 
     /**
@@ -380,7 +401,7 @@ public class DateTimeFormatUtils {
     }
 
     /**
-     * 获取日期当天的 23:59:59 Example:
+     * 获取日期当天的 23:59:59.999 Example:
      *
      * <pre>
      * '2017-03-23 16:20:47' -&gt; '2017-03-23 23:59:59.999'
@@ -395,7 +416,7 @@ public class DateTimeFormatUtils {
     }
 
     /**
-     * 获取日期当天的 23:59:59 Example:
+     * 获取日期当天的 23:59:59.999 Example:
      *
      * <pre>
      * '2017-03-23 16:20:47' -&gt; '2017-03-23 23:59:59.999'
@@ -406,6 +427,36 @@ public class DateTimeFormatUtils {
      */
     public static Date withTimeAtEndOfDay(LocalDateTime date) {
         Instant instant = date.atZone(ZoneId.systemDefault()).with(LocalTime.MAX).toInstant();
+        return Date.from(instant);
+    }
+
+    /**
+     * 获取日期当天的 23:59:59.000 Example:
+     *
+     * <pre>
+     * '2017-03-23 16:20:47' -&gt; '2017-03-23 23:59:59.000'
+     * </pre>
+     *
+     * @param date 日期参数
+     * @return 日期当天的 23:59:59.000
+     */
+    public static Date withTimeAtEndOfDayAndRemoveNano(LocalDateTime date) {
+        Instant instant = date.atZone(ZoneId.systemDefault()).with(LocalTime.MAX).withNano(0).toInstant();
+        return Date.from(instant);
+    }
+
+    /**
+     * 获取日期当天的 23:59:59.000 Example:
+     *
+     * <pre>
+     * '2017-03-23 16:20:47' -&gt; '2017-03-23 23:59:59.000'
+     * </pre>
+     *
+     * @param date 日期参数
+     * @return 日期当天的 23:59:59.000
+     */
+    public static Date withTimeAtEndOfDayAndRemoveNano(Date date) {
+        Instant instant = date.toInstant().atZone(ZoneId.systemDefault()).with(LocalTime.MAX).withNano(0).toInstant();
         return Date.from(instant);
     }
 

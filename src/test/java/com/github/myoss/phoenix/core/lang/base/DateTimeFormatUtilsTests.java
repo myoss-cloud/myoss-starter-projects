@@ -52,6 +52,16 @@ public class DateTimeFormatUtilsTests {
         ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
         Calendar calendar = DateTimeFormatUtils.toCalendar(zonedDateTime);
         Assert.assertEquals(zonedDateTime, DateTimeFormatUtils.toZonedDateTime(calendar));
+        Assert.assertEquals(calendar, DateTimeFormatUtils.toCalendar(now));
+    }
+
+    @Test
+    public void autoConvertTest2() {
+        LocalDateTime now = LocalDateTime.now();
+        Date date1 = DateTimeFormatUtils.toDate(LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth()));
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(date1);
+        Assert.assertEquals(instance, DateTimeFormatUtils.toCalendar(now.toLocalDate()));
     }
 
     /**
@@ -280,6 +290,20 @@ public class DateTimeFormatUtilsTests {
 
         Assert.assertEquals(exceptedDte, DateTimeFormatUtils.withTimeAtEndOfDay(date));
         Assert.assertEquals(exceptedDte, DateTimeFormatUtils.withTimeAtEndOfDay(dateTime));
+        Assert.assertEquals("2017-03-23 16:20:47", DateTimeFormatUtils.print2DateTimeCN(date));
+        Assert.assertEquals("2017-03-23 23:59:59", DateTimeFormatUtils.print2DateTimeCN(exceptedDte));
+    }
+
+    @Test
+    public void withTimeAtEndOfDayAndRemoveNanoTest1() {
+        LocalDateTime dateTime = LocalDateTime.of(2017, 3, 23, 16, 20, 47);
+        LocalDateTime excepted = LocalDateTime.of(2017, 3, 23, 23, 59, 59, 0);
+
+        Date date = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        Date exceptedDte = Date.from(excepted.atZone(ZoneId.systemDefault()).toInstant());
+
+        Assert.assertEquals(exceptedDte, DateTimeFormatUtils.withTimeAtEndOfDayAndRemoveNano(date));
+        Assert.assertEquals(exceptedDte, DateTimeFormatUtils.withTimeAtEndOfDayAndRemoveNano(dateTime));
         Assert.assertEquals("2017-03-23 16:20:47", DateTimeFormatUtils.print2DateTimeCN(date));
         Assert.assertEquals("2017-03-23 23:59:59", DateTimeFormatUtils.print2DateTimeCN(exceptedDte));
     }

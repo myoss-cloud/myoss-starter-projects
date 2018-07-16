@@ -181,13 +181,13 @@ public class NameStyleTests {
         String case6 = NameStyle.PASCAL_CASE.transform("snakecase");
         assertEquals("Snakecase", case6);
 
-        String case7 = NameStyle.CAMEL_CASE.transform("_snakeCase");
+        String case7 = NameStyle.PASCAL_CASE.transform("_snakeCase");
         assertEquals("_SnakeCase", case7);
 
-        String case8 = NameStyle.CAMEL_CASE.transform("_SnakeCase");
+        String case8 = NameStyle.PASCAL_CASE.transform("_SnakeCase");
         assertEquals("_SnakeCase", case8);
 
-        String case9 = NameStyle.CAMEL_CASE.transform("_snakecase");
+        String case9 = NameStyle.PASCAL_CASE.transform("_snakecase");
         assertEquals("_Snakecase", case9);
     }
 

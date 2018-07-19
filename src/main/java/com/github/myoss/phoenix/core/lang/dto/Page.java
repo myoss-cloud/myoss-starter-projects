@@ -33,6 +33,7 @@ import lombok.experimental.Accessors;
  *
  * @author Jerry.Chen
  * @since 2018年5月9日 下午3:50:31
+ * @param <T> 泛型
  */
 @Accessors(chain = true)
 @Data
@@ -144,17 +145,21 @@ public class Page<T> implements Serializable {
     }
 
     /**
+     * 获取每页条数
+     *
      * @return 每页条数
      */
     public int getPageSize() {
-        return pageSize < 1 ? Page.DEFAULT_PAGE_SIZE : pageSize;
+        return (pageSize < 1 ? Page.DEFAULT_PAGE_SIZE : pageSize);
     }
 
     /**
+     * 获取当前是第几页
+     *
      * @return 第几页，这里是从第<code>1</code>页开始（在MySQL中是从0开始，使用的时候需要减一）
      */
     public int getPageNum() {
-        return pageNum < 1 ? DEFAULT_PAGE_NUM : pageNum;
+        return (pageNum < 1 ? DEFAULT_PAGE_NUM : pageNum);
     }
 
     /**
@@ -177,7 +182,7 @@ public class Page<T> implements Serializable {
      * @return 扩展信息中的value
      */
     public Object getExtraInfo(String key) {
-        return this.extraInfo == null ? null : this.extraInfo.get(key);
+        return (this.extraInfo != null ? this.extraInfo.get(key) : null);
     }
 
     @Override

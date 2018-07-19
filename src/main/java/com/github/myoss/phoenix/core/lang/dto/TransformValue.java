@@ -102,8 +102,11 @@ public class TransformValue {
     public static <T> Page<T> copyAllInfo(Page<T> source, Page<T> target) {
         target.setSuccess(source.isSuccess()).setErrorCode(source.getErrorCode()).setErrorMsg(source.getErrorMsg());
         target.setValue(source.getValue()).setExtraInfo(source.getExtraInfo());
-        target.setPageSize(source.getPageSize()).setPageNum(source.getPageNum()).setTotalCount(source.getTotalCount())
-                .setParam(source.getParam()).setSort(source.getSort());
+        target.setPageSize(source.getPageSize())
+                .setPageNum(source.getPageNum())
+                .setTotalCount(source.getTotalCount())
+                .setParam(source.getParam())
+                .setSort(source.getSort());
         return target;
     }
 

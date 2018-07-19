@@ -44,15 +44,29 @@ import lombok.Getter;
  * @since 2018年5月4日 下午6:43:13
  */
 public class JacksonMapper {
-    public static TypeReference<SortedMap<String, String>> SORTED_MAP_S2S_TYPE_REFERENCE = new TypeReference<SortedMap<String, String>>() {
-                                                                                         };
+    /**
+     * {@link SortedMap} 类型转换器
+     */
+    public static TypeReference<SortedMap<String, String>> SORTED_MAP_S2S_TYPE_REFERENCE;
+    static {
+        SORTED_MAP_S2S_TYPE_REFERENCE = new TypeReference<SortedMap<String, String>>() {
+        };
+    }
     @Getter
-    private ObjectMapper                                   mapper;
+    private ObjectMapper mapper;
 
+    /**
+     * 创建 Jackson Mapper 对象
+     */
     public JacksonMapper() {
         this(null);
     }
 
+    /**
+     * 创建 Jackson Mapper 对象
+     *
+     * @param include 属性的风格
+     */
     public JacksonMapper(Include include) {
         mapper = new ObjectMapper();
         // 设置输出时包含属性的风格

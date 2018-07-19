@@ -42,8 +42,8 @@ public class AopLogMethodRegistrar implements ImportBeanDefinitionRegistrar, Res
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        AnnotationAttributes attributes = AnnotationAttributes.fromMap(importingClassMetadata
-                .getAnnotationAttributes(EnableAopLogMethod.class.getName()));
+        AnnotationAttributes attributes = AnnotationAttributes
+                .fromMap(importingClassMetadata.getAnnotationAttributes(EnableAopLogMethod.class.getName()));
         ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
         scanner.resetFilters(false);
         scanner.setResourceLoader(this.resourceLoader);

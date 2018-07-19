@@ -50,10 +50,9 @@ public enum Direction {
         try {
             return Direction.valueOf(value.toUpperCase(Locale.US));
         } catch (Exception e) {
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Invalid value '%s' for orders given! Has to be either 'desc' or 'asc' (case insensitive).",
-                            value), e);
+            throw new IllegalArgumentException(String.format(
+                    "Invalid value '%s' for orders given! Has to be either 'desc' or 'asc' (case insensitive).", value),
+                    e);
         }
     }
 
@@ -66,7 +65,7 @@ public enum Direction {
      */
     public static Direction fromStringOrNull(String value) {
         try {
-            return value == null ? null : fromString(value);
+            return (value != null ? fromString(value) : null);
         } catch (IllegalArgumentException e) {
             log.warn("IllegalArgumentException", e);
             return null;

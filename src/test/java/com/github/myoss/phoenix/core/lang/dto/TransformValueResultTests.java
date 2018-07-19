@@ -1,5 +1,5 @@
 /*
- * Copyright 2invalidValue8-2invalidValue8 https://github.com/myoss
+ * Copyright 2018-2018 https://github.com/myoss
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import org.junit.Test;
  */
 public class TransformValueResultTests {
     @Test
-    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, InstantiationException {
+    public void testConstructorIsPrivate()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<TransformValue> constructor = TransformValue.class.getDeclaredConstructor();
         Assert.assertTrue(Modifier.isPublic(constructor.getModifiers()));
         constructor.setAccessible(true);

@@ -28,6 +28,7 @@ import lombok.Data;
 /**
  * 封装字典选项值
  *
+ * @param <T> 泛型
  * @author Jerry.Chen
  * @since 2018年5月9日 下午4:33:50
  */
@@ -75,7 +76,7 @@ public class DictItem<T extends Serializable> implements Serializable {
      * @return 扩展信息中的value
      */
     public Object getExtraInfo(String key) {
-        return this.extraInfo == null ? null : this.extraInfo.get(key);
+        return (this.extraInfo != null ? this.extraInfo.get(key) : null);
     }
 
     @Override

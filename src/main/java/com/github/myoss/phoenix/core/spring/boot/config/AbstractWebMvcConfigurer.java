@@ -43,6 +43,8 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
     private FastJsonConfig defaultFastJsonConfig;
 
     /**
+     * 增加自定义的 HttpMessageConverter
+     *
      * @see WebMvcConfigurationSupport#requestMappingHandlerAdapter
      * @see WebMvcConfigurationSupport#getMessageConverters
      * @see FastJsonAutoConfiguration#fastJsonHttpMessageConverter(FastJsonConfig)

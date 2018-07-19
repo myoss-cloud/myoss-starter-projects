@@ -23,7 +23,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -39,6 +38,7 @@ import org.junit.Test;
 public class DateTimeFormatUtilsTests {
 
     @Test
+    @SuppressWarnings("checkstyle:RegexpSinglelineJava")
     public void autoConvertTest1() {
         LocalDateTime now = LocalDateTime.now();
         Date date1 = DateTimeFormatUtils.toDate(now);
@@ -50,16 +50,17 @@ public class DateTimeFormatUtilsTests {
         Assert.assertEquals(localDate, DateTimeFormatUtils.toLocalDate(date1));
 
         ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
-        Calendar calendar = DateTimeFormatUtils.toCalendar(zonedDateTime);
+        java.util.Calendar calendar = DateTimeFormatUtils.toCalendar(zonedDateTime);
         Assert.assertEquals(zonedDateTime, DateTimeFormatUtils.toZonedDateTime(calendar));
         Assert.assertEquals(calendar, DateTimeFormatUtils.toCalendar(now));
     }
 
     @Test
+    @SuppressWarnings("checkstyle:RegexpSinglelineJava")
     public void autoConvertTest2() {
         LocalDateTime now = LocalDateTime.now();
         Date date1 = DateTimeFormatUtils.toDate(LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth()));
-        Calendar instance = Calendar.getInstance();
+        java.util.Calendar instance = java.util.Calendar.getInstance();
         instance.setTime(date1);
         Assert.assertEquals(instance, DateTimeFormatUtils.toCalendar(now.toLocalDate()));
     }
@@ -80,8 +81,9 @@ public class DateTimeFormatUtilsTests {
 
     @Test
     public void print2DateTimeCNTest1() throws IllegalAccessException {
-        DateTimeFormatter dateTimeFormatterCn = (DateTimeFormatter) FieldUtils.getField(DateTimeFormatUtils.class,
-                "DATE_TIME_FORMATTER_CN", true).get(DateTimeFormatUtils.class);
+        DateTimeFormatter dateTimeFormatterCn = (DateTimeFormatter) FieldUtils
+                .getField(DateTimeFormatUtils.class, "DATE_TIME_FORMATTER_CN", true)
+                .get(DateTimeFormatUtils.class);
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 8, 8, 8, 8);
         Assert.assertEquals("2016-08-08 08:08:08", dateTimeFormatterCn.format(dateTime));
     }
@@ -193,13 +195,13 @@ public class DateTimeFormatUtilsTests {
 
         Date targetEffectiveTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-06 12:00:00");
         Date targetExpiryTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-08 12:00:00");
-        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
-                targetEffectiveTime, targetExpiryTime));
-        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(
-                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
-                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
+        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime, targetEffectiveTime,
+                targetExpiryTime));
+        Assert.assertTrue(
+                DateTimeFormatUtils.checkDateTimeOverlap(DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -209,13 +211,13 @@ public class DateTimeFormatUtilsTests {
 
         Date targetEffectiveTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-01 12:00:00");
         Date targetExpiryTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-05 12:00:00");
-        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
-                targetEffectiveTime, targetExpiryTime));
-        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(
-                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
-                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
+        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime, targetEffectiveTime,
+                targetExpiryTime));
+        Assert.assertTrue(
+                DateTimeFormatUtils.checkDateTimeOverlap(DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -227,11 +229,11 @@ public class DateTimeFormatUtilsTests {
         Date targetExpiryTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-05 11:59:59");
         Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
-        Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(
-                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
-                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
+        Assert.assertFalse(
+                DateTimeFormatUtils.checkDateTimeOverlap(DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -241,13 +243,13 @@ public class DateTimeFormatUtilsTests {
 
         Date targetEffectiveTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-10 12:00:00");
         Date targetExpiryTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-15 11:59:59");
-        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
-                targetEffectiveTime, targetExpiryTime));
-        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(
-                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
-                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
+        Assert.assertTrue(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime, targetEffectiveTime,
+                targetExpiryTime));
+        Assert.assertTrue(
+                DateTimeFormatUtils.checkDateTimeOverlap(DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test
@@ -259,11 +261,11 @@ public class DateTimeFormatUtilsTests {
         Date targetExpiryTime = DateTimeFormatUtils.parse2DateTimeCN("2017-03-15 11:59:59");
         Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(srcEffectiveTime, srcExpiryTime,
                 targetEffectiveTime, targetExpiryTime));
-        Assert.assertFalse(DateTimeFormatUtils.checkDateTimeOverlap(
-                DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
-                DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
-                DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
+        Assert.assertFalse(
+                DateTimeFormatUtils.checkDateTimeOverlap(DateTimeFormatUtils.toLocalDateTime(srcEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(srcExpiryTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetEffectiveTime),
+                        DateTimeFormatUtils.toLocalDateTime(targetExpiryTime)));
     }
 
     @Test

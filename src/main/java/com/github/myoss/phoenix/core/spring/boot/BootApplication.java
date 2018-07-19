@@ -55,8 +55,8 @@ public class BootApplication {
      * @return 部署的默认环境的值
      */
     public static String setStartDeployEnv(Logger logger, String deployEnvValue) {
-        String deployEnv = StringUtils.isNotBlank(deployEnvValue) ? deployEnvValue : StringUtils.defaultIfBlank(
-                System.getProperty(DEPLOY_ENV), System.getenv(DEPLOY_ENV));
+        String deployEnv = (StringUtils.isNotBlank(deployEnvValue) ? deployEnvValue
+                : StringUtils.defaultIfBlank(System.getProperty(DEPLOY_ENV), System.getenv(DEPLOY_ENV)));
         logger.info("Starting application, DEPLOY_ENV: {}", deployEnv);
         if (StringUtils.isBlank(deployEnv)) {
             // 设置部署的默认环境为：dev（即本机开发）

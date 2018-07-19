@@ -44,7 +44,7 @@ public class FastJsonUtils {
      */
     public static JSONObject parseObject(String jsonString) {
         JSONObject result = JSON.parseObject(jsonString);
-        return result == null ? new JSONObject() : result;
+        return (result != null ? result : new JSONObject());
     }
 
     /**
@@ -55,7 +55,7 @@ public class FastJsonUtils {
      */
     public static JSONArray parseArray(String jsonString) {
         JSONArray result = JSON.parseArray(jsonString);
-        return result == null ? new JSONArray() : result;
+        return (result != null ? result : new JSONArray());
     }
 
     /**
@@ -79,6 +79,6 @@ public class FastJsonUtils {
      */
     public static JSONObject getJSONObject(JSONObject source, String key) {
         JSONObject result = source.getJSONObject(key);
-        return result == null ? new JSONObject() : result;
+        return (result != null ? result : new JSONObject());
     }
 }

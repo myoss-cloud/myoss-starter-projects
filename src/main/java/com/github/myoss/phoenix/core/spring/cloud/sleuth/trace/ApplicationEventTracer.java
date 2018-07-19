@@ -115,7 +115,7 @@ public class ApplicationEventTracer {
      */
     public static String getSpanId() {
         String spanId = MDC.get(LEGACY_SPAN_ID_NAME);
-        return spanId != null ? spanId : MDC.get(SPAN_ID_NAME);
+        return (spanId != null ? spanId : MDC.get(SPAN_ID_NAME));
     }
 
     /**
@@ -131,6 +131,6 @@ public class ApplicationEventTracer {
      */
     public static String getTraceId() {
         String traceId = MDC.get(LEGACY_TRACE_ID_NAME);
-        return traceId != null ? traceId : MDC.get(TRACE_ID_NAME);
+        return (traceId != null ? traceId : MDC.get(TRACE_ID_NAME));
     }
 }

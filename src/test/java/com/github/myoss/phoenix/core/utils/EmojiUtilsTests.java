@@ -44,7 +44,8 @@ public class EmojiUtilsTests {
 
         // 将 emoji 表情字符中的"单\"转换为"双\\"
         String addBackslashUnicode = Pattern.compile("(\\\\u[ed][0-9a-f]{3})", Pattern.CASE_INSENSITIVE)
-                .matcher(unicode).replaceAll("\\\\$0");
+                .matcher(unicode)
+                .replaceAll("\\\\$0");
         log.info(addBackslashUnicode);
 
         // 将unicode转换为字符串

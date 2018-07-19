@@ -23,6 +23,7 @@ package com.github.myoss.phoenix.core.lang.concurrent;
  * @author Jerry.Chen
  * @since 2018年5月9日 下午5:18:39
  * @see java.util.concurrent.Callable
+ * @param <V> 泛型
  */
 @FunctionalInterface
 public interface CallableFunc<V> {

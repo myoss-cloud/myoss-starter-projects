@@ -29,11 +29,11 @@ import com.github.myoss.phoenix.core.lang.serializer.Serialization;
 public class StringSerialization implements Serialization<String> {
     @Override
     public byte[] serialize(String s) {
-        return s == null ? null : s.getBytes(PhoenixConstants.DEFAULT_CHARSET);
+        return (s != null ? s.getBytes(PhoenixConstants.DEFAULT_CHARSET) : null);
     }
 
     @Override
     public String deserialize(byte[] bytes) {
-        return bytes == null ? null : new String(bytes, PhoenixConstants.DEFAULT_CHARSET);
+        return (bytes != null ? new String(bytes, PhoenixConstants.DEFAULT_CHARSET) : null);
     }
 }

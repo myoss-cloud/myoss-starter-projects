@@ -27,10 +27,28 @@ import org.springframework.cache.support.NullValue;
  * @since 2018年5月23日 上午1:06:17
  */
 public class CaffeineCacheWrap extends org.springframework.cache.caffeine.CaffeineCache {
+    /**
+     * Create a {@link com.github.benmanes.caffeine.cache.Cache} instance with
+     * the specified name and the given internal
+     * {@link com.github.benmanes.caffeine.cache.Cache} to use.
+     *
+     * @param name the name of the cache
+     * @param cache the backing Caffeine Cache instance
+     */
     public CaffeineCacheWrap(String name, com.github.benmanes.caffeine.cache.Cache<Object, Object> cache) {
         super(name, cache);
     }
 
+    /**
+     * Create a {@link com.github.benmanes.caffeine.cache.Cache} instance with
+     * the specified name and the given internal
+     * {@link com.github.benmanes.caffeine.cache.Cache} to use.
+     *
+     * @param name the name of the cache
+     * @param cache the backing Caffeine Cache instance
+     * @param allowNullValues whether to accept and convert {@code null} values
+     *            for this cache
+     */
     public CaffeineCacheWrap(String name, com.github.benmanes.caffeine.cache.Cache<Object, Object> cache,
                              boolean allowNullValues) {
         super(name, cache, allowNullValues);

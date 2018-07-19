@@ -58,7 +58,7 @@ public class IdCardUtils {
      * 每位加权因子
      */
     private static final int[]                         POWER               = { 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10,
-            5, 8, 4, 2                                                    };
+            5, 8, 4, 2 };
 
     /**
      * 最低年限
@@ -83,7 +83,7 @@ public class IdCardUtils {
      * 验证澳门身份证号码正则表达式，据说这个正则表达式更严谨
      */
     public static final Pattern                        MO_CARD_PATTERN     = Pattern
-                                                                                   .compile("^[1|5|7][0-9]{6}(\\(?[0-9]\\)?)$");
+            .compile("^[1|5|7][0-9]{6}(\\(?[0-9]\\)?)$");
 
     /**
      * 性别：男性
@@ -100,25 +100,83 @@ public class IdCardUtils {
 
     static {
         Builder<String, String> cityBuilder = ImmutableMap.builder();
-        cityBuilder.put("11", "北京市").put("12", "天津市").put("13", "河北省").put("14", "山西省").put("15", "内蒙古自治区")
-                .put("21", "辽宁省").put("22", "吉林省").put("23", "黑龙江省").put("31", "上海市").put("32", "江苏省").put("33", "浙江省")
-                .put("34", "安徽省").put("35", "福建省").put("36", "江西省").put("37", "山东省").put("41", "河南省").put("42", "湖北省")
-                .put("43", "湖南省").put("44", "广东省").put("45", "广西壮族自治区").put("46", "海南省").put("50", "重庆市")
-                .put("51", "四川省").put("52", "贵州省").put("53", "云南省").put("54", "西藏自治区").put("61", "陕西省")
-                .put("62", "甘肃省").put("63", "青海省").put("64", "宁夏回族自治区").put("65", "新疆维吾尔族自治区").put("71", "台湾")
-                .put("81", "香港").put("82", "澳门").put("91", "国外");
+        cityBuilder.put("11", "北京市")
+                .put("12", "天津市")
+                .put("13", "河北省")
+                .put("14", "山西省")
+                .put("15", "内蒙古自治区")
+                .put("21", "辽宁省")
+                .put("22", "吉林省")
+                .put("23", "黑龙江省")
+                .put("31", "上海市")
+                .put("32", "江苏省")
+                .put("33", "浙江省")
+                .put("34", "安徽省")
+                .put("35", "福建省")
+                .put("36", "江西省")
+                .put("37", "山东省")
+                .put("41", "河南省")
+                .put("42", "湖北省")
+                .put("43", "湖南省")
+                .put("44", "广东省")
+                .put("45", "广西壮族自治区")
+                .put("46", "海南省")
+                .put("50", "重庆市")
+                .put("51", "四川省")
+                .put("52", "贵州省")
+                .put("53", "云南省")
+                .put("54", "西藏自治区")
+                .put("61", "陕西省")
+                .put("62", "甘肃省")
+                .put("63", "青海省")
+                .put("64", "宁夏回族自治区")
+                .put("65", "新疆维吾尔族自治区")
+                .put("71", "台湾")
+                .put("81", "香港")
+                .put("82", "澳门")
+                .put("91", "国外");
         CITY_CODE = cityBuilder.build();
 
         Builder<String, Integer> twFirstCodeBuilder = ImmutableMap.builder();
-        twFirstCodeBuilder.put("A", 10).put("B", 11).put("C", 12).put("D", 13).put("E", 14).put("F", 15).put("G", 16)
-                .put("H", 17).put("J", 18).put("K", 19).put("L", 20).put("M", 21).put("N", 22).put("P", 23)
-                .put("Q", 24).put("R", 25).put("S", 26).put("T", 27).put("U", 28).put("V", 29).put("X", 30)
-                .put("Y", 31).put("W", 32).put("Z", 33).put("I", 34).put("O", 35);
+        twFirstCodeBuilder.put("A", 10)
+                .put("B", 11)
+                .put("C", 12)
+                .put("D", 13)
+                .put("E", 14)
+                .put("F", 15)
+                .put("G", 16)
+                .put("H", 17)
+                .put("J", 18)
+                .put("K", 19)
+                .put("L", 20)
+                .put("M", 21)
+                .put("N", 22)
+                .put("P", 23)
+                .put("Q", 24)
+                .put("R", 25)
+                .put("S", 26)
+                .put("T", 27)
+                .put("U", 28)
+                .put("V", 29)
+                .put("X", 30)
+                .put("Y", 31)
+                .put("W", 32)
+                .put("Z", 33)
+                .put("I", 34)
+                .put("O", 35);
         TW_FIRST_CODE = twFirstCodeBuilder.build();
 
         Builder<String, Integer> hkFirstCodeBuilder = ImmutableMap.builder();
-        hkFirstCodeBuilder.put("A", 1).put("B", 2).put("C", 3).put("R", 18).put("U", 21).put("Z", 26).put("X", 24)
-                .put("W", 23).put("O", 15).put("N", 14);
+        hkFirstCodeBuilder.put("A", 1)
+                .put("B", 2)
+                .put("C", 3)
+                .put("R", 18)
+                .put("U", 21)
+                .put("Z", 26)
+                .put("X", 24)
+                .put("W", 23)
+                .put("O", 15)
+                .put("N", 14);
         HK_FIRST_CODE = hkFirstCodeBuilder.build();
     }
 
@@ -318,17 +376,17 @@ public class IdCardUtils {
                     info[2] = "false";
                     return info;
             }
-            info[2] = validateTWCard(idCard) ? "true" : "false";
+            info[2] = (validateTWCard(idCard) ? "true" : "false");
         } else if (idCard.matches("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$")) {
             // 澳门
             info[0] = "澳门";
             info[1] = UN_KNOW;
-            info[2] = validateMOCard(idCard) ? "true" : "false";
+            info[2] = (validateMOCard(idCard) ? "true" : "false");
         } else if (idCard.matches("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")) {
             // 香港
             info[0] = "香港";
             info[1] = UN_KNOW;
-            info[2] = validateHKCard(idCard) ? "true" : "false";
+            info[2] = (validateHKCard(idCard) ? "true" : "false");
         } else {
             return info;
         }

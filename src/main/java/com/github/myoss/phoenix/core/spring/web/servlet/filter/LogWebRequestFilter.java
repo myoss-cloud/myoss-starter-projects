@@ -108,21 +108,69 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j(topic = "WebRequest")
 public class LogWebRequestFilter extends OncePerRequestFilter {
+    /**
+     * HTTP request start time
+     */
     public static final String MDC_START_TIME                    = "startTime";
+    /**
+     * HTTP cost time
+     */
     public static final String MDC_COST_TIME                     = "costTime";
+    /**
+     * HTTP response status
+     */
     public static final String MDC_STATUS                        = "status";
+    /**
+     * HTTP request method
+     */
     public static final String MDC_METHOD                        = "method";
+    /**
+     * 请求服务器域名+接口地址信息
+     */
     public static final String MDC_REQUEST_SERVER_INFO           = "requestServerInfo";
+    /**
+     * 取得当前的request URL，不包括query string
+     */
     public static final String MDC_REQUEST_URL                   = "requestURL";
+    /**
+     * 取得当前的request URL，包括query string
+     */
     public static final String MDC_REQUEST_URL_WITH_QUERY_STRING = "requestURLWithQueryString";
+    /**
+     * 不包括host信息的URL
+     */
     public static final String MDC_REQUEST_URI                   = "requestURI";
+    /**
+     * 不包括host信息的URL，包括query string
+     */
     public static final String MDC_REQUEST_URI_WITH_QUERY_STRING = "requestURIWithQueryString";
+    /**
+     * query string
+     */
     public static final String MDC_QUERY_STRING                  = "queryString";
+    /**
+     * 客户端的ip地址
+     */
     public static final String MDC_REMOTE_ADDR                   = "remoteAddr";
+    /**
+     * 客户端的主机名
+     */
     public static final String MDC_REMOTE_HOST                   = "remoteHost";
+    /**
+     * user agent
+     */
     public static final String MDC_USER_AGENT                    = "userAgent";
+    /**
+     * referrer
+     */
     public static final String MDC_REFERRER                      = "referrer";
+    /**
+     * cookies
+     */
     public static final String MDC_COOKIES                       = "cookies";
+    /**
+     * cookies key prefix
+     */
     public static final String MDC_COOKIE_PREFIX                 = "cookie.";
     private boolean            logOnFilter                       = false;
     private boolean            putRequestInfoToMDC               = false;
@@ -130,6 +178,8 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     private String             spanIdName;
 
     /**
+     * 记录web请求的日志信息
+     *
      * @param logOnFilter 是否在 {@link #doFilterInternal} 输出 log
      *            日志，用于当前过滤器（默认值：false）
      * @param putRequestInfoToMDC 是否将请求的信息放入MDC中，默认只放 {@link #MDC_START_TIME}、
@@ -140,6 +190,8 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     }
 
     /**
+     * 记录web请求的日志信息
+     *
      * @param logOnFilter 是否在 {@link #doFilterInternal} 输出 log
      *            日志，用于当前过滤器（默认值：false）
      * @param putRequestInfoToMDC 是否将请求的信息放入MDC中，默认只放 {@link #MDC_START_TIME}、
@@ -149,11 +201,12 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
      * @param spanIdName {@link PhoenixConstants#LEGACY_SPAN_ID_NAME}
      *            输出调用链的SpanId到response header中
      */
-    public LogWebRequestFilter(boolean logOnFilter, boolean putRequestInfoToMDC, String traceIdName, String spanIdName) {
+    public LogWebRequestFilter(boolean logOnFilter, boolean putRequestInfoToMDC, String traceIdName,
+                               String spanIdName) {
         this.logOnFilter = logOnFilter;
         this.putRequestInfoToMDC = putRequestInfoToMDC;
-        this.traceIdName = StringUtils.isBlank(traceIdName) ? PhoenixConstants.LEGACY_TRACE_ID_NAME : traceIdName;
-        this.spanIdName = StringUtils.isBlank(spanIdName) ? PhoenixConstants.LEGACY_SPAN_ID_NAME : spanIdName;
+        this.traceIdName = (StringUtils.isNotBlank(traceIdName) ? traceIdName : PhoenixConstants.LEGACY_TRACE_ID_NAME);
+        this.spanIdName = (StringUtils.isNotBlank(spanIdName) ? spanIdName : PhoenixConstants.LEGACY_SPAN_ID_NAME);
     }
 
     @Override
@@ -230,7 +283,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
 
         // request URI：不包括host信息的URL
         String requestURI = request.getRequestURI();
-        String requestURIWithQueryString = queryString == null ? requestURI : requestURI + "?" + queryString;
+        String requestURIWithQueryString = (queryString != null ? requestURI + "?" + queryString : requestURI);
 
         putMDC(mdc, MDC_REQUEST_URI, requestURI);
         putMDC(mdc, MDC_REQUEST_URI_WITH_QUERY_STRING, requestURIWithQueryString);
@@ -266,6 +319,8 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     /**
      * 取得当前的request URL，包括query string。
      *
+     * @param requestURL request URL
+     * @param queryString query string
      * @return 当前请求的request URL
      */
     private String getRequestURL(StringBuilder requestURL, String queryString) {
@@ -282,6 +337,10 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
 
     /**
      * 设置mdc，如果value为空，则不置入。
+     *
+     * @param mdc {@link MDC} 属性值
+     * @param key set key
+     * @param value set value
      */
     private void putMDC(Map<String, String> mdc, String key, String value) {
         if (value != null) {

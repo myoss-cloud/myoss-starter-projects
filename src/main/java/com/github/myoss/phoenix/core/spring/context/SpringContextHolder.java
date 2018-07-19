@@ -50,7 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 @Scope(scopeName = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SpringContextHolder {
-    private static ApplicationContext applicationContext = null;
+    private static ApplicationContext APPLICATION_CONTEXT = null;
 
     /**
      * 使用 {@link ApplicationReadyEvent} 事件获取 ApplicationContext 注入到静态变量中
@@ -59,7 +59,7 @@ public class SpringContextHolder {
      */
     @EventListener
     public static void setApplicationContext(ApplicationReadyEvent event) {
-        applicationContext = event.getApplicationContext();
+        APPLICATION_CONTEXT = event.getApplicationContext();
     }
 
     /**
@@ -69,7 +69,7 @@ public class SpringContextHolder {
      */
     public static ApplicationContext getApplicationContext() {
         assertContextInjected();
-        return applicationContext;
+        return APPLICATION_CONTEXT;
     }
 
     /**
@@ -82,7 +82,7 @@ public class SpringContextHolder {
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         assertContextInjected();
-        return (T) applicationContext.getBean(name);
+        return (T) APPLICATION_CONTEXT.getBean(name);
     }
 
     /**
@@ -95,7 +95,7 @@ public class SpringContextHolder {
      */
     public static <T> T getBean(String name, Class<T> requiredType) {
         assertContextInjected();
-        return (T) applicationContext.getBean(name, requiredType);
+        return (T) APPLICATION_CONTEXT.getBean(name, requiredType);
     }
 
     /**
@@ -107,7 +107,7 @@ public class SpringContextHolder {
      */
     public static <T> T getBean(Class<T> requiredType) {
         assertContextInjected();
-        return applicationContext.getBean(requiredType);
+        return APPLICATION_CONTEXT.getBean(requiredType);
     }
 
     /**
@@ -132,7 +132,7 @@ public class SpringContextHolder {
      */
     public static boolean containsBean(String name) {
         assertContextInjected();
-        return applicationContext.containsBean(name);
+        return APPLICATION_CONTEXT.containsBean(name);
     }
 
     /**
@@ -150,7 +150,7 @@ public class SpringContextHolder {
      */
     public static boolean containsBeanDefinition(String beanName) {
         assertContextInjected();
-        return applicationContext.containsBeanDefinition(beanName);
+        return APPLICATION_CONTEXT.containsBeanDefinition(beanName);
     }
 
     /**
@@ -166,13 +166,13 @@ public class SpringContextHolder {
      * @see org.springframework.beans.factory.BeanFactory#containsBean
      */
     public static boolean containsLocalBean(String name) {
-        return applicationContext.containsLocalBean(name);
+        return APPLICATION_CONTEXT.containsLocalBean(name);
     }
 
     /**
      * 检查applicationContext不为空.
      */
     private static void assertContextInjected() {
-        Objects.requireNonNull(applicationContext, "请检查，applicationContext属性未注入.");
+        Objects.requireNonNull(APPLICATION_CONTEXT, "请检查，applicationContext属性未注入.");
     }
 }

@@ -67,6 +67,11 @@ import okhttp3.OkHttpClient.Builder;
 public class RestTemplate4OkHttp3ClientAutoConfiguration {
     private final OkHttp3ConnectionPoolProperties properties;
 
+    /**
+     * 初始化 OkHttp3连接池属性配置
+     *
+     * @param properties OkHttp3连接池属性配置
+     */
     public RestTemplate4OkHttp3ClientAutoConfiguration(OkHttp3ConnectionPoolProperties properties) {
         this.properties = properties;
     }
@@ -138,7 +143,8 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
         OkHttpClient httpClient = builder.connectTimeout(properties.getConnectTimeout(), TimeUnit.MILLISECONDS)
                 .readTimeout(properties.getReadTimeout(), TimeUnit.MILLISECONDS)
                 .writeTimeout(properties.getWriteTimeout(), TimeUnit.MILLISECONDS)
-                .connectionPool(restTemplate4OkHttp3ConnectionPool).build();
+                .connectionPool(restTemplate4OkHttp3ConnectionPool)
+                .build();
 
         // httpClient连接配置，底层是配置RequestConfig
         OkHttp3ClientHttpRequestFactory clientHttpRequestFactory = new OkHttp3ClientHttpRequestFactory(httpClient);

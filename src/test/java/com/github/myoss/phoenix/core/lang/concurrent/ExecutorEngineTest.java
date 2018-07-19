@@ -36,6 +36,7 @@ import org.springframework.util.ClassUtils;
 
 import com.github.myoss.phoenix.core.exception.BizRuntimeException;
 import com.google.common.collect.Lists;
+
 import ch.qos.logback.classic.Level;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,10 +49,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExecutorEngineTest {
     @Rule
-    public OutputCapture output = new OutputCapture();
+    public OutputCapture     output  = new OutputCapture();
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private final Pattern pattern = Pattern.compile("\\s*|\t|\r|\n|\r\n");
+    public ExpectedException thrown  = ExpectedException.none();
+    private final Pattern    pattern = Pattern.compile("\\s*|\t|\r|\n|\r\n");
 
     @Test
     public void executeTest1() {
@@ -82,6 +83,7 @@ public class ExecutorEngineTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:Indentation")
     public void executeTest3() throws IllegalAccessException, InterruptedException {
         ExecutorEngine executorEngine = new ExecutorEngine(Executors.newFixedThreadPool(3));
         ch.qos.logback.classic.Logger executorEngineLogger = (ch.qos.logback.classic.Logger) FieldUtils
@@ -89,17 +91,20 @@ public class ExecutorEngineTest {
         executorEngineLogger.setLevel(Level.ALL);
         List<Integer> inputs = Lists.newArrayList(1, 2, 3);
         List<Integer> result = executorEngine.execute(inputs, input -> {
-            return Double.valueOf(Math.pow(input, 2)).intValue(); // 平方
+            // 平方
+            return Double.valueOf(Math.pow(input, 2)).intValue();
         }, (MergeUnit<Integer, List<Integer>>) params -> {
             ArrayList<Integer> integers = Lists.newArrayList(params);
-            Collections.sort(integers); // 排序
+            // 排序
+            Collections.sort(integers);
             return integers;
         });
         assertThat(result).isEqualTo(Lists.newArrayList(1, 4, 9));
         String printLog = this.output.toString();
         boolean flag = StringUtils.isBlank(pattern.matcher(printLog).replaceAll(""));
         int retry = 0;
-        while (flag) { // 跑多线程，这个日志获取有点延时...
+        while (flag) {
+            // 跑多线程，这个日志获取有点延时...
             printLog = this.output.toString();
             flag = StringUtils.isBlank(pattern.matcher(printLog).replaceAll(""));
             if (retry == 20) {
@@ -116,6 +121,7 @@ public class ExecutorEngineTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:Indentation")
     public void executeTest4() throws InterruptedException {
         ExecutorService delegate = Executors.newFixedThreadPool(3);
         ExecutorEngine executorEngine = new ExecutorEngine(delegate);
@@ -127,10 +133,12 @@ public class ExecutorEngineTest {
                 if (input == 2) {
                     throw new BizRuntimeException("ba la ba la");
                 }
-                return Double.valueOf(Math.pow(input, 2)).intValue(); // 平方
+                // 平方
+                return Double.valueOf(Math.pow(input, 2)).intValue();
             }, (MergeUnit<Integer, List<Integer>>) params -> {
                 ArrayList<Integer> integers = Lists.newArrayList(params);
-                Collections.sort(integers); // 排序
+                // 排序
+                Collections.sort(integers);
                 return integers;
             });
         } catch (Exception e) {
@@ -138,7 +146,8 @@ public class ExecutorEngineTest {
             String printLog = this.output.toString();
             boolean flag = StringUtils.isBlank(pattern.matcher(printLog).replaceAll(""));
             int retry = 0;
-            while (flag) { // 跑多线程，这个日志获取有点延时...
+            while (flag) {
+                // 跑多线程，这个日志获取有点延时...
                 printLog = this.output.toString();
                 flag = StringUtils.isBlank(pattern.matcher(printLog).replaceAll(""));
                 if (retry == 20) {
@@ -152,8 +161,7 @@ public class ExecutorEngineTest {
                     printLog);
             assertThat(printLog).contains(" WARN ", " " + ClassUtils.getQualifiedName(ExecutorEngine.class) + " ",
                     "Concurrent execute result failure",
-                    "" + ClassUtils.getQualifiedName(BizRuntimeException.class) + ": ba la ba la"
-            );
+                    "" + ClassUtils.getQualifiedName(BizRuntimeException.class) + ": ba la ba la");
             throw e;
         }
     }

@@ -80,6 +80,7 @@ public class BeanUtil {
      * @throws BeansException if the copying failed
      * @see BeanWrapper
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     public static void copyProperties(Object source, Object target, @Nullable Class<?> editable,
                                       boolean overrideNotBlankProperty, @Nullable String... ignoreProperties)
             throws BeansException {
@@ -124,16 +125,16 @@ public class BeanUtil {
                         }
                     }
                 } catch (Throwable ex) {
-                    throw new FatalBeanException("Could not copy property '" + targetPd.getName()
-                            + "' from source to target", ex);
+                    throw new FatalBeanException(
+                            "Could not copy property '" + targetPd.getName() + "' from source to target", ex);
                 }
             }
             if (writeMethod != null && (ignoreList == null || !ignoreList.contains(targetPd.getName()))) {
                 PropertyDescriptor sourcePd = BeanUtils.getPropertyDescriptor(source.getClass(), targetPd.getName());
                 if (sourcePd != null) {
                     Method readMethod = sourcePd.getReadMethod();
-                    if (readMethod != null
-                            && ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())) {
+                    if (readMethod != null && ClassUtils.isAssignable(writeMethod.getParameterTypes()[0],
+                            readMethod.getReturnType())) {
                         try {
                             if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
                                 readMethod.setAccessible(true);
@@ -150,8 +151,8 @@ public class BeanUtil {
                             }
                             writeMethod.invoke(target, value);
                         } catch (Throwable ex) {
-                            throw new FatalBeanException("Could not copy property '" + targetPd.getName()
-                                    + "' from source to target", ex);
+                            throw new FatalBeanException(
+                                    "Could not copy property '" + targetPd.getName() + "' from source to target", ex);
                         }
                     }
                 }

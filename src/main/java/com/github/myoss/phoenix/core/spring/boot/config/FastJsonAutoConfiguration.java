@@ -51,7 +51,7 @@ public class FastJsonAutoConfiguration {
     public static FastJsonConfig fastJsonConfig() {
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(
-        // 关闭循环引用，输出的json字符串中有："$ref"
+                // 关闭循环引用，输出的json字符串中有："$ref"
                 SerializerFeature.DisableCircularReferenceDetect,
                 // 将 null 字段输出字段名
                 SerializerFeature.WriteMapNullValue);

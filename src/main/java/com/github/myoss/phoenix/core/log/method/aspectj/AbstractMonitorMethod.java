@@ -50,6 +50,13 @@ public abstract class AbstractMonitorMethod {
         return arguments;
     }
 
+    /**
+     * 转换那些无法被JSON序列化的对象，比如：ServletRequest/ServletResponse
+     *
+     * @param arguments 待转换的方法参数数组对象
+     * @param i 索引
+     * @param value 转换后的值
+     */
     protected void convertArgs(Object[] arguments, int i, Object value) {
         if (value instanceof Writer) {
             arguments[i] = value.getClass().getName();
@@ -63,6 +70,12 @@ public abstract class AbstractMonitorMethod {
         }
     }
 
+    /**
+     * 将对象转换为 JSON 字符串
+     *
+     * @param input 对象
+     * @return JSON 字符串
+     */
     protected String toJSONString(Object input) {
         return JSONObject.toJSONStringWithDateFormat(input, properties.getDateFormat());
     }

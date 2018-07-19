@@ -47,7 +47,8 @@ public class IpUtils {
         try {
             return InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            throw new BizRuntimeException("Thrown to indicate that the IP address of a host could not be determined", e);
+            throw new BizRuntimeException("Thrown to indicate that the IP address of a host could not be determined",
+                    e);
         }
     }
 

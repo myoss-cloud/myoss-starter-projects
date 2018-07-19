@@ -24,7 +24,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -37,10 +36,25 @@ import org.apache.commons.lang3.StringUtils;
  * @since 2018年5月23日 上午1:41:48
  */
 public class DateTimeFormatUtils {
+    /**
+     * yyyy-MM-dd HH:mm:ss
+     */
     public static final String             YYYY_MM_DD_HH_MM_SS    = "yyyy-MM-dd HH:mm:ss";
+    /**
+     * yyyy-MM-dd
+     */
     public static final String             YYYY_MM_DD             = "yyyy-MM-dd";
+    /**
+     * yyyyMMddHHmmss
+     */
     public static final String             YYYYMMDDHHMMSS         = "yyyyMMddHHmmss";
+    /**
+     * yyyyMMdd
+     */
     public static final String             YYYYMMDD               = "yyyyMMdd";
+    /**
+     * HH:mm:ss
+     */
     public static final String             HH_MM_SS               = "HH:mm:ss";
     private static final DateTimeFormatter DATE_TIME_FORMATTER_CN = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS);
     private static final DateTimeFormatter DATE_FORMATTER         = DateTimeFormatter.ofPattern(YYYY_MM_DD);
@@ -69,35 +83,38 @@ public class DateTimeFormatUtils {
     }
 
     /**
-     * 将 {@link LocalDateTime} 按默认时区转换为 {@link Calendar}
+     * 将 {@link LocalDateTime} 按默认时区转换为 {@link java.util.Calendar}
      *
      * @param localDateTime 表示与时区无关的日期和时间信息，不直接对应时刻，需要通过时区转换
      * @return Java 1.8 以前的日历
      */
-    public static Calendar toCalendar(LocalDateTime localDateTime) {
+    @SuppressWarnings("checkstyle:RegexpSinglelineJava")
+    public static java.util.Calendar toCalendar(LocalDateTime localDateTime) {
         ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
         return toCalendar(zonedDateTime);
     }
 
     /**
-     * 将 {@link LocalDate} 按默认时区转换为 {@link Calendar}
+     * 将 {@link LocalDate} 按默认时区转换为 {@link java.util.Calendar}
      *
      * @param localDate 表示与时区无关的日期，只有日期信息，没有时间信息
      * @return Java 1.8 以前的日历
      */
-    public static Calendar toCalendar(LocalDate localDate) {
+    @SuppressWarnings("checkstyle:RegexpSinglelineJava")
+    public static java.util.Calendar toCalendar(LocalDate localDate) {
         return toCalendar(localDate.atStartOfDay());
     }
 
     /**
-     * 将 {@link ZonedDateTime} 按时区转换为 {@link Calendar}
+     * 将 {@link ZonedDateTime} 按时区转换为 {@link java.util.Calendar}
      *
      * @param zonedDateTime 表示特定时区的日期和时间
      * @return Java 1.8 以前的日历
      */
-    public static Calendar toCalendar(ZonedDateTime zonedDateTime) {
+    @SuppressWarnings("checkstyle:RegexpSinglelineJava")
+    public static java.util.Calendar toCalendar(ZonedDateTime zonedDateTime) {
         TimeZone timeZone = TimeZone.getTimeZone(zonedDateTime.getZone());
-        Calendar calendar = Calendar.getInstance(timeZone);
+        java.util.Calendar calendar = java.util.Calendar.getInstance(timeZone);
         calendar.setTimeInMillis(zonedDateTime.toInstant().toEpochMilli());
         return calendar;
     }
@@ -123,14 +140,15 @@ public class DateTimeFormatUtils {
     }
 
     /**
-     * 将 {@link ZonedDateTime} 按时区转换为 {@link Calendar}
+     * 将 {@link ZonedDateTime} 按时区转换为 {@link java.util.Calendar}
      *
      * @param calendar Java 1.8 以前的日历
      * @return 表示特定时区的日期和时间
      */
-    public static ZonedDateTime toZonedDateTime(Calendar calendar) {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(calendar.getTimeInMillis()), calendar.getTimeZone()
-                .toZoneId());
+    @SuppressWarnings("checkstyle:RegexpSinglelineJava")
+    public static ZonedDateTime toZonedDateTime(java.util.Calendar calendar) {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(calendar.getTimeInMillis()),
+                calendar.getTimeZone().toZoneId());
     }
 
     /**
@@ -140,7 +158,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyy-MM-dd HH:mm:ss”字符串
      */
     public static String print2DateTimeCN(Date date) {
-        return date == null ? null : DATE_TIME_FORMATTER_CN.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        return (date != null ? DATE_TIME_FORMATTER_CN.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
     }
 
     /**
@@ -150,7 +168,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyy-MM-dd HH:mm:ss”字符串
      */
     public static String print2DateTimeCN(LocalDateTime date) {
-        return date == null ? null : DATE_TIME_FORMATTER_CN.format(date);
+        return (date != null ? DATE_TIME_FORMATTER_CN.format(date) : null);
     }
 
     /**
@@ -174,7 +192,7 @@ public class DateTimeFormatUtils {
      * @return 日期
      */
     public static LocalDateTime parseToDateTimeCN(String date) {
-        return StringUtils.isBlank(date) ? null : LocalDateTime.parse(date, DATE_TIME_FORMATTER_CN);
+        return (StringUtils.isNotBlank(date) ? LocalDateTime.parse(date, DATE_TIME_FORMATTER_CN) : null);
     }
 
     /**
@@ -184,7 +202,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyy-MM-dd”字符串
      */
     public static String print2Date(Date date) {
-        return date == null ? null : DATE_FORMATTER.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        return (date != null ? DATE_FORMATTER.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
     }
 
     /**
@@ -194,7 +212,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyy-MM-dd”字符串
      */
     public static String print2Date(LocalDateTime date) {
-        return date == null ? null : DATE_FORMATTER.format(date);
+        return (date != null ? DATE_FORMATTER.format(date) : null);
     }
 
     /**
@@ -218,7 +236,7 @@ public class DateTimeFormatUtils {
      * @return 日期
      */
     public static LocalDate parseToDate(String date) {
-        return StringUtils.isBlank(date) ? null : LocalDate.parse(date, DATE_FORMATTER);
+        return (StringUtils.isNotBlank(date) ? LocalDate.parse(date, DATE_FORMATTER) : null);
     }
 
     /**
@@ -228,7 +246,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyyMMddHHmmss”字符串
      */
     public static String print2DateTimeEN(Date date) {
-        return date == null ? null : DATE_TIME_FORMATTER_EN.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        return (date != null ? DATE_TIME_FORMATTER_EN.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
     }
 
     /**
@@ -238,7 +256,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyyMMddHHmmss”字符串
      */
     public static String print2DateTimeEN(LocalDateTime date) {
-        return date == null ? null : DATE_TIME_FORMATTER_EN.format(date);
+        return (date != null ? DATE_TIME_FORMATTER_EN.format(date) : null);
     }
 
     /**
@@ -262,7 +280,7 @@ public class DateTimeFormatUtils {
      * @return 日期
      */
     public static LocalDateTime parseToDateTimeEN(String date) {
-        return StringUtils.isBlank(date) ? null : LocalDateTime.parse(date, DATE_TIME_FORMATTER_EN);
+        return (StringUtils.isNotBlank(date) ? LocalDateTime.parse(date, DATE_TIME_FORMATTER_EN) : null);
     }
 
     /**
@@ -272,7 +290,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyyMMdd”字符串
      */
     public static String print2DateEN(Date date) {
-        return date == null ? null : DATE_FORMATTER_EN.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        return (date != null ? DATE_FORMATTER_EN.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
     }
 
     /**
@@ -282,7 +300,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyyMMdd”字符串
      */
     public static String print2DateEN(LocalDate date) {
-        return date == null ? null : DATE_FORMATTER_EN.format(date);
+        return (date != null ? DATE_FORMATTER_EN.format(date) : null);
     }
 
     /**
@@ -292,7 +310,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“yyyyMMdd”字符串
      */
     public static String print2DateEN(LocalDateTime date) {
-        return date == null ? null : DATE_FORMATTER_EN.format(date);
+        return (date != null ? DATE_FORMATTER_EN.format(date) : null);
     }
 
     /**
@@ -329,7 +347,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“HH:mm:ss”字符串
      */
     public static String print2Time(Date date) {
-        return date == null ? null : TIME_FORMATTER.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        return (date != null ? TIME_FORMATTER.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
     }
 
     /**
@@ -339,7 +357,7 @@ public class DateTimeFormatUtils {
      * @return 格式化后的“HH:mm:ss”字符串
      */
     public static String print2Time(LocalDateTime date) {
-        return date == null ? null : TIME_FORMATTER.format(date);
+        return (date != null ? TIME_FORMATTER.format(date) : null);
     }
 
     /**

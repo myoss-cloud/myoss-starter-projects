@@ -90,8 +90,8 @@ public class FileUtil {
      * @return 转换之后的 jar 文件路径
      */
     public static String toJarFilePath(String jarUrl) {
-        jarUrl = jarUrl.startsWith("jar:") ? jarUrl : String.format("jar:%s", jarUrl);
-        return jarUrl.indexOf("!/") > 0 ? jarUrl.substring(0, jarUrl.indexOf("!/") + 2) : (jarUrl + "!/");
+        jarUrl = (jarUrl.startsWith("jar:") ? jarUrl : String.format("jar:%s", jarUrl));
+        return (jarUrl.indexOf("!/") > 0 ? jarUrl.substring(0, jarUrl.indexOf("!/") + 2) : (jarUrl + "!/"));
     }
 
     /**

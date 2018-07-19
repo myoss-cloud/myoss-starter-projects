@@ -28,7 +28,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.util.StreamUtils;
 
 /**
- * 检查HTTP input message 的 {@linkplain #getBody() body}，如果body中没有值，则返回{@code null}
+ * 检查HTTP input message 的 {@linkplain #getBody()}，如果body中没有值，则返回{@code null}
  *
  * @author Jerry.Chen
  * @since 2018年4月11日 下午3:00:24
@@ -38,6 +38,12 @@ public class EmptyBodyCheckingHttpInputMessage implements HttpInputMessage {
     private final InputStream body;
     private final HttpMethod  method;
 
+    /**
+     * 检查HTTP input message 的 {@linkplain #getBody()}，如果body中没有值，则返回{@code null}
+     *
+     * @param inputMessage an HTTP input message
+     * @throws IOException IO异常
+     */
     public EmptyBodyCheckingHttpInputMessage(HttpInputMessage inputMessage) throws IOException {
         this.headers = inputMessage.getHeaders();
         InputStream inputStream = inputMessage.getBody();
@@ -68,10 +74,20 @@ public class EmptyBodyCheckingHttpInputMessage implements HttpInputMessage {
         return (this.body != null ? this.body : StreamUtils.emptyInput());
     }
 
+    /**
+     * 判断请求 body 是否有值
+     *
+     * @return true/false
+     */
     public boolean hasBody() {
         return (this.body != null);
     }
 
+    /**
+     * HTTP 请求方法
+     *
+     * @return HTTP 请求方法
+     */
     public HttpMethod getMethod() {
         return this.method;
     }

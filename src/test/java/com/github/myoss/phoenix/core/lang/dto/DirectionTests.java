@@ -100,10 +100,8 @@ public class DirectionTests {
         Direction direction = Direction.fromStringOrNull("");
         Assert.assertNull(direction);
         String output = this.output.toString();
-        assertThat(output)
-                .contains("IllegalArgumentException")
-                .contains(
-                        "java.lang.IllegalArgumentException: Invalid value '' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
+        assertThat(output).contains("IllegalArgumentException").contains(
+                "java.lang.IllegalArgumentException: Invalid value '' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
     }
 
     @Test
@@ -111,9 +109,7 @@ public class DirectionTests {
         Direction direction = Direction.fromStringOrNull("error");
         Assert.assertNull(direction);
         String output = this.output.toString();
-        assertThat(output)
-                .contains("IllegalArgumentException")
-                .contains(
-                        "java.lang.IllegalArgumentException: Invalid value 'error' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
+        assertThat(output).contains("IllegalArgumentException").contains(
+                "java.lang.IllegalArgumentException: Invalid value 'error' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
     }
 }

@@ -33,6 +33,12 @@ import javax.servlet.ServletInputStream;
 public class ByteArrayServletInputStream extends ServletInputStream {
     private final ByteArrayInputStream byteArrayInputStream;
 
+    /**
+     * 实现{@link ServletInputStream}，使用 {@link ByteArrayInputStream}
+     * 支持多次读取{@code byte[]}
+     *
+     * @param body byte[]
+     */
     public ByteArrayServletInputStream(byte[] body) {
         this.byteArrayInputStream = new ByteArrayInputStream(body);
     }

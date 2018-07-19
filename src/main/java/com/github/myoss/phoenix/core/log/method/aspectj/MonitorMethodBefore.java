@@ -65,8 +65,10 @@ public class MonitorMethodBefore extends AbstractMonitorMethod {
      */
     @Pointcut("execution(@org.springframework.web.bind.annotation.ExceptionHandler * *(..))"
             + " || execution(@org.springframework.scheduling.annotation.Scheduled * *(..))"
-            + " || @within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)" // 放在class上有效，method上无效
-            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)" // 放在class上无效，method上有效
+            // 放在class上有效，method上无效
+            + " || @within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)"
+            // 放在class上无效，method上有效
+            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)"
             + " || @within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround)"
             + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround)")
     public void unWantToMatch() {
@@ -80,18 +82,28 @@ public class MonitorMethodBefore extends AbstractMonitorMethod {
      * <code>@com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodBefore</code>
      * </ul>
      */
-    @Pointcut("@within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodBefore)"// 放在class上有效，method上无效
-            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodBefore)" // 放在class上无效，method上有效
+    @Pointcut("@within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodBefore)"
+            // 放在class上有效，method上无效
+            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodBefore)"
+    // 放在class上无效，method上有效
     )
     public void wantToMatch() {
         // Do nothing
     }
 
+    /**
+     * 监控规则
+     */
     @Pointcut("wantToMatch() && ! unWantToMatch()")
     public void allWantToMatch() {
         // Do nothing
     }
 
+    /**
+     * 使用 AOP 记录方法的入参
+     *
+     * @param joinPoint AOP JoinPoint
+     */
     @Before("allWantToMatch()")
     public void doBefore(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();

@@ -56,7 +56,7 @@ public class Order implements Serializable {
             throw new IllegalArgumentException("Property must not null or empty!");
         }
 
-        this.direction = direction == null ? DEFAULT_DIRECTION : direction;
+        this.direction = (direction != null ? direction : DEFAULT_DIRECTION);
         this.property = property;
     }
 }

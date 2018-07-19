@@ -38,6 +38,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,21 +50,18 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ExecutorEngine implements AutoCloseable {
-    private static final ThreadPoolExecutor SHUTDOWN_EXECUTOR = new ThreadPoolExecutor(
-            0,
-            1,
-            0,
-            TimeUnit.MILLISECONDS,
+    private static final ThreadPoolExecutor SHUTDOWN_EXECUTOR = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(10),
-            new ThreadFactoryBuilder()
-                    .setDaemon(true)
-                    .setNameFormat(
-                            "Phoenix-Core-ExecutorEngineCloseTimer")
-                    .build());
+            new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Phoenix-Core-ExecutorEngineCloseTimer").build());
 
     @Getter
-    private final ExecutorService executorService;
+    private final ExecutorService           executorService;
 
+    /**
+     * 创建多线程执行框架
+     *
+     * @param delegate an instance of {@link ExecutorService}
+     */
     public ExecutorEngine(ExecutorService delegate) {
         this.executorService = MoreExecutors.listeningDecorator(delegate);
         // 添加一个关闭的钩子来等待 executorService 中的线程完成
@@ -85,7 +83,8 @@ public class ExecutorEngine implements AutoCloseable {
      */
     public static ExecutorEngine buildTreadPoolExecutor() {
         ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true)
-                .setNameFormat("ExecutorEngineThreadPool-%d").build();
+                .setNameFormat("ExecutorEngineThreadPool-%d")
+                .build();
         ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(5, 200, 0, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(1024), threadFactory);
         return new ExecutorEngine(poolExecutor);
@@ -95,7 +94,7 @@ public class ExecutorEngine implements AutoCloseable {
      * 创建可以追踪调用链的多线程池
      *
      * @param beanFactory Spring BeanFactory
-     * @param delegate    代理的线程池
+     * @param delegate 代理的线程池
      * @return 可以追踪调用链的多线程池执行框架
      */
     public static ExecutorEngine buildTraceableExecutorService(BeanFactory beanFactory, ExecutorService delegate) {
@@ -120,10 +119,10 @@ public class ExecutorEngine implements AutoCloseable {
     /**
      * 多线程执行任务.
      *
-     * @param inputs      输入参数
+     * @param inputs 输入参数
      * @param executeUnit 执行单元
-     * @param <I>         入参类型
-     * @param <O>         出参类型
+     * @param <I> 入参类型
+     * @param <O> 出参类型
      * @return 执行结果
      */
     @SuppressWarnings("unchecked")
@@ -143,9 +142,9 @@ public class ExecutorEngine implements AutoCloseable {
     /**
      * 多线程执行任务.
      *
-     * @param size        最多执行几次
+     * @param size 最多执行几次
      * @param executeUnit 执行单元
-     * @param <O>         出参类型
+     * @param <O> 出参类型
      * @return 执行结果
      */
     @SuppressWarnings("unchecked")
@@ -169,30 +168,30 @@ public class ExecutorEngine implements AutoCloseable {
     /**
      * 多线程执行任务并归并结果.
      *
-     * @param inputs      执行入参
+     * @param inputs 执行入参
      * @param executeUnit 执行单元
-     * @param mergeUnit   合并结果单元
-     * @param <I>         入参类型
-     * @param <M>         中间结果类型
-     * @param <O>         最终结果类型
+     * @param mergeUnit 合并结果单元
+     * @param <I> 入参类型
+     * @param <M> 中间结果类型
+     * @param <O> 最终结果类型
      * @return 执行结果
      */
     public <I, M, O> O execute(final Collection<I> inputs, final ExecuteUnit<I, M> executeUnit,
-            final MergeUnit<M, O> mergeUnit) {
+                               final MergeUnit<M, O> mergeUnit) {
         return mergeUnit.merge(execute(inputs, executeUnit));
     }
 
     /**
      * 提交多线程任务.
      *
-     * @param inputs      执行入参
+     * @param inputs 执行入参
      * @param executeUnit 执行单元
-     * @param <I>         入参类型
-     * @param <O>         最终结果类型
+     * @param <I> 入参类型
+     * @param <O> 最终结果类型
      * @return 执行结果
      */
     private <I, O> ListenableFuture<List<O>> submitFutures(final Collection<I> inputs,
-            final ExecuteUnit<I, O> executeUnit) {
+                                                           final ExecuteUnit<I, O> executeUnit) {
         Set<ListenableFuture<O>> result = new HashSet<>(inputs.size());
         for (final I each : inputs) {
             result.add((ListenableFuture<O>) executorService.submit(() -> executeUnit.execute(each)));
@@ -204,7 +203,7 @@ public class ExecutorEngine implements AutoCloseable {
      * 为多线程任务添加回调监控
      *
      * @param allFutures 多线程任务
-     * @param <O>        最终结果类型
+     * @param <O> 最终结果类型
      */
     private <O> void addCallback(final ListenableFuture<O> allFutures) {
         Futures.addCallback(allFutures, new FutureCallback<O>() {
@@ -224,7 +223,7 @@ public class ExecutorEngine implements AutoCloseable {
      * 获取多线程任务执行的最终结果
      *
      * @param allFutures 多线程任务
-     * @param <O>        最终结果类型
+     * @param <O> 最终结果类型
      * @return 执行结果
      */
     private <O> O getFutureResults(final ListenableFuture<O> allFutures) {

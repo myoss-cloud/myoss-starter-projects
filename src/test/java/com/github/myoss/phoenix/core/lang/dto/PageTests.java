@@ -170,10 +170,12 @@ public class PageTests {
         assertThat(Page.DEFAULT_PAGE_SIZE).isEqualTo(20);
 
         Page<Long> result = new Page<>();
-        assertThat(result.getPageSize()).isEqualTo(Page.DEFAULT_PAGE_SIZE); // 默认值是20
+        // 默认值是20
+        assertThat(result.getPageSize()).isEqualTo(Page.DEFAULT_PAGE_SIZE);
 
+        // 小于0，返回为“默认值20”
         result.setPageSize(0);
-        assertThat(result.getPageSize()).isEqualTo(Page.DEFAULT_PAGE_SIZE); // 小于0，返回为“默认值20”
+        assertThat(result.getPageSize()).isEqualTo(Page.DEFAULT_PAGE_SIZE);
 
         result.setPageSize(1);
         assertThat(result.getPageSize()).isEqualTo(1);
@@ -187,10 +189,12 @@ public class PageTests {
         assertThat(Page.DEFAULT_PAGE_NUM).isEqualTo(1);
 
         Page<Long> result = new Page<>();
-        assertThat(result.getPageNum()).isEqualTo(1); // 默认值是1
+        // 默认值是1
+        assertThat(result.getPageNum()).isEqualTo(1);
 
         result.setPageNum(-1);
-        assertThat(result.getPageNum()).isEqualTo(1); // 小于0，返回为“0”
+        // 小于0，返回为“0”
+        assertThat(result.getPageNum()).isEqualTo(1);
 
         result.setPageNum(0);
         assertThat(result.getPageNum()).isEqualTo(1);

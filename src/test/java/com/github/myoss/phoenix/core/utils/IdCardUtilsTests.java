@@ -47,8 +47,8 @@ public class IdCardUtilsTests {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException,
-            InvocationTargetException, InstantiationException {
+    public void testConstructorIsPrivate()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<IdCardUtils> constructor = IdCardUtils.class.getDeclaredConstructor();
         Assert.assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);

@@ -26,22 +26,51 @@ package com.github.myoss.phoenix.core.lang.concurrent;
 public class ExecuteException extends RuntimeException {
     private static final long serialVersionUID = -9182505389714583078L;
 
+    /**
+     * 多线程执行异常
+     */
     public ExecuteException() {
         super();
     }
 
+    /**
+     * 多线程执行异常
+     *
+     * @param message 错误信息
+     */
     public ExecuteException(String message) {
         super(message);
     }
 
+    /**
+     * 多线程执行异常
+     *
+     * @param message 错误信息
+     * @param cause 异常信息
+     */
     public ExecuteException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * 多线程执行异常
+     *
+     * @param cause 异常信息
+     */
     public ExecuteException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * 多线程执行异常
+     *
+     * @param message 错误信息
+     * @param cause 异常信息
+     * @param enableSuppression whether or not suppression is enabled or
+     *            disabled
+     * @param writableStackTrace whether or not the stack trace should be
+     *            writable
+     */
     public ExecuteException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

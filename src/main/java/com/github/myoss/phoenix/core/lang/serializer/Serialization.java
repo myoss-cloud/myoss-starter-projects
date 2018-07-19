@@ -21,6 +21,7 @@ package com.github.myoss.phoenix.core.lang.serializer;
  * Basic interface serialization and deserialization of Objects to byte arrays
  * (binary data).
  *
+ * @param <T> 泛型
  * @author Jerry.Chen
  * @since 2018年5月25日 下午4:52:33
  */

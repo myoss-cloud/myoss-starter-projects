@@ -52,31 +52,6 @@ public class Sort implements Iterable<Order>, Serializable {
     @JSONField(serialize = false, deserialize = false)
     private List<Order>           orders;
 
-    public static class ModelValueDeserializer implements ObjectDeserializer {
-        @SuppressWarnings("unchecked")
-        @Override
-        public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-            JSONArray jsonArray = (JSONArray) parser.parse();
-            if (jsonArray == null) {
-                return null;
-            }
-            List<Order> orders = new ArrayList<>(jsonArray.size());
-            for (Object o : jsonArray) {
-                JSONObject item = (JSONObject) o;
-                String property = (String) item.get("property");
-                String direction = (String) item.get("direction");
-                Order order = new Order(Direction.fromStringOrNull(direction), property);
-                orders.add(order);
-            }
-            return (T) new Sort(orders);
-        }
-
-        @Override
-        public int getFastMatchToken() {
-            return 0;
-        }
-    }
-
     /**
      * Creates a new {@link Sort} instance using the given {@link Order}s.
      *
@@ -118,7 +93,7 @@ public class Sort implements Iterable<Order>, Serializable {
      *            {@literal null} or empty strings.
      */
     public Sort(Direction direction, String... properties) {
-        this(direction, properties == null ? new ArrayList<String>() : Arrays.asList(properties));
+        this(direction, (properties != null ? Arrays.asList(properties) : new ArrayList<>()));
     }
 
     /**
@@ -212,5 +187,33 @@ public class Sort implements Iterable<Order>, Serializable {
     @Override
     public String toString() {
         return JSON.toJSONString(orders);
+    }
+
+    /**
+     * {@link Sort} 反序列化解析器
+     */
+    public static class ModelValueDeserializer implements ObjectDeserializer {
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
+            JSONArray jsonArray = (JSONArray) parser.parse();
+            if (jsonArray == null) {
+                return null;
+            }
+            List<Order> orders = new ArrayList<>(jsonArray.size());
+            for (Object o : jsonArray) {
+                JSONObject item = (JSONObject) o;
+                String property = (String) item.get("property");
+                String direction = (String) item.get("direction");
+                Order order = new Order(Direction.fromStringOrNull(direction), property);
+                orders.add(order);
+            }
+            return (T) new Sort(orders);
+        }
+
+        @Override
+        public int getFastMatchToken() {
+            return 0;
+        }
     }
 }

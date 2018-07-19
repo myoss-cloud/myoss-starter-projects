@@ -64,9 +64,10 @@ public class MonitorMethodAround extends AbstractMonitorMethod {
      */
     @Pointcut("execution(@org.springframework.web.bind.annotation.ExceptionHandler * *(..))"
             + " || execution(@org.springframework.scheduling.annotation.Scheduled * *(..))"
-            + " || @within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)" // 放在class上有效，method上无效
-            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)" // 放在class上无效，method上有效
-    )
+            // 放在class上有效，method上无效
+            + " || @within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)"
+            // 放在class上无效，method上有效
+            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogUnMonitor)")
     public void unWantToMatch() {
         // Do nothing
     }
@@ -78,18 +79,30 @@ public class MonitorMethodAround extends AbstractMonitorMethod {
      * <code>@com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround</code>
      * </ul>
      */
-    @Pointcut("@within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround)"// 放在class上有效，method上无效
-            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround)" // 放在class上无效，method上有效
+    @Pointcut("@within(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround)"
+            // 放在class上有效，method上无效
+            + " || @annotation(com.github.myoss.phoenix.core.log.method.aspectj.annotation.LogMethodAround)"
+    // 放在class上无效，method上有效
     )
     public void wantToMatch() {
         // Do nothing
     }
 
+    /**
+     * 监控规则
+     */
     @Pointcut("wantToMatch() && ! unWantToMatch()")
     public void allWantToMatch() {
         // Do nothing
     }
 
+    /**
+     * 使用 AOP 记录方法的入参和返回值
+     *
+     * @param joinPoint AOP JoinPoint
+     * @return 方法返回值
+     * @throws Throwable 执行异常
+     */
     @Around("allWantToMatch()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTimeMillis = System.currentTimeMillis();

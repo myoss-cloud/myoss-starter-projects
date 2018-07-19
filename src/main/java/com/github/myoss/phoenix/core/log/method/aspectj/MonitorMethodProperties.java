@@ -21,13 +21,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.ClassUtils;
 
 import lombok.Data;
@@ -75,17 +72,24 @@ public class MonitorMethodProperties {
      * Controller异常时返回的errorCode
      *
      * @see AopLogControllerExceptionHandler#outputException(Throwable,
-     *      HttpHeaders, HttpStatus, HttpServletRequest)
+     *      org.springframework.http.HttpHeaders,
+     *      org.springframework.http.HttpStatus,
+     *      javax.servlet.http.HttpServletRequest)
      */
     private String      controllerExceptionErrorCode = "systemException";
     /**
      * Controller异常时返回的errorCode
      *
      * @see AopLogControllerExceptionHandler#outputException(Throwable,
-     *      HttpHeaders, HttpStatus, HttpServletRequest)
+     *      org.springframework.http.HttpHeaders,
+     *      org.springframework.http.HttpStatus,
+     *      javax.servlet.http.HttpServletRequest)
      */
     private String      controllerExceptionErrorMsg  = "We'll be back soon ...";
 
+    /**
+     * 初始化属性
+     */
     @PostConstruct
     public void init() {
         ClassLoader classLoader = this.getClass().getClassLoader();

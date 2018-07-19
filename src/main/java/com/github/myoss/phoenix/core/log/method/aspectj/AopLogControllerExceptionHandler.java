@@ -74,6 +74,12 @@ public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHan
     @Autowired
     protected MonitorMethodProperties properties;
 
+    /**
+     * 获取 HTTP 请求响应状态码
+     *
+     * @param request HTTP 请求
+     * @return 响应状态码
+     */
     public static HttpStatus getStatus(HttpServletRequest request) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         if (statusCode == null) {

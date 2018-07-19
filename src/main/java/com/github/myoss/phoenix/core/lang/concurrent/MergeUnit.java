@@ -34,5 +34,5 @@ public interface MergeUnit<I, O> {
      * @param params 合并前数据
      * @return 合并后结果
      */
-    O merge(final List<I> params);
+    O merge(List<I> params);
 }

@@ -33,6 +33,9 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmojiUtils {
+    /**
+     * emoji 表情字符正则匹配规则
+     */
     public static final Pattern PATTERN = Pattern.compile("(\\\\u[ed][0-9a-f]{3})", Pattern.CASE_INSENSITIVE);
 
     /**

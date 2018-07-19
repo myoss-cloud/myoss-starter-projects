@@ -51,7 +51,7 @@ public class StringUtil {
         for (int i = 0; i < words.length; i++) {
             String word = words[i];
             if (firstWordNotFound && startsWithLetter(word)) {
-                words[i] = firstCharacterUppercase ? StringUtils.capitalize(word.toLowerCase()) : word.toLowerCase();
+                words[i] = (firstCharacterUppercase ? StringUtils.capitalize(word.toLowerCase()) : word.toLowerCase());
                 firstWordNotFound = false;
             } else {
                 words[i] = StringUtils.capitalize(word.toLowerCase());

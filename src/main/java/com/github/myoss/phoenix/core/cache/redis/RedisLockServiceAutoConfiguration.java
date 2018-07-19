@@ -43,10 +43,21 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisLockServiceAutoConfiguration {
     private RedisProperties redisProperties;
 
+    /**
+     * 初始化 Redis 缓存锁服务自动配置
+     *
+     * @param redisProperties Redis 缓存的配置
+     */
     public RedisLockServiceAutoConfiguration(RedisProperties redisProperties) {
         this.redisProperties = redisProperties;
     }
 
+    /**
+     * 初始化默认的Redis 缓存锁实现
+     *
+     * @param redisTemplate Spring RedisTemplate
+     * @return 默认的Redis 缓存锁实现
+     */
     @ConditionalOnBean(name = "redisTemplate")
     @ConditionalOnMissingBean
     @Bean

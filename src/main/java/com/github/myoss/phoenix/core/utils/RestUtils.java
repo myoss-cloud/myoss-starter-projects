@@ -92,8 +92,8 @@ public class RestUtils {
                     log.warn("requestUrl: {}, requestMethod: {}, costTime: {}, exceptionBody: {}", uri, method,
                             costTime, exceptionBody);
                 } else {
-                    log.warn("requestUrl: {}, requestMethod: {}, costTime: {}, requestBody: {}, exceptionBody: {}",
-                            uri, method, costTime, requestBody, exceptionBody);
+                    log.warn("requestUrl: {}, requestMethod: {}, costTime: {}, requestBody: {}, exceptionBody: {}", uri,
+                            method, costTime, requestBody, exceptionBody);
                 }
             } else {
                 if (log.isInfoEnabled()) {
@@ -328,8 +328,8 @@ public class RestUtils {
                 }
             }
         }
-        return ArrayUtils.isNotEmpty(uriVariables) ? uriComponentsBuilder.buildAndExpand(uriVariables)
-                : uriComponentsBuilder.build();
+        return (ArrayUtils.isNotEmpty(uriVariables) ? uriComponentsBuilder.buildAndExpand(uriVariables)
+                : uriComponentsBuilder.build());
     }
 
     /**
@@ -347,7 +347,7 @@ public class RestUtils {
                 uriComponentsBuilder.queryParam(entry.getKey(), entry.getValue());
             }
         }
-        return ArrayUtils.isNotEmpty(uriVariables) ? uriComponentsBuilder.buildAndExpand(uriVariables)
-                : uriComponentsBuilder.build();
+        return (ArrayUtils.isNotEmpty(uriVariables) ? uriComponentsBuilder.buildAndExpand(uriVariables)
+                : uriComponentsBuilder.build());
     }
 }

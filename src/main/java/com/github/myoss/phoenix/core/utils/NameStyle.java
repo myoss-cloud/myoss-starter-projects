@@ -75,8 +75,8 @@ public enum NameStyle {
     /**
      * 驼峰转下划线，单词小写
      */
-    SCREAMING_SNAKE_CASE("SCREAMING_SNAKE_CASE", "驼峰转下划线，单词大写", new String[] { "SNAKE_CASE", "_SNAKE_CASE",
-            "SNAKE_CASE_" }) {
+    SCREAMING_SNAKE_CASE("SCREAMING_SNAKE_CASE", "驼峰转下划线，单词大写",
+            new String[] { "SNAKE_CASE", "_SNAKE_CASE", "SNAKE_CASE_" }) {
         @Override
         public String transform(String s) {
             if (StringUtils.isBlank(s)) {
@@ -185,9 +185,7 @@ public enum NameStyle {
             }
             return builder.toString();
         }
-    }
-
-    ;
+    };
 
     /**
      * 类型
@@ -202,5 +200,11 @@ public enum NameStyle {
      */
     String[] example;
 
+    /**
+     * 进行格式化
+     *
+     * @param s 原始字符串
+     * @return 转换后的字符串
+     */
     public abstract String transform(String s);
 }

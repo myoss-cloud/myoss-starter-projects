@@ -48,15 +48,20 @@ public class ReaderBodyHttpServletRequestWrapper extends HttpServletRequestWrapp
     private boolean            marked = false;
     private ServletInputStream inputStream;
 
-    public ReaderBodyHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
+    /**
+     * 创建HttpServletRequestWrapper包装类
+     *
+     * @param request HttpServletRequest
+     */
+    public ReaderBodyHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
     }
 
     @Override
     public BufferedReader getReader() throws IOException {
         String characterEncoding = this.getCharacterEncoding();
-        Charset charset = characterEncoding != null ? Charset.forName(characterEncoding)
-                : PhoenixConstants.DEFAULT_CHARSET;
+        Charset charset = (characterEncoding != null ? Charset.forName(characterEncoding)
+                : PhoenixConstants.DEFAULT_CHARSET);
         InputStreamReader inputStreamReader = new InputStreamReader(getInputStream(), charset);
         return new BufferedReader(inputStreamReader);
     }
@@ -74,6 +79,8 @@ public class ReaderBodyHttpServletRequestWrapper extends HttpServletRequestWrapp
 
     /**
      * 包装{@link ServletInputStream}
+     *
+     * @throws IOException IO异常
      */
     private void warpInputStream() throws IOException {
         lock.lock();

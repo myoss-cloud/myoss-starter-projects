@@ -27,6 +27,15 @@ import java.nio.charset.Charset;
  */
 public interface PhoenixConstants {
     /**
+     * 获取应用部署的环境变量
+     *
+     * @return 部署的环境变量
+     */
+    default String getDeployEnv() {
+        return DeployEnvEnum.getDeployEnv();
+    }
+
+    /**
      * UTF-8: 默认的字符集
      */
     Charset DEFAULT_CHARSET        = Charset.forName("UTF-8");

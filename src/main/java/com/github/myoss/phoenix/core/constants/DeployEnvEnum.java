@@ -56,8 +56,14 @@ public enum DeployEnvEnum {
     private String        value;
     @Getter
     private String        name;
-    private static String deployEnv;
+    private static String CURRENT_ENV;
 
+    /**
+     * 根据环境变量的值获取枚举
+     *
+     * @param value 环境变量的值
+     * @return 枚举
+     */
     public static DeployEnvEnum getEnumByValue(String value) {
         if (StringUtils.isBlank(value)) {
             return null;
@@ -176,10 +182,10 @@ public enum DeployEnvEnum {
      * @return 部署的环境变量
      */
     public static String getDeployEnv() {
-        if (deployEnv == null) {
-            deployEnv = StringUtils.defaultIfBlank(System.getProperty(DEPLOY_ENV), System.getenv(DEPLOY_ENV));
+        if (CURRENT_ENV == null) {
+            CURRENT_ENV = StringUtils.defaultIfBlank(System.getProperty(DEPLOY_ENV), System.getenv(DEPLOY_ENV));
         }
-        return deployEnv;
+        return CURRENT_ENV;
     }
 
     /**

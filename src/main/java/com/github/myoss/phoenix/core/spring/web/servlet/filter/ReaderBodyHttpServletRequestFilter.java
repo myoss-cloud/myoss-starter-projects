@@ -33,8 +33,8 @@ import com.github.myoss.phoenix.core.spring.web.servlet.support.ReaderBodyHttpSe
  * 将{@link HttpServletRequest}进行包装为 {@link ReaderBodyHttpServletRequestWrapper}
  * ，使下面这两个方法支持多次读取，默认只能读取一次
  * <ul>
- * <li> {@link ReaderBodyHttpServletRequestWrapper#getReader()}
- * <li> {@link ReaderBodyHttpServletRequestWrapper#getInputStream()}
+ * <li>{@link ReaderBodyHttpServletRequestWrapper#getReader()}
+ * <li>{@link ReaderBodyHttpServletRequestWrapper#getInputStream()}
  * </ul>
  *
  * @author Jerry.Chen

@@ -33,6 +33,7 @@ import lombok.experimental.Accessors;
  *
  * @author Jerry.Chen
  * @since 2018年5月9日 下午2:55:11
+ * @param <T> 泛型
  */
 @AllArgsConstructor
 @Accessors(chain = true)
@@ -123,7 +124,7 @@ public class Result<T> implements Serializable {
      * @return 扩展信息中的value
      */
     public Object getExtraInfo(String key) {
-        return this.extraInfo == null ? null : this.extraInfo.get(key);
+        return (this.extraInfo != null ? this.extraInfo.get(key) : null);
     }
 
     @Override

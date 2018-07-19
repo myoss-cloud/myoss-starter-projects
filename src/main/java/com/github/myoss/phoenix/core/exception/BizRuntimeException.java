@@ -27,25 +27,52 @@ import lombok.Getter;
  */
 public class BizRuntimeException extends RuntimeException {
     private static final long serialVersionUID = 7634892282599474024L;
+    @SuppressWarnings("checkstyle:MutableException")
     @Getter
     private String            messageCode;
 
+    /**
+     * 业务运行时异常
+     */
     public BizRuntimeException() {
         super();
     }
 
+    /**
+     * 业务运行时异常
+     *
+     * @param message 错误信息
+     */
     public BizRuntimeException(String message) {
         super(message);
     }
 
+    /**
+     * 业务运行时异常
+     *
+     * @param cause 异常信息
+     */
     public BizRuntimeException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * 业务运行时异常
+     *
+     * @param message 错误信息
+     * @param cause 异常信息
+     */
     public BizRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * 业务运行时异常
+     *
+     * @param messageCode 错误代码
+     * @param message 错误信息
+     * @param cause 异常信息
+     */
     public BizRuntimeException(String messageCode, String message, Throwable cause) {
         super(message, cause);
         this.messageCode = messageCode;

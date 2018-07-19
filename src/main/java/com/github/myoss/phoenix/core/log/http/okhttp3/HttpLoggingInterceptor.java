@@ -57,6 +57,9 @@ import okio.GzipSource;
 public final class HttpLoggingInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
+    /**
+     * Log level
+     */
     public enum Level {
         /**
          * No logs.
@@ -128,10 +131,18 @@ public final class HttpLoggingInterceptor implements Interceptor {
         BODY
     }
 
+    /**
+     * 创建 Http 请求日志拦截器
+     */
     public HttpLoggingInterceptor() {
         this(log);
     }
 
+    /**
+     * 创建 Http 请求日志拦截器
+     *
+     * @param logger 日志
+     */
     public HttpLoggingInterceptor(Logger logger) {
         this.logger = logger;
     }
@@ -236,7 +247,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
 
         ResponseBody responseBody = response.body();
         long contentLength = responseBody.contentLength();
-        String bodySize = contentLength != -1 ? contentLength + "-byte" : "unknown-length";
+        String bodySize = (contentLength != -1 ? contentLength + "-byte" : "unknown-length");
         logger.info("<-- " + response.code() + (response.message().isEmpty() ? "" : ' ' + response.message()) + " ("
                 + tookMs + "ms" + (!logHeaders ? ", " + bodySize + " body" : "") + ')');
 
@@ -297,11 +308,14 @@ public final class HttpLoggingInterceptor implements Interceptor {
      * Returns true if the body in question probably contains human readable
      * text. Uses a small sample of code points to detect unicode control
      * characters commonly used in binary file signatures.
+     *
+     * @param buffer A collection of bytes in memory
+     * @return true/false
      */
     static boolean isPlaintext(Buffer buffer) {
         try {
             Buffer prefix = new Buffer();
-            long byteCount = buffer.size() < 64 ? buffer.size() : 64;
+            long byteCount = (buffer.size() < 64 ? buffer.size() : 64);
             buffer.copyTo(prefix, 0, byteCount);
             for (int i = 0; i < 16; i++) {
                 if (prefix.exhausted()) {

@@ -142,7 +142,6 @@ public class ExecutorEngineTest {
                 return integers;
             });
         } catch (Exception e) {
-            delegate.shutdown();
             String printLog = this.output.toString();
             boolean flag = StringUtils.isBlank(pattern.matcher(printLog).replaceAll(""));
             int retry = 0;

@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,28 +40,33 @@ public class DateTimeFormatUtils {
     /**
      * yyyy-MM-dd HH:mm:ss
      */
-    public static final String             YYYY_MM_DD_HH_MM_SS    = "yyyy-MM-dd HH:mm:ss";
+    public static final String             YYYY_MM_DD_HH_MM_SS     = "yyyy-MM-dd HH:mm:ss";
     /**
      * yyyy-MM-dd
      */
-    public static final String             YYYY_MM_DD             = "yyyy-MM-dd";
+    public static final String             YYYY_MM_DD              = "yyyy-MM-dd";
     /**
      * yyyyMMddHHmmss
      */
-    public static final String             YYYYMMDDHHMMSS         = "yyyyMMddHHmmss";
+    public static final String             YYYYMMDDHHMMSS          = "yyyyMMddHHmmss";
     /**
      * yyyyMMdd
      */
-    public static final String             YYYYMMDD               = "yyyyMMdd";
+    public static final String             YYYYMMDD                = "yyyyMMdd";
+    /**
+     * yyyyMM
+     */
+    public static final String             YYYYMM                  = "yyyyMM";
     /**
      * HH:mm:ss
      */
-    public static final String             HH_MM_SS               = "HH:mm:ss";
-    private static final DateTimeFormatter DATE_TIME_FORMATTER_CN = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS);
-    private static final DateTimeFormatter DATE_FORMATTER         = DateTimeFormatter.ofPattern(YYYY_MM_DD);
-    private static final DateTimeFormatter DATE_TIME_FORMATTER_EN = DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS);
-    private static final DateTimeFormatter DATE_FORMATTER_EN      = DateTimeFormatter.ofPattern(YYYYMMDD);
-    private static final DateTimeFormatter TIME_FORMATTER         = DateTimeFormatter.ofPattern(HH_MM_SS);
+    public static final String             HH_MM_SS                = "HH:mm:ss";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER_CN  = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS);
+    private static final DateTimeFormatter DATE_FORMATTER          = DateTimeFormatter.ofPattern(YYYY_MM_DD);
+    private static final DateTimeFormatter DATE_TIME_FORMATTER_EN  = DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS);
+    private static final DateTimeFormatter DATE_FORMATTER_EN       = DateTimeFormatter.ofPattern(YYYYMMDD);
+    private static final DateTimeFormatter YEAR_MONTH_FORMATTER_EN = DateTimeFormatter.ofPattern(YYYYMM);
+    private static final DateTimeFormatter TIME_FORMATTER          = DateTimeFormatter.ofPattern(HH_MM_SS);
 
     /**
      * 将 {@link LocalDateTime} 按默认时区转换为 {@link Date}
@@ -338,6 +344,65 @@ public class DateTimeFormatUtils {
             return null;
         }
         return LocalDate.parse(date, DATE_FORMATTER_EN).atStartOfDay();
+    }
+
+    /**
+     * 转换日期为：yyyyMM
+     *
+     * @param date 待转换的日期
+     * @return 格式化后的“yyyyMM”字符串
+     */
+    public static String print2YearMonth(Date date) {
+        return (date != null ? YEAR_MONTH_FORMATTER_EN.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
+    }
+
+    /**
+     * 转换日期为：yyyyMM
+     *
+     * @param date 待转换的日期
+     * @return 格式化后的“yyyyMM”字符串
+     */
+    public static String print2YearMonth(LocalDate date) {
+        return (date != null ? YEAR_MONTH_FORMATTER_EN.format(date) : null);
+    }
+
+    /**
+     * 转换日期为：yyyyMM
+     *
+     * @param date 待转换的日期
+     * @return 格式化后的“yyyyMM”字符串
+     */
+    public static String print2YearMonth(LocalDateTime date) {
+        return (date != null ? YEAR_MONTH_FORMATTER_EN.format(date) : null);
+    }
+
+    /**
+     * 将字符串日期：yyyyMM 转换为日期（返回当月的1号）
+     *
+     * @param date “yyyyMM”字符串
+     * @return 日期
+     */
+    public static Date parse2YearMonth(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        }
+        YearMonth yearMonth = YearMonth.parse(date, YEAR_MONTH_FORMATTER_EN);
+        LocalDateTime localDateTime = yearMonth.atDay(1).atStartOfDay();
+        return toDate(localDateTime);
+    }
+
+    /**
+     * 将字符串日期：yyyyMM 转换为日期（返回当月的1号）
+     *
+     * @param date “yyyyMM”字符串
+     * @return 日期
+     */
+    public static LocalDateTime parseToYearMonth(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        }
+        YearMonth yearMonth = YearMonth.parse(date, YEAR_MONTH_FORMATTER_EN);
+        return yearMonth.atDay(1).atStartOfDay();
     }
 
     /**

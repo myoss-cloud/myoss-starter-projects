@@ -165,6 +165,31 @@ public class DateTimeFormatUtilsTests {
     }
 
     @Test
+    public void print2YearMonthTest1() {
+        Date null1 = null;
+        LocalDateTime null2 = null;
+        Assert.assertNull(DateTimeFormatUtils.print2YearMonth(null1));
+        Assert.assertNull(DateTimeFormatUtils.print2YearMonth(null2));
+
+        LocalDateTime dateTime = LocalDateTime.of(2016, 8, 1, 0, 0, 0, 0);
+        Date date = DateTimeFormatUtils.toDate(dateTime);
+        Assert.assertEquals("201608", DateTimeFormatUtils.print2YearMonth(date));
+        Assert.assertEquals("201608", DateTimeFormatUtils.print2YearMonth(dateTime.toLocalDate()));
+        Assert.assertEquals("201608", DateTimeFormatUtils.print2YearMonth(dateTime));
+    }
+
+    @Test
+    public void parse2YearMonthTest1() {
+        Assert.assertNull(DateTimeFormatUtils.parse2YearMonth(null));
+        Assert.assertNull(DateTimeFormatUtils.parseToYearMonth(null));
+
+        LocalDateTime dateTime = LocalDateTime.of(2016, 8, 1, 0, 0, 0, 0);
+        Date date = DateTimeFormatUtils.toDate(dateTime);
+        Assert.assertEquals(date, DateTimeFormatUtils.parse2YearMonth("201608"));
+        Assert.assertEquals(dateTime, DateTimeFormatUtils.parseToYearMonth("201608"));
+    }
+
+    @Test
     public void print2DateTimeENTest1() {
         Date null1 = null;
         LocalDateTime null2 = null;

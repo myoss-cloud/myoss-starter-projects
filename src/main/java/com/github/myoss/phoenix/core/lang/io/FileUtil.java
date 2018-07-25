@@ -22,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -112,6 +114,41 @@ public class FileUtil {
     }
 
     /**
+     * 读取 jar 文件
+     *
+     * @param jarUrl jar 文件路径
+     * @return jar 文件
+     */
+    public static JarFile toJarFile(URL jarUrl) {
+        try {
+            JarURLConnection jar = (JarURLConnection) jarUrl.openConnection();
+            return jar.getJarFile();
+        } catch (IOException e) {
+            throw new BizRuntimeException(e);
+        }
+    }
+
+    /**
+     * 将 URL 路径转换为 Path 路径
+     *
+     * @param url URL 路径
+     * @return Path 路径
+     */
+    public static Path toPath(URL url) {
+        String protocol = url.getProtocol();
+        try {
+            if ("jar".equals(protocol)) {
+                // 兼容 windows/unix
+                return Paths.get(new URI(url.getPath()));
+            } else {
+                return Paths.get(url.toURI());
+            }
+        } catch (URISyntaxException e) {
+            throw new BizRuntimeException("url to path failed [" + url.toString() + "]", e);
+        }
+    }
+
+    /**
      * 获取 "jar包" 中的某个目录下的所有文件
      *
      * @param jarPath jar 包路径
@@ -120,10 +157,9 @@ public class FileUtil {
      * @param addEmptyDirectory 是否包含空目录
      * @return jar 包中的某个目录下的所有文件
      */
-    public static Map<String, InputStream> getFilesFromJar(String jarPath, String directory,
-                                                           boolean excludeChildDirectory, boolean addEmptyDirectory) {
-        String jarUrl = toJarFilePath(jarPath);
-        JarFile jarFile = toJarFile(jarUrl);
+    public static Map<String, InputStream> getFilesFromJar(URL jarPath, String directory, boolean excludeChildDirectory,
+                                                           boolean addEmptyDirectory) {
+        JarFile jarFile = toJarFile(jarPath);
         Enumeration<JarEntry> entries = jarFile.entries();
         Map<String, InputStream> files = new LinkedHashMap<>();
         if (entries == null || !entries.hasMoreElements()) {
@@ -133,8 +169,8 @@ public class FileUtil {
         if (addEmptyDirectory) {
             emptyDirectory = new LinkedHashMap<>();
         }
-        Path path = Paths.get(jarUrl);
-        Path directoryPath = path.resolve(directory);
+        Path path = toPath(jarPath);
+        Path directoryPath = (path.endsWith(directory) ? path : path.resolve(directory));
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();
@@ -185,13 +221,13 @@ public class FileUtil {
      * @param addEmptyDirectory 是否添加空目录文件夹（true: 添加; false: 不添加）
      * @return 某个目录下的所有文件
      */
-    public static Map<String, InputStream> getFilesFromDirectory(String rootDirectory, Path directory,
+    public static Map<String, InputStream> getFilesFromDirectory(Path rootDirectory, Path directory,
                                                                  boolean excludeChildDirectory,
                                                                  boolean addEmptyDirectory) {
         try {
             Map<String, InputStream> files = new LinkedHashMap<>();
             Files.list(directory).forEach(path -> {
-                if (excludeChildDirectory && !StringUtils.equals(path.getParent().toString(), rootDirectory)) {
+                if (excludeChildDirectory && !path.getParent().equals(rootDirectory)) {
                     // 排除子目录的文件
                     return;
                 }
@@ -228,9 +264,33 @@ public class FileUtil {
      * @param addEmptyDirectory 是否添加空目录文件夹（true: 添加; false: 不添加）
      * @return 某个目录下的所有文件
      */
+    public static Map<String, InputStream> getFilesFromDirectory(Path directory, boolean excludeChildDirectory,
+                                                                 boolean addEmptyDirectory) {
+        return getFilesFromDirectory(directory, directory, excludeChildDirectory, addEmptyDirectory);
+    }
+
+    /**
+     * 获取某个目录下的所有文件（不包括空目录文件夹）
+     *
+     * @param directory 目录的路径
+     * @return 某个目录下的所有文件
+     */
+    public static Map<String, InputStream> getFilesFromDirectory(Path directory) {
+        return getFilesFromDirectory(directory, false, false);
+    }
+
+    /**
+     * 获取某个目录下的所有文件
+     *
+     * @param directory 目录的路径
+     * @param excludeChildDirectory 排除 <code>templateDirectory</code> 子目录文件
+     * @param addEmptyDirectory 是否添加空目录文件夹（true: 添加; false: 不添加）
+     * @return 某个目录下的所有文件
+     */
     public static Map<String, InputStream> getFilesFromDirectory(String directory, boolean excludeChildDirectory,
                                                                  boolean addEmptyDirectory) {
-        return getFilesFromDirectory(directory, Paths.get(directory), excludeChildDirectory, addEmptyDirectory);
+        Path rootDirectory = Paths.get(directory);
+        return getFilesFromDirectory(rootDirectory, rootDirectory, excludeChildDirectory, addEmptyDirectory);
     }
 
     /**
@@ -240,6 +300,6 @@ public class FileUtil {
      * @return 某个目录下的所有文件
      */
     public static Map<String, InputStream> getFilesFromDirectory(String directory) {
-        return getFilesFromDirectory(directory, Paths.get(directory), false, false);
+        return getFilesFromDirectory(directory, false, false);
     }
 }

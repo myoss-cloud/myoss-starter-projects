@@ -170,7 +170,11 @@ public class FileUtil {
             emptyDirectory = new LinkedHashMap<>();
         }
         Path path = toPath(jarPath);
-        Path directoryPath = (path.endsWith(directory) ? path : path.resolve(directory));
+        if (!path.endsWith(".jar!")) {
+            // 如果 path 中有其它文件，使用 resolveSibling 获取根目录
+            path = path.resolveSibling("");
+        }
+        Path directoryPath = path.resolve(directory);
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();

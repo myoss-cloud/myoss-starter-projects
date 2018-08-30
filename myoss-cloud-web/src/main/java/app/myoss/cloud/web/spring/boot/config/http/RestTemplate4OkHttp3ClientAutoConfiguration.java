@@ -52,7 +52,7 @@ import okhttp3.OkHttpClient.Builder;
  * 需要在项目中的 {@code application.yml} 中添加下面的属性启用此配置<br>
  *
  * <pre>
- * phoenix.ok-http3.connection-pool.enabled = false
+ * myoss-cloud.ok-http3.connection-pool.enabled = false
  * </pre>
  *
  * @author Jerry.Chen

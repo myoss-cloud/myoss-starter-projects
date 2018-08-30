@@ -49,7 +49,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ExecutorEngine implements AutoCloseable {
     private static final ThreadPoolExecutor SHUTDOWN_EXECUTOR = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(10),
-            new ThreadFactoryBuilder().setDaemon(true).setNameFormat("Phoenix-Core-ExecutorEngineCloseTimer").build());
+            new ThreadFactoryBuilder().setDaemon(true)
+                    .setNameFormat("MyOSSCloud-Core-ExecutorEngineCloseTimer")
+                    .build());
 
     @Getter
     private final ExecutorService           executorService;

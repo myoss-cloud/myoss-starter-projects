@@ -17,7 +17,7 @@
 
 <!--  必须的配置
 <property name="logging.level" value="INFO"/>
-<property name="project.name" value="phoenix-core"/>
+<property name="project.name" value="myoss-cloud-projects"/>
 -->
 
 <!--  可选的配置
@@ -29,7 +29,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="600 seconds" debug="false">
     <property name="logging.level" value="INFO"/>
-    <property name="project.name" value="phoenix-core"/>
+    <property name="project.name" value="myoss-cloud-projects"/>
 
     <include resource="app/myoss/cloud/apm/log/logback/logback-file-appender.xml"/>
 

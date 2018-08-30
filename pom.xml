@@ -16,12 +16,12 @@
 
     <name>myoss-cloud</name>
     <description>myoss open source project, myoss-cloud written in Java</description>
-    <url>https://github.com/myoss/myoss-cloud</url>
+    <url>https://github.com/myoss/myoss-cloud-projects</url>
     <inceptionYear>2018</inceptionYear>
 
     <scm>
-        <url>https://github.com/myoss/myoss-cloud</url>
-        <connection>scm:git:https://github.com/myoss/myoss-cloud.git</connection>
+        <url>https://github.com/myoss/myoss-cloud-projects</url>
+        <connection>scm:git:https://github.com/myoss/myoss-cloud-projects.git</connection>
     </scm>
 
     <licenses>

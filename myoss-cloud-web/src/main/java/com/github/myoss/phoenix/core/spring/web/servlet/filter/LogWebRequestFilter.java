@@ -37,7 +37,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.github.myoss.phoenix.core.constants.PhoenixConstants;
+import com.github.myoss.phoenix.core.log.constants.ApmConstants;
 
 import brave.internal.HexCodec;
 import brave.propagation.TraceContext;
@@ -196,17 +196,17 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
      *            日志，用于当前过滤器（默认值：false）
      * @param putRequestInfoToMDC 是否将请求的信息放入MDC中，默认只放 {@link #MDC_START_TIME}、
      *            {@link #MDC_COST_TIME}、{@link #MDC_STATUS} 这个key（默认值：false）
-     * @param traceIdName {@link PhoenixConstants#LEGACY_TRACE_ID_NAME}
+     * @param traceIdName {@link ApmConstants#LEGACY_TRACE_ID_NAME}
      *            输出调用链的TraceId到response header中
-     * @param spanIdName {@link PhoenixConstants#LEGACY_SPAN_ID_NAME}
+     * @param spanIdName {@link ApmConstants#LEGACY_SPAN_ID_NAME}
      *            输出调用链的SpanId到response header中
      */
     public LogWebRequestFilter(boolean logOnFilter, boolean putRequestInfoToMDC, String traceIdName,
                                String spanIdName) {
         this.logOnFilter = logOnFilter;
         this.putRequestInfoToMDC = putRequestInfoToMDC;
-        this.traceIdName = (StringUtils.isNotBlank(traceIdName) ? traceIdName : PhoenixConstants.LEGACY_TRACE_ID_NAME);
-        this.spanIdName = (StringUtils.isNotBlank(spanIdName) ? spanIdName : PhoenixConstants.LEGACY_SPAN_ID_NAME);
+        this.traceIdName = (StringUtils.isNotBlank(traceIdName) ? traceIdName : ApmConstants.LEGACY_TRACE_ID_NAME);
+        this.spanIdName = (StringUtils.isNotBlank(spanIdName) ? spanIdName : ApmConstants.LEGACY_SPAN_ID_NAME);
     }
 
     @Override

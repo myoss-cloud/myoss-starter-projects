@@ -17,10 +17,10 @@
 
 package com.github.myoss.phoenix.core.spring.cloud.sleuth.trace;
 
-import static com.github.myoss.phoenix.core.constants.PhoenixConstants.LEGACY_SPAN_ID_NAME;
-import static com.github.myoss.phoenix.core.constants.PhoenixConstants.LEGACY_TRACE_ID_NAME;
-import static com.github.myoss.phoenix.core.constants.PhoenixConstants.SPAN_ID_NAME;
-import static com.github.myoss.phoenix.core.constants.PhoenixConstants.TRACE_ID_NAME;
+import static com.github.myoss.phoenix.core.log.constants.ApmConstants.LEGACY_SPAN_ID_NAME;
+import static com.github.myoss.phoenix.core.log.constants.ApmConstants.LEGACY_TRACE_ID_NAME;
+import static com.github.myoss.phoenix.core.log.constants.ApmConstants.SPAN_ID_NAME;
+import static com.github.myoss.phoenix.core.log.constants.ApmConstants.TRACE_ID_NAME;
 
 import org.slf4j.MDC;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -106,10 +106,10 @@ public class ApplicationEventTracer {
      * 获取当前线程中保存的spanId
      * <p>
      * 优先取
-     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#LEGACY_SPAN_ID_NAME}
+     * {@link com.github.myoss.phoenix.core.log.constants.ApmConstants#LEGACY_SPAN_ID_NAME}
      * <p>
      * 如果没有上面这个key，才取这个key的值
-     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#SPAN_ID_NAME}
+     * {@link com.github.myoss.phoenix.core.log.constants.ApmConstants#SPAN_ID_NAME}
      *
      * @return MDC中的spanId信息
      */
@@ -122,10 +122,10 @@ public class ApplicationEventTracer {
      * 获取当前线程中保存的traceId
      * <p>
      * 优先取
-     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#LEGACY_TRACE_ID_NAME}
+     * {@link com.github.myoss.phoenix.core.log.constants.ApmConstants#LEGACY_TRACE_ID_NAME}
      * <p>
      * 如果没有上面这个key，才取这个key的值
-     * {@link com.github.myoss.phoenix.core.constants.PhoenixConstants#TRACE_ID_NAME}
+     * {@link com.github.myoss.phoenix.core.log.constants.ApmConstants#TRACE_ID_NAME}
      *
      * @return MDC中的traceId信息
      */

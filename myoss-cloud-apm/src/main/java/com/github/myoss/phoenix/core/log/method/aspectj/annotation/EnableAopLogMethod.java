@@ -26,7 +26,6 @@ import java.lang.annotation.Target;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
-import com.github.myoss.phoenix.core.log.method.aspectj.AopLogControllerExceptionHandler;
 import com.github.myoss.phoenix.core.log.method.aspectj.AopLogMethodRegistrar;
 import com.github.myoss.phoenix.core.log.method.aspectj.MonitorMethodProperties;
 
@@ -37,7 +36,7 @@ import com.github.myoss.phoenix.core.log.method.aspectj.MonitorMethodProperties;
  * <li>{@link LogMethodAfter}
  * <li>{@link LogMethodAround}
  * <li>{@link LogUnMonitor}
- * <li>{@link AopLogControllerExceptionHandler}
+ * <li>{@code com.github.myoss.phoenix.core.log.method.aspectj.AopLogControllerExceptionHandler}
  * </ul>
  * 使用例子：
  *
@@ -71,10 +70,11 @@ public @interface EnableAopLogMethod {
     boolean enableAopLogMethod() default true;
 
     /**
-     * 开启自动记录 controller 异常
+     * 开启自动记录 controller异常，
+     * 使用：{@code com.github.myoss.phoenix.core.log.method.aspectj.AopLogControllerExceptionHandler}
+     * 处理异常信息
      *
      * @return 默认开启（如果不是WebApplication，是不起作用的）
-     * @see AopLogControllerExceptionHandler
      */
     boolean enableAopLogControllerException() default true;
 }

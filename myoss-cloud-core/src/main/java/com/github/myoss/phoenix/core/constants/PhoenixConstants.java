@@ -38,78 +38,28 @@ public interface PhoenixConstants {
     /**
      * UTF-8: 默认的字符集
      */
-    Charset DEFAULT_CHARSET        = Charset.forName("UTF-8");
+    Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     /**
      * 部署的环境变量（dev,test,pre,prd）
      *
      * @see DeployEnvEnum
      */
-    String  DEPLOY_ENV             = "DEPLOY_ENV";
-
-    /**
-     * add property to MDC context "spanExportable"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  SPAN_EXPORTABLE_NAME   = "spanExportable";
-    /**
-     * add property to MDC context "parentId"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  PARENT_ID_NAME         = "parentId";
-    /**
-     * add property to MDC context "traceId"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  TRACE_ID_NAME          = "traceId";
-    /**
-     * add property to MDC context "spanId"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  SPAN_ID_NAME           = "spanId";
-
-    /**
-     * adding legacy "X-B3" entries to MDC context "X-B3-Export"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  LEGACY_EXPORTABLE_NAME = "X-Span-Export";
-    /**
-     * adding legacy "X-B3" entries to MDC context "X-B3-ParentSpanId"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  LEGACY_PARENT_ID_NAME  = "X-B3-ParentSpanId";
-    /**
-     * adding legacy "X-B3" entries to MDC context "X-B3-TraceId"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  LEGACY_TRACE_ID_NAME   = "X-B3-TraceId";
-    /**
-     * adding legacy "X-B3" entries to MDC context "X-B3-SpanId"
-     *
-     * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
-     */
-    String  LEGACY_SPAN_ID_NAME    = "X-B3-SpanId";
+    String  DEPLOY_ENV      = "DEPLOY_ENV";
 
     /**
      * 下划线
      */
-    String  UNDERLINE              = "_";
+    String  UNDERLINE       = "_";
     /**
      * 字符串常量: Y
      */
-    String  Y                      = "Y";
+    String  Y               = "Y";
     /**
      * 字符串常量: N
      */
-    String  N                      = "N";
+    String  N               = "N";
     /**
      * 字符串常量: system
      */
-    String  SYSTEM                 = "system";
+    String  SYSTEM          = "system";
 }

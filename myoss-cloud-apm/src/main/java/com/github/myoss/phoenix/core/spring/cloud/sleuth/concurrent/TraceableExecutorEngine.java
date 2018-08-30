@@ -15,7 +15,7 @@
  *
  */
 
-package com.github.myoss.phoenix.core.log.spring.cloud.sleuth.concurrent;
+package com.github.myoss.phoenix.core.spring.cloud.sleuth.concurrent;
 
 import java.util.concurrent.ExecutorService;
 

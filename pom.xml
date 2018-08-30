@@ -4,14 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.github.myoss</groupId>
-        <artifactId>phoenix-parent</artifactId>
-        <version>1.1.3.RELEASE</version>
+        <groupId>app.myoss.cloud</groupId>
+        <artifactId>spring-boot-parent</artifactId>
+        <version>2.0.0.RELEASE</version>
     </parent>
 
     <artifactId>myoss-cloud-parent</artifactId>
-    <groupId>app.myoss.cloud</groupId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>myoss-cloud</name>
@@ -49,83 +48,9 @@
     </modules>
 
     <properties>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-
         <!-- myoss cloud -->
-        <myoss-clound-dependencies.version>1.0.0-SNAPSHOT</myoss-clound-dependencies.version>
+        <revision>2.0.0.RELEASE</revision>
+        <myoss-cloud-projects.version>${revision}</myoss-cloud-projects.version>
         <!-- myoss cloud -->
-
-        <!-- third party -->
-        <fastjson.version>1.2.49</fastjson.version>
-        <guava.version>26.0-jre</guava.version>
-        <commons-text.version>1.3</commons-text.version>
-        <squareup-okhttp3.version>3.11.0</squareup-okhttp3.version>
-        <!-- third party -->
     </properties>
-
-    <dependencies>
-        <!-- utils start -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <!-- 替换 commons-lang3 中的部分过时依赖 -->
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>${commons-text.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <!-- utils end -->
-
-        <!-- http client start -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>${squareup-okhttp3.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <!-- http client end -->
-    </dependencies>
-
-    <dependencyManagement>
-        <!-- myoss cloud dependencies start -->
-        <dependencies>
-            <dependency>
-                <groupId>app.myoss.cloud</groupId>
-                <artifactId>myoss-cloud-core</artifactId>
-                <version>${myoss-clound-dependencies.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>app.myoss.cloud</groupId>
-                <artifactId>myoss-cloud-apm</artifactId>
-                <version>${myoss-clound-dependencies.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>app.myoss.cloud</groupId>
-                <artifactId>myoss-cloud-cache</artifactId>
-                <version>${myoss-clound-dependencies.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>app.myoss.cloud</groupId>
-                <artifactId>myoss-cloud-web</artifactId>
-                <version>${myoss-clound-dependencies.version}</version>
-            </dependency>
-        </dependencies>
-        <!-- myoss cloud dependencies end -->
-    </dependencyManagement>
 </project>

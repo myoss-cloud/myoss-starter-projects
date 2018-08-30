@@ -5,7 +5,7 @@
     <parent>
         <artifactId>myoss-cloud-parent</artifactId>
         <groupId>app.myoss.cloud</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -45,5 +45,26 @@
         </dependency>
         <!-- spring boot end -->
 
+        <!-- utils start -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- 替换 commons-lang3 中的部分过时依赖 -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- utils end -->
     </dependencies>
 </project>

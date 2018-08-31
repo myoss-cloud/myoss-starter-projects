@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>myoss-starter-projects</artifactId>
+        <groupId>app.myoss.cloud.boot</groupId>
+        <version>2.0.1.RELEASE</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>myoss-starter-apm</artifactId>
+    <name>myoss-starter-apm</name>
+    <description>myoss open source project, myoss-starter written in Java</description>
+    <url>https://github.com/myoss/myoss-starter-projects</url>
+    <inceptionYear>2018</inceptionYear>
+
+    <scm>
+        <url>https://github.com/myoss/myoss-starter-projects</url>
+        <connection>scm:git:https://github.com/myoss/myoss-starter-projects.git</connection>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jerry.Chen</name>
+            <email>jerry.work@aliyun.com</email>
+            <organizationUrl>https://github.com/myoss</organizationUrl>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <!-- myoss cloud dependencies start -->
+        <dependency>
+            <groupId>app.myoss.cloud.boot</groupId>
+            <artifactId>myoss-starter-core</artifactId>
+        </dependency>
+        <!-- myoss cloud dependencies end -->
+
+        <!-- spring cloud dependency start -->
+        <dependency>
+            <!-- support to sleuth -->
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <!-- spring cloud dependency end -->
+
+        <!-- log start -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <!-- 用于logback.xml中使用 if condition 判断 -->
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+        </dependency>
+        <!-- log end -->
+    </dependencies>
+</project>

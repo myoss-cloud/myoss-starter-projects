@@ -6,21 +6,22 @@
     <parent>
         <groupId>app.myoss.cloud</groupId>
         <artifactId>spring-boot-parent</artifactId>
-        <version>2.0.0.RELEASE</version>
+        <version>2.0.1.RELEASE</version>
     </parent>
 
-    <artifactId>myoss-cloud-parent</artifactId>
-    <version>${revision}</version>
+    <groupId>app.myoss.cloud.boot</groupId>
+    <artifactId>myoss-starter-projects</artifactId>
+    <version>2.0.1.RELEASE</version>
     <packaging>pom</packaging>
 
-    <name>myoss-cloud</name>
-    <description>myoss open source project, myoss-cloud written in Java</description>
-    <url>https://github.com/myoss/myoss-cloud-projects</url>
+    <name>myoss-starter-projects</name>
+    <description>myoss open source project, myoss-starter written in Java</description>
+    <url>https://github.com/myoss-cloud/myoss-starter-projects</url>
     <inceptionYear>2018</inceptionYear>
 
     <scm>
-        <url>https://github.com/myoss/myoss-cloud-projects</url>
-        <connection>scm:git:https://github.com/myoss/myoss-cloud-projects.git</connection>
+        <url>https://github.com/myoss-cloud/myoss-starter-projects</url>
+        <connection>scm:git:https://github.com/myoss-cloud/myoss-starter-projects.git</connection>
     </scm>
 
     <licenses>
@@ -36,21 +37,22 @@
         <developer>
             <name>Jerry.Chen</name>
             <email>jerry.work@aliyun.com</email>
-            <organizationUrl>https://github.com/myoss</organizationUrl>
+            <organizationUrl>https://github.com/myoss-cloud</organizationUrl>
+            <url>https://github.com/myoss</url>
         </developer>
     </developers>
 
     <modules>
-        <module>myoss-cloud-core</module>
-        <module>myoss-cloud-apm</module>
-        <module>myoss-cloud-cache</module>
-        <module>myoss-cloud-web</module>
+        <module>myoss-starter-core</module>
+        <module>myoss-starter-apm</module>
+        <module>myoss-starter-cache</module>
+        <module>myoss-starter-web</module>
     </modules>
 
     <properties>
         <!-- myoss cloud -->
-        <revision>2.0.0.RELEASE</revision>
-        <myoss-cloud-projects.version>${revision}</myoss-cloud-projects.version>
+        <revision>2.0.1.RELEASE</revision>
+        <myoss-starter-projects.version>${revision}</myoss-starter-projects.version>
         <!-- myoss cloud -->
     </properties>
 </project>

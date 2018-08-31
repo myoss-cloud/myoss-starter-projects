@@ -1,0 +1,175 @@
+<!--
+  ~ Copyright 2018-2018 https://github.com/myoss
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<!--  必须的配置
+<property name="logging.level" value="INFO"/>
+<property name="project.name" value="myoss-starter-projects"/>
+-->
+
+<!--  可选的配置
+<property name="logging.path" value="${user.home}/logs/${project.name}-test"/>
+<property name="logging.rootPath" value="${user.home}/logs/${project.name}"/>
+-->
+
+<!-- logback.xml 使用示例:
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="600 seconds" debug="false">
+    <property name="logging.level" value="INFO"/>
+    <property name="project.name" value="myoss-starter-projects"/>
+
+    <include resource="app/myoss/cloud/apm/log/logback/logback-file-appender.xml"/>
+
+    <root>
+        <level value="${logging.level}"/>
+        <appender-ref ref="errorAppenderAsync"/>
+        <appender-ref ref="infoAppenderAsync"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
+-->
+
+<included>
+    <!-- logging.path: 自己控制日志文件目录 -->
+    <!-- logging.rootPath: 自己控制日志文件根目录 -->
+    <if condition='property("logging.path").length() == 0'>
+        <then>
+            <if condition='",test,pre,prd".indexOf(property("DEPLOY_ENV")) > 0'>
+                <then>
+                    <!-- 测试/预发/生产环境 -->
+                    <property name="logging.path" value="${logging.rootPath}/logs/${project.name}"/>
+                </then>
+                <else>
+                    <!-- 本地开发环境，兼容 unix/windows 系统用户文件权限的问题 -->
+                    <property name="logging.path" value="${user.home}/logs/${project.name}"/>
+                </else>
+            </if>
+        </then>
+    </if>
+
+    <!-- logging.infoAppender.fileName: info日志文件名 -->
+    <if condition='property("logging.infoAppender.fileName").length() == 0'>
+        <then>
+            <property name="logging.infoAppender.fileName" value="all-${project.name}_all"/>
+        </then>
+    </if>
+
+    <!-- logging.requestInfoAppender.fileName: web request info日志文件名 -->
+    <if condition='property("logging.requestInfoAppender.fileName").length() == 0'>
+        <then>
+            <property name="logging.requestInfoAppender.fileName" value="requestInfo-${project.name}_info"/>
+        </then>
+    </if>
+
+    <!-- logging.errorAppender.fileName: 错误日志文件名 -->
+    <if condition='property("logging.errorAppender.fileName").length() == 0'>
+        <then>
+            <property name="logging.errorAppender.fileName" value="error-${project.name}_error"/>
+        </then>
+    </if>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/${logging.infoAppender.fileName}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/${logging.infoAppender.fileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出 infoAppender 的日志 -->
+    <!-- AsyncAppender并不处理日志，只是将日志缓冲到一个BlockingQueue里面去，并在内部创建一个工作线程从队列头部获取日志，之后将获取的日志
+    循环记录到附加的其他appender上去，从而达到不阻塞主线程的效果。因此AsyncAppender仅仅充当事件转发器，必须引用另一个appender来做事。-->
+    <appender name="infoAppenderAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 包含调用者信息,默认是false,官方提到如果开启会有性能上的损失,开启用于输出[%F:%L]等信息 -->
+        <includeCallerData>true</includeCallerData>
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>2048</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="infoAppender"/>
+    </appender>
+
+    <!-- 客户端请求的审计日志 -->
+    <appender name="requestInfoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/${logging.requestInfoAppender.fileName}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/${logging.requestInfoAppender.fileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - [%X{method}] [%X{requestURIWithQueryString}] [%X{startTime}] [%X{costTime}] [%X{status}] [ip=%X{remoteAddr}, ref=%X{referrer}, ua=%X{userAgent}, sid=%X{cookie.JSESSIONID}] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出 requestInfoAppender 的日志 -->
+    <appender name="requestInfoAppenderAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>true</includeCallerData>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>2048</queueSize>
+        <appender-ref ref="requestInfoAppender"/>
+    </appender>
+
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.path}/${logging.errorAppender.fileName}.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 过滤日志级别最低为 ERROR -->
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.path}/${logging.errorAppender.fileName}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步输出 errorAppender 的日志 -->
+    <appender name="errorAppenderAsync" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>true</includeCallerData>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>2048</queueSize>
+        <appender-ref ref="errorAppender"/>
+    </appender>
+
+    <logger name="org.apache">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="WebRequest" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="requestInfoAppenderAsync"/>
+    </logger>
+</included>

@@ -13,7 +13,7 @@
 - [maven][1]
 - [the latest JAR][2]  
 
-[1]: http://repo1.maven.org/maven2/app.myoss.cloud.boot/boot/myoss-starter-projects/  
+[1]: http://repo1.maven.org/maven2/app/myoss/cloud/boot/myoss-starter-projects/  
 [2]: https://search.maven.org/remote_content?g=app.myoss.cloud.boot&a=myoss-starter-projects&v=LATEST
 
 ## Maven

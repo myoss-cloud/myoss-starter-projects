@@ -6,12 +6,12 @@
     <parent>
         <groupId>app.myoss.cloud</groupId>
         <artifactId>spring-boot-parent</artifactId>
-        <version>2.0.1.RELEASE</version>
+        <version>2.0.3.RELEASE</version>
     </parent>
 
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-projects</artifactId>
-    <version>2.0.1.RELEASE</version>
+    <version>2.0.2.RELEASE</version>
     <packaging>pom</packaging>
 
     <name>myoss-starter-projects</name>
@@ -51,7 +51,7 @@
 
     <properties>
         <!-- myoss cloud -->
-        <revision>2.0.1.RELEASE</revision>
+        <revision>2.0.2.RELEASE</revision>
         <myoss-starter-projects.version>${revision}</myoss-starter-projects.version>
         <!-- myoss cloud -->
     </properties>

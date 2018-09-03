@@ -17,6 +17,9 @@
 
 package app.myoss.cloud.apm.log.method.aspectj;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
@@ -47,6 +50,7 @@ public class AopLogMethodRegistrar implements ImportBeanDefinitionRegistrar, Res
         ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
         scanner.resetFilters(false);
         scanner.setResourceLoader(this.resourceLoader);
+        List<String> scanPackages = new ArrayList<>();
 
         // 监控 method 的入参和出参
         boolean enableAopLogMethod = attributes.getBoolean("enableAopLogMethod");
@@ -62,11 +66,14 @@ public class AopLogMethodRegistrar implements ImportBeanDefinitionRegistrar, Res
             scanner.addExcludeFilter(new AnnotationTypeFilter(ControllerAdvice.class));
         } else {
             scanner.addIncludeFilter(new AnnotationTypeFilter(ControllerAdvice.class));
+            // app.myoss.cloud.web.spring.web.method.aspectj.AopLogControllerExceptionHandler
+            scanPackages.add("app.myoss.cloud.web.spring.web.method.aspectj");
         }
 
         // 扫描注册
         String packageName = ClassUtils.getPackageName(AopLogMethodRegistrar.class);
-        scanner.scan(packageName);
+        scanPackages.add(packageName);
+        scanner.scan(scanPackages.toArray(new String[0]));
     }
 
     @Override

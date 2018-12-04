@@ -2,3 +2,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
 app.myoss.cloud.core.spring.boot.config.CommonAutoConfiguration,\
 app.myoss.cloud.core.spring.boot.config.FastJsonAutoConfiguration
+# Environment Post Processors
+org.springframework.boot.env.EnvironmentPostProcessor = \
+app.myoss.cloud.core.spring.boot.config.CoreCommonEnvironmentPostProcessor
+# Application Listeners
+org.springframework.context.ApplicationListener = \
+app.myoss.cloud.core.spring.boot.config.CoreCommonEnvironmentPostProcessor

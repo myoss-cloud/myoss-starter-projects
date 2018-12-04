@@ -28,6 +28,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.FutureCallback;
@@ -108,12 +109,16 @@ public class ExecutorEngine implements AutoCloseable {
      *
      * @param inputs 输入参数
      * @param executeUnit 执行单元
+     * @param timeout 执行超时时间（可选参数），因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近）
+     * @param timeUnit 执行超时时间单位（可选参数，如果设置了 timeout，没有设置 timeUnit，则默认使用
+     *            {@link TimeUnit#MILLISECONDS}）
      * @param <I> 入参类型
      * @param <O> 出参类型
      * @return 执行结果
      */
     @SuppressWarnings("unchecked")
-    public <I, O> List<O> execute(final Collection<I> inputs, final ExecuteUnit<I, O> executeUnit) {
+    public <I, O> List<O> execute(final Collection<I> inputs, final ExecuteUnit<I, O> executeUnit, Long timeout,
+                                  TimeUnit timeUnit) {
         if (inputs.size() == 1) {
             try {
                 return Lists.newArrayList(executeUnit.execute(inputs.iterator().next()));
@@ -123,7 +128,21 @@ public class ExecutorEngine implements AutoCloseable {
         }
         ListenableFuture<List<O>> futures = submitFutures(inputs, executeUnit);
         addCallback(futures);
-        return getFutureResults(futures);
+        return getFutureResults(futures, timeout, timeUnit);
+    }
+
+    /**
+     * 多线程执行任务.
+     *
+     * @param inputs 输入参数
+     * @param executeUnit 执行单元
+     * @param <I> 入参类型
+     * @param <O> 出参类型
+     * @return 执行结果
+     */
+    @SuppressWarnings("unchecked")
+    public <I, O> List<O> execute(final Collection<I> inputs, final ExecuteUnit<I, O> executeUnit) {
+        return execute(inputs, executeUnit, null, null);
     }
 
     /**
@@ -131,11 +150,15 @@ public class ExecutorEngine implements AutoCloseable {
      *
      * @param size 最多执行几次
      * @param executeUnit 执行单元
+     * @param timeout 执行超时时间（可选参数），因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近）
+     * @param timeUnit 执行超时时间单位（可选参数，如果设置了 timeout，没有设置 timeUnit，则默认使用
+     *            {@link TimeUnit#MILLISECONDS}）
      * @param <O> 出参类型
      * @return 执行结果
      */
     @SuppressWarnings("unchecked")
-    public <O> List<O> execute(final int size, final ExecuteUnit<Integer, O> executeUnit) {
+    public <O> List<O> execute(final int size, final ExecuteUnit<Integer, O> executeUnit, Long timeout,
+                               TimeUnit timeUnit) {
         if (size == 1) {
             try {
                 return Lists.newArrayList(executeUnit.execute(0));
@@ -149,7 +172,39 @@ public class ExecutorEngine implements AutoCloseable {
         }
         ListenableFuture<List<O>> futures = submitFutures(inputs, executeUnit);
         addCallback(futures);
-        return getFutureResults(futures);
+        return getFutureResults(futures, timeout, timeUnit);
+    }
+
+    /**
+     * 多线程执行任务.
+     *
+     * @param size 最多执行几次
+     * @param executeUnit 执行单元
+     * @param <O> 出参类型
+     * @return 执行结果
+     */
+    @SuppressWarnings("unchecked")
+    public <O> List<O> execute(final int size, final ExecuteUnit<Integer, O> executeUnit) {
+        return execute(size, executeUnit, null, null);
+    }
+
+    /**
+     * 多线程执行任务并归并结果.
+     *
+     * @param inputs 执行入参
+     * @param executeUnit 执行单元
+     * @param mergeUnit 合并结果单元
+     * @param timeout 执行超时时间（可选参数），因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近）
+     * @param timeUnit 执行超时时间单位（可选参数，如果设置了 timeout，没有设置 timeUnit，则默认使用
+     *            {@link TimeUnit#MILLISECONDS}）
+     * @param <I> 入参类型
+     * @param <M> 中间结果类型
+     * @param <O> 最终结果类型
+     * @return 执行结果
+     */
+    public <I, M, O> O execute(final Collection<I> inputs, final ExecuteUnit<I, M> executeUnit,
+                               final MergeUnit<M, O> mergeUnit, Long timeout, TimeUnit timeUnit) {
+        return mergeUnit.merge(execute(inputs, executeUnit, timeout, timeUnit));
     }
 
     /**
@@ -210,15 +265,26 @@ public class ExecutorEngine implements AutoCloseable {
      * 获取多线程任务执行的最终结果
      *
      * @param allFutures 多线程任务
+     * @param timeout 执行超时时间（可选参数），因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近）
+     * @param timeUnit 执行超时时间单位（可选参数，如果设置了 timeout，没有设置 timeUnit，则默认使用
+     *            {@link TimeUnit#MILLISECONDS}）
      * @param <O> 最终结果类型
      * @return 执行结果
      */
-    private <O> O getFutureResults(final ListenableFuture<O> allFutures) {
+    private <O> O getFutureResults(final ListenableFuture<O> allFutures, Long timeout, TimeUnit timeUnit) {
         try {
+            if (timeout != null && timeUnit != null) {
+                return allFutures.get(timeout, timeUnit);
+            }
+            if (timeout != null) {
+                return allFutures.get(timeout, TimeUnit.MILLISECONDS);
+            }
             return allFutures.get();
         } catch (final InterruptedException | ExecutionException ex) {
             // 其它异常信息，使用自定义异常进行包装
             throw new ExecuteException("execute task throw exception", ex);
+        } catch (TimeoutException ex) {
+            throw new ExecuteTimeoutException("execute task throw times out exception", ex);
         }
     }
 }

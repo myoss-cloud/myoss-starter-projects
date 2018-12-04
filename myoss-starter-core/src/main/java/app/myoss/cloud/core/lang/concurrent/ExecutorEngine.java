@@ -105,6 +105,42 @@ public class ExecutorEngine implements AutoCloseable {
     }
 
     /**
+     * 多线程执行任务. 多个执行单元，使用相同的输入参数，进行多线程请求
+     *
+     * <pre>
+     * // Demo示例
+     * String param = &quot;&#39118;&#38738;&#26472;\uD83D\uDE0D&quot;;
+     * List&lt;ExecuteUnit&lt;String, String&gt;&gt; executeUnits = new ArrayList&lt;&gt;();
+     * executeUnits.add(EmojiUtils::addBackslash);
+     * executeUnits.add(EmojiUtils::removeBackslash);
+     * List&lt;String&gt; execute = executorEngine.execute(param, executeUnits, timeout, timeUnit);
+     * </pre>
+     *
+     * @param input 输入参数
+     * @param executeUnits 多个执行单元
+     * @param timeout 执行超时时间（可选参数），因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近）
+     * @param timeUnit 执行超时时间单位（可选参数，如果设置了 timeout，没有设置 timeUnit，则默认使用
+     *            {@link TimeUnit#MILLISECONDS}）
+     * @param <I> 入参类型
+     * @param <O> 出参类型
+     * @return 执行结果
+     */
+    @SuppressWarnings("unchecked")
+    public <I, O> List<O> execute(final I input, final Collection<ExecuteUnit<I, O>> executeUnits, Long timeout,
+                                  TimeUnit timeUnit) {
+        if (executeUnits.size() == 1) {
+            try {
+                return Lists.newArrayList(executeUnits.iterator().next().execute(input));
+            } catch (Exception ex) {
+                throw new ExecuteException("execute task throw exception", ex);
+            }
+        }
+        ListenableFuture<List<O>> futures = submitFutures(input, executeUnits);
+        addCallback(futures);
+        return getFutureResults(futures, timeout, timeUnit);
+    }
+
+    /**
      * 多线程执行任务.
      *
      * @param inputs 输入参数
@@ -232,11 +268,29 @@ public class ExecutorEngine implements AutoCloseable {
      * @param <O> 最终结果类型
      * @return 执行结果
      */
-    private <I, O> ListenableFuture<List<O>> submitFutures(final Collection<I> inputs,
-                                                           final ExecuteUnit<I, O> executeUnit) {
+    public <I, O> ListenableFuture<List<O>> submitFutures(final Collection<I> inputs,
+                                                          final ExecuteUnit<I, O> executeUnit) {
         Set<ListenableFuture<O>> result = new HashSet<>(inputs.size());
         for (final I each : inputs) {
             result.add((ListenableFuture<O>) executorService.submit(() -> executeUnit.execute(each)));
+        }
+        return Futures.allAsList(result);
+    }
+
+    /**
+     * 提交多线程任务.
+     *
+     * @param input 执行入参
+     * @param executeUnits 多个执行单元
+     * @param <I> 入参类型
+     * @param <O> 最终结果类型
+     * @return 执行结果
+     */
+    public <I, O> ListenableFuture<List<O>> submitFutures(final I input,
+                                                          final Collection<ExecuteUnit<I, O>> executeUnits) {
+        Set<ListenableFuture<O>> result = new HashSet<>(executeUnits.size());
+        for (ExecuteUnit<I, O> each : executeUnits) {
+            result.add((ListenableFuture<O>) executorService.submit(() -> each.execute(input)));
         }
         return Futures.allAsList(result);
     }
@@ -247,7 +301,7 @@ public class ExecutorEngine implements AutoCloseable {
      * @param allFutures 多线程任务
      * @param <O> 最终结果类型
      */
-    private <O> void addCallback(final ListenableFuture<O> allFutures) {
+    public <O> void addCallback(final ListenableFuture<O> allFutures) {
         Futures.addCallback(allFutures, new FutureCallback<O>() {
             @Override
             public void onSuccess(O result) {
@@ -271,7 +325,7 @@ public class ExecutorEngine implements AutoCloseable {
      * @param <O> 最终结果类型
      * @return 执行结果
      */
-    private <O> O getFutureResults(final ListenableFuture<O> allFutures, Long timeout, TimeUnit timeUnit) {
+    public <O> O getFutureResults(final ListenableFuture<O> allFutures, Long timeout, TimeUnit timeUnit) {
         try {
             if (timeout != null && timeUnit != null) {
                 return allFutures.get(timeout, timeUnit);

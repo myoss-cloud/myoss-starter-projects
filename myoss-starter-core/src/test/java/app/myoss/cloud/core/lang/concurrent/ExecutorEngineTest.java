@@ -38,6 +38,7 @@ import org.springframework.util.ClassUtils;
 import com.google.common.collect.Lists;
 
 import app.myoss.cloud.core.exception.BizRuntimeException;
+import app.myoss.cloud.core.utils.EmojiUtils;
 import ch.qos.logback.classic.Level;
 import lombok.extern.slf4j.Slf4j;
 
@@ -194,5 +195,35 @@ public class ExecutorEngineTest {
                     "" + ClassUtils.getQualifiedName(BizRuntimeException.class) + ": ba la ba la");
             throw e;
         }
+    }
+
+    @Test
+    public void executeTest5() {
+        ExecutorService delegate = Executors.newFixedThreadPool(3);
+        ExecutorEngine executorEngine = new ExecutorEngine(delegate);
+        String param = "风青杨\uD83D\uDE0D";
+        List<ExecuteUnit<String, String>> executeUnits = new ArrayList<>();
+        executeUnits.add(EmojiUtils::addBackslash);
+        executeUnits.add(EmojiUtils::removeBackslash);
+        Long sleepTime = 500L;
+        int totalCostTime = 0;
+        int runCount = 5;
+        for (int i = 0; i < runCount; i++) {
+            long start = System.currentTimeMillis();
+            TimeUnit timeUnit = (i % 2 == 0 ? TimeUnit.MILLISECONDS : null);
+            Long timeout = (i % 2 == 1 ? 10L : null);
+            List<String> execute = executorEngine.execute(param, executeUnits, timeout, timeUnit);
+            long end = System.currentTimeMillis();
+            long costTime = end - start;
+            totalCostTime += costTime;
+            log.info("[test " + (i + 1) + "] cost time: " + costTime);
+            for (Object o : execute) {
+                log.info("[test " + (i + 1) + "] " + o);
+            }
+            log.info("");
+        }
+        int avgCostTime = totalCostTime / runCount;
+        log.info("总耗时: {}, 总共运行: {}次, 平均耗时: {}", totalCostTime, runCount, avgCostTime);
+        assertThat(avgCostTime).isLessThan(sleepTime.intValue() + 100);
     }
 }

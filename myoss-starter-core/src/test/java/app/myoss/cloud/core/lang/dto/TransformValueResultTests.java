@@ -50,6 +50,7 @@ public class TransformValueResultTests {
 
         Result<String> target = new Result<>();
         Assert.assertEquals(TransformValue.copyErrorInfo(source, target), target);
+        Assert.assertEquals(TransformValue.copyErrorInfo2(source, target), target);
 
         Assert.assertFalse(source.isSuccess());
         Assert.assertEquals(source.getErrorCode(), target.getErrorCode());
@@ -149,5 +150,22 @@ public class TransformValueResultTests {
         Assert.assertEquals(source.getErrorMsg(), "error code: blankValue");
         Assert.assertTrue(source.getValue());
         Assert.assertEquals(source.getExtraInfo(), Maps.newHashMap("key", "value"));
+    }
+
+    @Test
+    public void setErrorInfoTest3() {
+        Result<Boolean> source = new Result<>(true);
+        source.setErrorCode("invalidValue");
+        source.setErrorMsg("error code: invalidValue");
+        source.addExtraInfo("key", "value");
+
+        Result<String> target = new Result<>();
+        TransformValue.copyErrorInfo2(source, target);
+        Assert.assertNotEquals(target, source);
+        Assert.assertEquals(target.getErrorCode(), source.getErrorCode());
+        Assert.assertEquals(target.getErrorMsg(), source.getErrorMsg());
+        Assert.assertTrue(source.isSuccess());
+        Assert.assertNotEquals(target.getExtraInfo(), source.getExtraInfo());
+        Assert.assertNotEquals(target.getValue(), source.getValue());
     }
 }

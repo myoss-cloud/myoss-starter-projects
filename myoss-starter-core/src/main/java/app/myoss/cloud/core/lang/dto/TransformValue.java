@@ -39,6 +39,20 @@ public class TransformValue {
     }
 
     /**
+     * 复制 Result 中的错误信息，只会复制目标中的 success/errorCode/errorMsg 值
+     *
+     * @param source 源
+     * @param target 目标
+     * @param <T> 类型
+     * @return target实例对象
+     */
+    public static <T> Result<T> copyErrorInfo2(Result<?> source, Result<T> target) {
+        return target.setSuccess(source.isSuccess())
+                .setErrorCode(source.getErrorCode())
+                .setErrorMsg(source.getErrorMsg());
+    }
+
+    /**
      * 复制 Result 中的所有信息
      *
      * @param source 源

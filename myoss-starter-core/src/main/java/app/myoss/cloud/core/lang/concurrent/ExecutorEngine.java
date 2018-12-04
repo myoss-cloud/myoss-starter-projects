@@ -109,7 +109,7 @@ public class ExecutorEngine implements AutoCloseable {
      *
      * <pre>
      * // Demo示例
-     * String param = &quot;&#39118;&#38738;&#26472;\uD83D\uDE0D&quot;;
+     * String param = &quot;Myoss\uD83D\uDE0D&quot;;
      * List&lt;ExecuteUnit&lt;String, String&gt;&gt; executeUnits = new ArrayList&lt;&gt;();
      * executeUnits.add(EmojiUtils::addBackslash);
      * executeUnits.add(EmojiUtils::removeBackslash);

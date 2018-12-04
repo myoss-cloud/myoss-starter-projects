@@ -25,6 +25,19 @@ import com.alibaba.fastjson.serializer.ObjectSerializer;
 /**
  * Emoji表情序列化工具类
  *
+ * <pre>
+ * // Demo示例
+ * public class EmojiNickname {
+ *     &#64;JSONField(serializeUsing = EmojiValueFastJsonSerializer.class)
+ *     &#64;Getter
+ *     private String nickname;
+ *
+ *     public void setNickname(String nickname) {
+ *         this.nickname = EmojiUtils.addBackslash(nickname);
+ *     }
+ * }
+ * </pre>
+ *
  * @author Jerry.Chen
  * @since 2018年12月4日 下午3:57:55
  */

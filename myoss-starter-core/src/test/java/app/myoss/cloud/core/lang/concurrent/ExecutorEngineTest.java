@@ -98,8 +98,8 @@ public class ExecutorEngineTest {
                 Thread.sleep(sleepTime);
                 log.info("input -->> {}", input);
                 return input + 10;
-            }, sleepTime + 10, timeUnit);
-            // 因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近），所以这里设置总的超时时间为：500L + 10L = 510L
+            }, sleepTime + 50, timeUnit);
+            // 因为是并发去执行，线程足够多的时候，全部执行下来，只需要花费单个执行的时间（无限接近），所以这里设置总的超时时间为：500L + 50L = 550L
             long end = System.currentTimeMillis();
             long costTime = end - start;
             totalCostTime += costTime;
@@ -110,7 +110,7 @@ public class ExecutorEngineTest {
             log.info("");
         }
         int avgCostTime = totalCostTime / runCount;
-        log.info("总耗时: {}, 总共运行: {}次, 平均耗时: {}, 校验多线程执行不超过: {}", totalCostTime, runCount, avgCostTime, sleepTime + 10);
+        log.info("总耗时: {}, 总共运行: {}次, 平均耗时: {}, 校验多线程执行不超过: {}", totalCostTime, runCount, avgCostTime, sleepTime + 50);
         assertThat(avgCostTime).isLessThan(sleepTime.intValue() + 100);
     }
 

@@ -18,9 +18,15 @@
 package app.myoss.cloud.apm.spring.cloud.sleuth.concurrent;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.cloud.sleuth.instrument.async.TraceableExecutorService;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import app.myoss.cloud.core.lang.concurrent.ExecutorEngine;
 
@@ -42,5 +48,20 @@ public class TraceableExecutorEngine {
     public static ExecutorEngine buildTraceableExecutorService(BeanFactory beanFactory, ExecutorService delegate) {
         TraceableExecutorService traceableExecutorService = new TraceableExecutorService(beanFactory, delegate);
         return new ExecutorEngine(traceableExecutorService);
+    }
+
+    /**
+     * 创建可以追踪调用链的多线程池
+     *
+     * @param beanFactory Spring BeanFactory
+     * @return 可以追踪调用链的多线程池执行框架
+     */
+    public static ExecutorEngine buildTraceableExecutorService(BeanFactory beanFactory) {
+        ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true)
+                .setNameFormat("TraceableExecutorEngineThreadPool-%d")
+                .build();
+        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(5, 200, 0, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(1024), threadFactory);
+        return buildTraceableExecutorService(beanFactory, poolExecutor);
     }
 }

@@ -42,6 +42,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 多线程执行框架
+ * <p>
+ * app.myoss.cloud.apm.spring.cloud.sleuth.concurrent.TraceableExecutorEngine:
+ * 创建可以追踪调用链的多线程池
+ * </p>
  *
  * @author Jerry.Chen
  * @since 2018年6月4日 下午11:17:29

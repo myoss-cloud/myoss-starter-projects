@@ -27,6 +27,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.ClassUtils;
 
+import app.myoss.cloud.apm.constants.ApmConstants;
 import lombok.Data;
 
 /**
@@ -36,7 +37,7 @@ import lombok.Data;
  * @since 2018年4月13日 下午12:15:37
  */
 @Data
-@ConfigurationProperties(prefix = "myoss-cloud.log.method")
+@ConfigurationProperties(prefix = ApmConstants.MONITOR_METHOD_CONFIG_PREFIX)
 public class MonitorMethodProperties {
     /**
      * 使用slf4j记录方法的入参和出参，输出应用名字，默认没有设置

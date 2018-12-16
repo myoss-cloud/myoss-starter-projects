@@ -25,52 +25,65 @@ package app.myoss.cloud.apm.constants;
  */
 public class ApmConstants {
     /**
+     * APM配置前缀
+     */
+    public static final String CONFIG_PREFIX                       = "myoss-cloud.log";
+    /**
+     * 使用slf4j记录方法的入参和出参，配置前缀
+     */
+    public static final String MONITOR_METHOD_CONFIG_PREFIX        = CONFIG_PREFIX + ".method";
+    /**
+     * 每天定时检查日志文件，是否已经滚动生成新的文件，没有就触发生成新的文件，配置前缀
+     */
+    public static final String AUTO_ROLLING_LOG_FILE_CONFIG_PREFIX = CONFIG_PREFIX + ".auto-rolling-log-file";
+
+    /**
      * add property to MDC context "spanExportable"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String SPAN_EXPORTABLE_NAME   = "spanExportable";
+    public static final String SPAN_EXPORTABLE_NAME                = "spanExportable";
     /**
      * add property to MDC context "parentId"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String PARENT_ID_NAME         = "parentId";
+    public static final String PARENT_ID_NAME                      = "parentId";
     /**
      * add property to MDC context "traceId"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String TRACE_ID_NAME          = "traceId";
+    public static final String TRACE_ID_NAME                       = "traceId";
     /**
      * add property to MDC context "spanId"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String SPAN_ID_NAME           = "spanId";
+    public static final String SPAN_ID_NAME                        = "spanId";
 
     /**
      * adding legacy "X-B3" entries to MDC context "X-B3-Export"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String LEGACY_EXPORTABLE_NAME = "X-Span-Export";
+    public static final String LEGACY_EXPORTABLE_NAME              = "X-Span-Export";
     /**
      * adding legacy "X-B3" entries to MDC context "X-B3-ParentSpanId"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String LEGACY_PARENT_ID_NAME  = "X-B3-ParentSpanId";
+    public static final String LEGACY_PARENT_ID_NAME               = "X-B3-ParentSpanId";
     /**
      * adding legacy "X-B3" entries to MDC context "X-B3-TraceId"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String LEGACY_TRACE_ID_NAME   = "X-B3-TraceId";
+    public static final String LEGACY_TRACE_ID_NAME                = "X-B3-TraceId";
     /**
      * adding legacy "X-B3" entries to MDC context "X-B3-SpanId"
      *
      * @see org.springframework.cloud.sleuth.log.Slf4jCurrentTraceContext
      */
-    public static final String LEGACY_SPAN_ID_NAME    = "X-B3-SpanId";
+    public static final String LEGACY_SPAN_ID_NAME                 = "X-B3-SpanId";
 }

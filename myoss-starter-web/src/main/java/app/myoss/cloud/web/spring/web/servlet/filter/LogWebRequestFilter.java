@@ -38,6 +38,7 @@ import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import app.myoss.cloud.apm.constants.ApmConstants;
+import app.myoss.cloud.web.utils.IpUtils;
 import brave.internal.HexCodec;
 import brave.propagation.TraceContext;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +88,10 @@ import lombok.extern.slf4j.Slf4j;
  * <tr>
  * <td>%X{remoteAddr}</td>
  * <td>用户IP地址</td>
+ * </tr>
+ * <tr>
+ * <td>%X{remoteRealIp}</td>
+ * <td>客户端的真实ip地址</td>
  * </tr>
  * <tr>
  * <td>%X{remoteHost}</td>
@@ -148,9 +153,13 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
      */
     public static final String MDC_QUERY_STRING                  = "queryString";
     /**
-     * 客户端的ip地址
+     * 客户端的ip地址（如果服务前面是 NGINX 转发过来的，那么就是它的 ip 地址）
      */
     public static final String MDC_REMOTE_ADDR                   = "remoteAddr";
+    /**
+     * 客户端的真实ip地址
+     */
+    public static final String MDC_REMOTE_REAL_IP                = "remoteRealIp";
     /**
      * 客户端的主机名
      */
@@ -291,6 +300,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
         // client info
         putMDC(mdc, MDC_REMOTE_HOST, request.getRemoteHost());
         putMDC(mdc, MDC_REMOTE_ADDR, request.getRemoteAddr());
+        putMDC(mdc, MDC_REMOTE_REAL_IP, IpUtils.getIpAddress(request));
 
         // user agent
         putMDC(mdc, MDC_USER_AGENT, request.getHeader("User-Agent"));
@@ -375,6 +385,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
             MDC.remove(MDC_REQUEST_URI_WITH_QUERY_STRING);
             MDC.remove(MDC_QUERY_STRING);
             MDC.remove(MDC_REMOTE_ADDR);
+            MDC.remove(MDC_REMOTE_REAL_IP);
             MDC.remove(MDC_REMOTE_HOST);
             MDC.remove(MDC_USER_AGENT);
             MDC.remove(MDC_REFERRER);

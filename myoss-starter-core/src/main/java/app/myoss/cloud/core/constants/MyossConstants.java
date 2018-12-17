@@ -36,30 +36,39 @@ public interface MyossConstants {
     }
 
     /**
+     * myoss cloud 配置前缀
+     */
+    String  CONFIG_PREFIX      = "myoss-cloud";
+    /**
+     * myoss cloud 核心配置前缀
+     */
+    String  CORE_CONFIG_PREFIX = CONFIG_PREFIX + ".core";
+
+    /**
      * UTF-8: 默认的字符集
      */
-    Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    Charset DEFAULT_CHARSET    = Charset.forName("UTF-8");
     /**
      * 部署的环境变量（dev,test,pre,prd）
      *
      * @see DeployEnvEnum
      */
-    String  DEPLOY_ENV      = "DEPLOY_ENV";
+    String  DEPLOY_ENV         = "DEPLOY_ENV";
 
     /**
      * 下划线
      */
-    String  UNDERLINE       = "_";
+    String  UNDERLINE          = "_";
     /**
      * 字符串常量: Y
      */
-    String  Y               = "Y";
+    String  Y                  = "Y";
     /**
      * 字符串常量: N
      */
-    String  N               = "N";
+    String  N                  = "N";
     /**
      * 字符串常量: system
      */
-    String  SYSTEM          = "system";
+    String  SYSTEM             = "system";
 }

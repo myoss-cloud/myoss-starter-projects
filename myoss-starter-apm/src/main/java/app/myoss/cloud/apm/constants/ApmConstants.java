@@ -17,6 +17,8 @@
 
 package app.myoss.cloud.apm.constants;
 
+import app.myoss.cloud.core.constants.MyossConstants;
+
 /**
  * 应用性能监控常量
  *
@@ -27,7 +29,7 @@ public class ApmConstants {
     /**
      * APM配置前缀
      */
-    public static final String CONFIG_PREFIX                       = "myoss-cloud.log";
+    public static final String CONFIG_PREFIX                       = MyossConstants.CONFIG_PREFIX + ".log";
     /**
      * 使用slf4j记录方法的入参和出参，配置前缀
      */

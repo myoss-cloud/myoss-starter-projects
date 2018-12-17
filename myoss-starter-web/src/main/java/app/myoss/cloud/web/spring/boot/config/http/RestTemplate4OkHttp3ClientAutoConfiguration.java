@@ -41,6 +41,7 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.core.spring.boot.config.FastJsonAutoConfiguration;
+import app.myoss.cloud.web.constants.WebConstants;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -61,7 +62,7 @@ import okhttp3.OkHttpClient.Builder;
  */
 @ConditionalOnClass({ ConnectionPool.class, RestTemplate.class })
 @EnableConfigurationProperties(OkHttp3ConnectionPoolProperties.class)
-@ConditionalOnProperty(prefix = "myoss-cloud.ok-http3.connection-pool", value = "enabled", matchIfMissing = false)
+@ConditionalOnProperty(prefix = WebConstants.OK_HTTP3_CONNECTION_CONFIG_PREFIX, value = "enabled", matchIfMissing = false)
 @ConditionalOnWebApplication
 @Configuration
 public class RestTemplate4OkHttp3ClientAutoConfiguration {

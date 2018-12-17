@@ -19,6 +19,7 @@ package app.myoss.cloud.web.spring.boot.config.http;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import app.myoss.cloud.web.constants.WebConstants;
 import lombok.Data;
 
 /**
@@ -28,7 +29,7 @@ import lombok.Data;
  * @since 2018年5月21日 上午11:08:41
  */
 @Data
-@ConfigurationProperties(prefix = "myoss-cloud.ok-http3.connection-pool")
+@ConfigurationProperties(prefix = WebConstants.OK_HTTP3_CONNECTION_CONFIG_PREFIX)
 public class OkHttp3ConnectionPoolProperties {
     /**
      * 启用自动配置RestTemplate，使用 OkHttp3 连接池

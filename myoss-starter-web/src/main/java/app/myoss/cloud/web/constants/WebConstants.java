@@ -15,26 +15,24 @@
  *
  */
 
-package app.myoss.cloud.cache.redis;
+package app.myoss.cloud.web.constants;
 
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import app.myoss.cloud.cache.constants.CacheConstants;
-import lombok.Data;
+import app.myoss.cloud.core.constants.MyossConstants;
 
 /**
- * Redis 缓存的配置
+ * Web常量
  *
  * @author Jerry.Chen
- * @since 2018年5月21日 下午1:41:21
+ * @since 2018年12月17日 下午4:15:33
  */
-@Data
-@ConfigurationProperties(prefix = CacheConstants.REDIS_CONFIG_PREFIX)
-public class RedisProperties {
+public class WebConstants {
     /**
-     * 缓存锁的时间单位，默认为: 秒
+     * 缓存配置前缀
      */
-    private TimeUnit lockTimeUnit = TimeUnit.SECONDS;
+    public static final String CONFIG_PREFIX                     = MyossConstants.CONFIG_PREFIX + ".web";
+    /**
+     * OkHttp3连接池属性配置前缀
+     */
+    public static final String OK_HTTP3_CONNECTION_CONFIG_PREFIX = MyossConstants.CONFIG_PREFIX
+            + ".ok-http3.connection-pool";
 }

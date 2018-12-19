@@ -59,10 +59,7 @@ public class IpUtils {
      * @return 客户端的真实地址
      */
     public static String getIpAddress(HttpServletRequest request) {
-        String ipAddress = request.getHeader("x-forwarded-for");
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("X-Forwarded-For");
-        }
+        String ipAddress = request.getHeader("X-Forwarded-For");
         if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("Proxy-Client-IP");
         }
@@ -84,12 +81,7 @@ public class IpUtils {
         // 对于通过多个代理的情况，第一个IP为客户端真实IP，多个IP按照','分割。**.***.***.***".length() = 15
         if (ipAddress != null && ipAddress.length() > 15) {
             if (ipAddress.indexOf(",") > 0) {
-                String[] split = ipAddress.split(",");
-                for (String item : split) {
-                    if (UNKNOWN.equalsIgnoreCase(item)) {
-                        return item;
-                    }
-                }
+                ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
             }
         }
         return ipAddress;

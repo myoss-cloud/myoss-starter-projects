@@ -51,12 +51,18 @@ public class RedisLockServiceImpl implements LockService {
 
     @Override
     public boolean getLock(Serializable key, int expireTime) {
-        Long value = redisTemplate.opsForValue().increment(key, 1);
-        if (!Objects.equals(value, 1L)) {
-            return false;
+        boolean result;
+        try {
+            Long value = redisTemplate.opsForValue().increment(key, 1);
+            if (!Objects.equals(value, 1L)) {
+                return false;
+            }
+        } finally {
+            // 防止万一 put 的时候异常，一定要设置过期时间
+            Boolean expire = redisTemplate.expire(key, expireTime, timeUnit);
+            result = Objects.equals(expire, true);
         }
-        Boolean expire = redisTemplate.expire(key, expireTime, timeUnit);
-        return Objects.equals(expire, true);
+        return result;
     }
 
     @Override

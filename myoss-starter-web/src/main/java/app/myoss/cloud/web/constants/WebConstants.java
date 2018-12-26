@@ -35,4 +35,9 @@ public class WebConstants {
      */
     public static final String OK_HTTP3_CONNECTION_CONFIG_PREFIX = MyossConstants.CONFIG_PREFIX
             + ".ok-http3.connection-pool";
+
+    /**
+     * restTemplate4OkHttp3 spring bean name
+     */
+    public static final String REST_TEMPLATE4_OK_HTTP3_BEAN_NAME = "restTemplate4OkHttp3";
 }

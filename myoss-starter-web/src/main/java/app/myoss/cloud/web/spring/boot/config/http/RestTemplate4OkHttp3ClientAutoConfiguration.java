@@ -124,8 +124,8 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
      *            {@link #restTemplate4OkHttp3NetworkInterceptor()}
      * @return OkHttp3 RestTemplate 对象
      */
-    @ConditionalOnMissingBean(name = "restTemplate4OkHttp3")
-    @Bean(name = "restTemplate4OkHttp3")
+    @ConditionalOnMissingBean(name = WebConstants.REST_TEMPLATE4_OK_HTTP3_BEAN_NAME)
+    @Bean(name = WebConstants.REST_TEMPLATE4_OK_HTTP3_BEAN_NAME)
     public RestTemplate restTemplate4OkHttp3(FastJsonConfig defaultFastJsonConfig,
                                              ConnectionPool restTemplate4OkHttp3ConnectionPool,
                                              List<Interceptor> restTemplate4OkHttp3Interceptor,

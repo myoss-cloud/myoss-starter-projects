@@ -60,17 +60,23 @@ public class RestUtils {
      * @param restTemplate RestTemplate
      * @param httpHeaders 自定义HttpHeaders
      * @param contentType Internet Media Type，互联网媒体类型
-     * @param uri 请求的uri，uri中可以包含占位符{0}, {1}, {n}
+     * @param uri 请求的uri
      * @param method 请求方法类型
      * @param requestBody 请求的内容
      * @param responseType 返回的数据类型
+     * @param restRequestCallback 回调函数，用于在发送请求之前，做某些处理操作；也可用于在返回结果之前，做某些处理操作
      * @param <T> 数据类型class的泛形
      * @return 请求结果
      */
     public static <T> T exchange(RestTemplate restTemplate, HttpHeaders httpHeaders, MediaType contentType, URI uri,
-                                 HttpMethod method, Object requestBody, Class<T> responseType) {
+                                 HttpMethod method, Object requestBody, Class<T> responseType,
+                                 RestRequestCallback restRequestCallback) {
         if (contentType != null) {
             httpHeaders.setContentType(contentType);
+        }
+        if (restRequestCallback != null) {
+            // 执行前置操作
+            restRequestCallback.beforeRequest(restTemplate, uri, httpHeaders, method, requestBody, responseType);
         }
         HttpEntity<?> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
         log.info("requestUrl: {}, requestMethod: {}, requestBody: {}", uri, method, requestBody);
@@ -80,6 +86,11 @@ public class RestUtils {
             T responseBody = responseEntity.getBody();
             long costTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
             log.info("costTime: {}, responseBody: {}", costTime, responseBody);
+            if (restRequestCallback != null) {
+                // 执行后置操作
+                responseBody = restRequestCallback.afterRequest(restTemplate, uri, method, httpEntity, responseType,
+                        responseBody);
+            }
             return responseBody;
         } catch (Exception e) {
             long costTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
@@ -102,6 +113,10 @@ public class RestUtils {
                             requestBody);
                 }
             }
+            if (restRequestCallback != null) {
+                // 出现异常操作
+                restRequestCallback.onThrowException(restTemplate, uri, method, httpEntity, responseType, e);
+            }
             throw e;
         }
     }
@@ -110,8 +125,26 @@ public class RestUtils {
      * 自定义发送HTTP请求
      *
      * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
      * @param contentType Internet Media Type，互联网媒体类型
-     * @param uri 请求的uri，uri中可以包含占位符{0}, {1}, {n}
+     * @param uri 请求的uri
+     * @param method 请求方法类型
+     * @param requestBody 请求的内容
+     * @param responseType 返回的数据类型
+     * @param <T> 数据类型class的泛形
+     * @return 请求结果
+     */
+    public static <T> T exchange(RestTemplate restTemplate, HttpHeaders httpHeaders, MediaType contentType, URI uri,
+                                 HttpMethod method, Object requestBody, Class<T> responseType) {
+        return exchange(restTemplate, httpHeaders, contentType, uri, method, requestBody, responseType, null);
+    }
+
+    /**
+     * 自定义发送HTTP请求
+     *
+     * @param restTemplate RestTemplate
+     * @param contentType Internet Media Type，互联网媒体类型
+     * @param uri 请求的uri
      * @param method 请求方法类型
      * @param requestBody 请求的内容
      * @param responseType 返回的数据类型

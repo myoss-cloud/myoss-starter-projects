@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import app.myoss.cloud.apm.constants.ApmConstants;
+import app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod;
 import app.myoss.cloud.apm.spring.job.AutoRollingLogFileJob;
 import app.myoss.cloud.apm.spring.job.AutoRollingLogFileProperties;
 
@@ -37,6 +38,12 @@ import app.myoss.cloud.apm.spring.job.AutoRollingLogFileProperties;
 @EnableScheduling
 @Configurable
 public class ApmAutoConfiguration {
+    /**
+     * 初始化
+     */
+    public ApmAutoConfiguration() {
+    }
+
     /**
      * 自动配置，每天定时检查日志文件，是否已经滚动生成新的文件，没有就触发生成新的文件
      */

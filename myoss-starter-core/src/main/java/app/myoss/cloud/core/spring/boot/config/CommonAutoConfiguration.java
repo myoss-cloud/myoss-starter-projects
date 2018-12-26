@@ -31,4 +31,9 @@ import app.myoss.cloud.core.spring.context.SpringContextHolder;
 @Import(SpringContextHolder.class)
 @Configuration
 public class CommonAutoConfiguration {
+    /**
+     * 初始化
+     */
+    public CommonAutoConfiguration() {
+    }
 }

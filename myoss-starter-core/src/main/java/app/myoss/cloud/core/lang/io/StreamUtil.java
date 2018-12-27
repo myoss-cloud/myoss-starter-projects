@@ -17,6 +17,7 @@
 
 package app.myoss.cloud.core.lang.io;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +26,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.Objects;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.core.exception.BizRuntimeException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -42,7 +47,11 @@ public class StreamUtil {
     /**
      * 缓冲字节大小
      */
-    public static final int BUFFER_SIZE = 4096;
+    public static final int BUFFER_SIZE     = 4096;
+    /**
+     * 压缩缓冲字节大小
+     */
+    public static final int COMPRESS_BUFFER = 10240;
 
     /**
      * Copy the contents of the given InputStream into a new byte array. Leaves
@@ -161,5 +170,131 @@ public class StreamUtil {
             throw new BizRuntimeException(ex);
         }
         return byteCount;
+    }
+
+    /**
+     * 数据压缩
+     *
+     * @param inputStream 待压缩的数据流
+     * @param outputStream 压缩后的数据流
+     */
+    public static void compress(InputStream inputStream, OutputStream outputStream) {
+        try {
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
+            int count;
+            byte[] data = new byte[COMPRESS_BUFFER];
+            while ((count = inputStream.read(data, 0, COMPRESS_BUFFER)) != -1) {
+                gzipOutputStream.write(data, 0, count);
+            }
+            gzipOutputStream.finish();
+            gzipOutputStream.flush();
+            gzipOutputStream.close();
+        } catch (IOException e) {
+            throw new BizRuntimeException(e);
+        }
+    }
+
+    /**
+     * 数据解压缩
+     *
+     * @param inputStream 待解压的数据流
+     * @param outputStream 解压后的数据流
+     */
+    public static void decompress(InputStream inputStream, OutputStream outputStream) {
+        try {
+            GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+            int count;
+            byte[] data = new byte[COMPRESS_BUFFER];
+            while ((count = gzipInputStream.read(data, 0, COMPRESS_BUFFER)) != -1) {
+                outputStream.write(data, 0, count);
+            }
+            gzipInputStream.close();
+        } catch (IOException e) {
+            throw new BizRuntimeException(e);
+        }
+    }
+
+    /**
+     * 数据压缩
+     *
+     * @param sourceData 待压缩的原始数据
+     * @return 压缩后的数据流
+     */
+    public static byte[] compress(byte[] sourceData) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(sourceData);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            compress(inputStream, outputStream);
+            byte[] outputData = outputStream.toByteArray();
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+            return outputData;
+        } catch (IOException e) {
+            throw new BizRuntimeException(e);
+        }
+    }
+
+    /**
+     * 数据解压缩
+     *
+     * @param sourceData 待解压的数据
+     * @return 解压后的数据流
+     */
+    public static byte[] decompress(byte[] sourceData) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(sourceData);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            decompress(inputStream, outputStream);
+            byte[] outputData = outputStream.toByteArray();
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+            return outputData;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 数据压缩
+     *
+     * @param sourceData 待压缩的原始数据
+     * @return 压缩后的数据流
+     */
+    public static byte[] compressString(String sourceData) {
+        return compress(sourceData.getBytes(MyossConstants.DEFAULT_CHARSET));
+    }
+
+    /**
+     * 数据解压缩
+     *
+     * @param sourceData 待解压的数据
+     * @return 解压后的数据流
+     */
+    public static String decompressString(byte[] sourceData) {
+        byte[] decompress = decompress(sourceData);
+        return new String(decompress, MyossConstants.DEFAULT_CHARSET);
+    }
+
+    /**
+     * 使用 Base64 进行数据压缩
+     *
+     * @param sourceData 待压缩的原始数据
+     * @return 压缩后的 Base64 字符串
+     */
+    public static String compressBase64String(String sourceData) {
+        return Base64.getEncoder().encodeToString(compressString(sourceData));
+    }
+
+    /**
+     * 使用 Base64 进行数据解压缩
+     *
+     * @param sourceData 待解压的数据
+     * @return 解压后的 Base64 字符串
+     */
+    public static String decompressBase64String(String sourceData) {
+        byte[] decode = Base64.getDecoder().decode(sourceData.getBytes(MyossConstants.DEFAULT_CHARSET));
+        return decompressString(decode);
     }
 }

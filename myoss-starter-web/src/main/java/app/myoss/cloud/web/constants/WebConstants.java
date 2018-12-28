@@ -29,15 +29,24 @@ public class WebConstants {
     /**
      * 缓存配置前缀
      */
-    public static final String CONFIG_PREFIX                     = MyossConstants.CONFIG_PREFIX + ".web";
+    public static final String CONFIG_PREFIX                                     = MyossConstants.CONFIG_PREFIX
+            + ".web";
     /**
      * OkHttp3连接池属性配置前缀
      */
-    public static final String OK_HTTP3_CONNECTION_CONFIG_PREFIX = MyossConstants.CONFIG_PREFIX
+    public static final String OK_HTTP3_CONNECTION_CONFIG_PREFIX                 = MyossConstants.CONFIG_PREFIX
             + ".ok-http3.connection-pool";
 
     /**
      * restTemplate4OkHttp3 spring bean name
      */
-    public static final String REST_TEMPLATE4_OK_HTTP3_BEAN_NAME = "restTemplate4OkHttp3";
+    public static final String REST_TEMPLATE4_OK_HTTP3_BEAN_NAME                 = "restTemplate4OkHttp3";
+    /**
+     * readerBodyHttpServletRequestFilter spring bean name
+     */
+    public static final String READER_BODY_HTTP_SERVLET_REQUEST_FILTER_BEAN_NAME = "readerBodyHttpServletRequestFilter";
+    /**
+     * webRequestLogFilter spring bean name
+     */
+    public static final String WEB_REQUEST_LOG_FILTER_BEAN_NAME                  = "webRequestLogFilter";
 }

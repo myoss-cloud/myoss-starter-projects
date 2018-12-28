@@ -22,7 +22,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -32,6 +32,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 
 import app.myoss.cloud.core.spring.boot.config.FastJsonAutoConfiguration;
+import app.myoss.cloud.web.constants.WebConstants;
 import app.myoss.cloud.web.spring.web.servlet.filter.LogWebRequestFilter;
 import app.myoss.cloud.web.spring.web.servlet.filter.ReaderBodyHttpServletRequestFilter;
 
@@ -64,8 +65,8 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
      * @return 可以多次读取 {@link HttpServletRequest#getReader()} 和
      *         {@link HttpServletRequest#getInputStream()} 中的内容
      */
-    @ConditionalOnBean
-    @Bean
+    @ConditionalOnMissingBean(name = WebConstants.READER_BODY_HTTP_SERVLET_REQUEST_FILTER_BEAN_NAME)
+    @Bean(name = WebConstants.READER_BODY_HTTP_SERVLET_REQUEST_FILTER_BEAN_NAME)
     public FilterRegistrationBean<ReaderBodyHttpServletRequestFilter> readerBodyHttpServletRequestFilter() {
         FilterRegistrationBean<ReaderBodyHttpServletRequestFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new ReaderBodyHttpServletRequestFilter());
@@ -77,8 +78,8 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
      *
      * @return 记录web请求的日志信息过滤器
      */
-    @ConditionalOnBean
-    @Bean
+    @ConditionalOnMissingBean(name = WebConstants.WEB_REQUEST_LOG_FILTER_BEAN_NAME)
+    @Bean(name = WebConstants.WEB_REQUEST_LOG_FILTER_BEAN_NAME)
     public FilterRegistrationBean<LogWebRequestFilter> webRequestLogFilter() {
         FilterRegistrationBean<LogWebRequestFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogWebRequestFilter(true, true));

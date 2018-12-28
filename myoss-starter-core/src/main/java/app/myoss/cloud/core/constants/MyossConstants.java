@@ -49,6 +49,14 @@ public interface MyossConstants {
      */
     Charset DEFAULT_CHARSET    = Charset.forName("UTF-8");
     /**
+     * UTF-8 字符集
+     */
+    Charset UTF_8              = Charset.forName("UTF-8");
+    /**
+     * ISO-8859-1 字符集
+     */
+    Charset ISO_8859_1         = Charset.forName("ISO-8859-1");
+    /**
      * 部署的环境变量（dev,test,pre,prd）
      *
      * @see DeployEnvEnum

@@ -35,6 +35,7 @@ import app.myoss.cloud.apm.spring.job.AutoRollingLogFileProperties;
  * @author Jerry.Chen
  * @since 2018年12月15日 下午10:11:48
  */
+@EnableAopLogMethod
 @EnableScheduling
 @Configurable
 public class ApmAutoConfiguration {

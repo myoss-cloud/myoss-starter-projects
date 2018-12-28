@@ -35,6 +35,10 @@ public class ApmConstants {
      */
     public static final String MONITOR_METHOD_CONFIG_PREFIX        = CONFIG_PREFIX + ".method";
     /**
+     * 使用slf4j记录 {@link org.springframework.stereotype.Controller} 的信息，配置前缀
+     */
+    public static final String MONITOR_CONTROLLER_CONFIG_PREFIX    = CONFIG_PREFIX + ".controller";
+    /**
      * 每天定时检查日志文件，是否已经滚动生成新的文件，没有就触发生成新的文件，配置前缀
      */
     public static final String AUTO_ROLLING_LOG_FILE_CONFIG_PREFIX = CONFIG_PREFIX + ".auto-rolling-log-file";

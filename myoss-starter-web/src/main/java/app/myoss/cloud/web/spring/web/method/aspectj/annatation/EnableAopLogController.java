@@ -15,7 +15,7 @@
  *
  */
 
-package app.myoss.cloud.apm.log.method.aspectj.annotation;
+package app.myoss.cloud.web.spring.web.method.aspectj.annatation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -26,45 +26,38 @@ import java.lang.annotation.Target;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 
-import app.myoss.cloud.apm.log.method.aspectj.AopLogMethodRegistrar;
-import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodProperties;
+import app.myoss.cloud.web.spring.web.method.aspectj.AopLogControllerRegistrar;
+import app.myoss.cloud.web.spring.web.method.aspectj.MonitorControllerProperties;
 
 /**
- * 开启下面几个注解的功能，使用slf4j记录方法的入参和出参；同时支持开启自动记录 controller 异常
+ * 开启自动记录 {@link org.springframework.stereotype.Controller} 信息
  * <ul>
- * <li>{@link LogMethodBefore}
- * <li>{@link LogMethodAfter}
- * <li>{@link LogMethodAround}
- * <li>{@link LogUnMonitor}
+ * <li>{@link app.myoss.cloud.web.spring.web.method.aspectj.AopLogControllerExceptionHandler}
  * </ul>
  * 使用例子：
  *
  * <pre>
- * &#064;EnableAopLogMethod
+ * &#064;EnableAopLogController
  * &#064;Configuration
  * public class Config {
  * }
  * </pre>
  *
  * @author Jerry.Chen
- * @since 2018年3月31日 下午10:53:18
+ * @since 2018年12月28日 下午3:25:48
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@EnableConfigurationProperties(MonitorMethodProperties.class)
-@Import(AopLogMethodRegistrar.class)
-public @interface EnableAopLogMethod {
+@EnableConfigurationProperties(MonitorControllerProperties.class)
+@Import(AopLogControllerRegistrar.class)
+public @interface EnableAopLogController {
     /**
-     * 开启自动记录 method 的入参和出参
-     * <ul>
-     * <li>{@link LogMethodBefore}
-     * <li>{@link LogMethodAfter}
-     * <li>{@link LogMethodAround}
-     * <li>{@link LogUnMonitor}
-     * </ul>
+     * 开启自动记录 controller异常，
+     * 使用：{@link app.myoss.cloud.web.spring.web.method.aspectj.AopLogControllerExceptionHandler}
+     * 处理异常信息
      *
-     * @return 默认开启
+     * @return 默认开启（如果不是WebApplication，是不起作用的）
      */
-    boolean enableAopLogMethod() default true;
+    boolean enableAopLogControllerException() default true;
 }

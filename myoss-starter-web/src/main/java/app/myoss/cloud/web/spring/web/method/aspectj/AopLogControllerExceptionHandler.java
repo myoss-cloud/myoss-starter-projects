@@ -43,7 +43,6 @@ import org.springframework.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
 
-import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodProperties;
 import app.myoss.cloud.apm.spring.cloud.sleuth.trace.ApplicationEventTracer;
 import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.web.spring.web.servlet.support.EmptyBodyCheckingHttpInputMessage;
@@ -58,21 +57,21 @@ import lombok.extern.slf4j.Slf4j;
  * {@link ResponseEntityExceptionHandler#handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatus, WebRequest)}
  * ，因为所有的异常处理最后一步都会走到这里，对外的错误异常统一输出，完美解决。
  * <p>
- * 如果要开启此功能，{@link app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod}
+ * 如果要开启此功能，{@link app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController}
  * <p>
- * 如果要禁用掉此功能，{@link app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod#enableAopLogControllerException()}
+ * 如果要禁用掉此功能，{@link app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController#enableAopLogControllerException()}
  *
  * @author Jerry.Chen
  * @since 2018年4月11日 下午12:10:23
  * @see ResponseEntityExceptionHandler
- * @see app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod
+ * @see app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController
  */
 @ConditionalOnWebApplication
 @Slf4j
 @ControllerAdvice
 public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @Autowired
-    protected MonitorMethodProperties properties;
+    protected MonitorControllerProperties properties;
 
     /**
      * 获取 HTTP 请求响应状态码

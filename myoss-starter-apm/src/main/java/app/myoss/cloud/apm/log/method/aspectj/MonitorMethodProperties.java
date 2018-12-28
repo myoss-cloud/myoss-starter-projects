@@ -67,26 +67,7 @@ public class MonitorMethodProperties {
      *
      * @see AbstractMonitorMethod#toJSONString(Object)
      */
-    private String      dateFormat                   = "yyyy-MM-dd HH:mm:ss.SSS";
-
-    /**
-     * Controller异常时返回的errorCode
-     *
-     * @see AopLogControllerExceptionHandler#outputException(Throwable,
-     *      org.springframework.http.HttpHeaders,
-     *      org.springframework.http.HttpStatus,
-     *      javax.servlet.http.HttpServletRequest)
-     */
-    private String      controllerExceptionErrorCode = "systemException";
-    /**
-     * Controller异常时返回的errorCode
-     *
-     * @see AopLogControllerExceptionHandler#outputException(Throwable,
-     *      org.springframework.http.HttpHeaders,
-     *      org.springframework.http.HttpStatus,
-     *      javax.servlet.http.HttpServletRequest)
-     */
-    private String      controllerExceptionErrorMsg  = "We'll be back soon ...";
+    private String      dateFormat = "yyyy-MM-dd HH:mm:ss.SSS";
 
     /**
      * 初始化属性

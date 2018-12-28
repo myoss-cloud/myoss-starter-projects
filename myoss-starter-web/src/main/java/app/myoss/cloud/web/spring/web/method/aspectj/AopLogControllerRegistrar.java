@@ -15,7 +15,7 @@
  *
  */
 
-package app.myoss.cloud.apm.log.method.aspectj;
+package app.myoss.cloud.web.spring.web.method.aspectj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,38 +29,38 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod;
-import app.myoss.cloud.apm.log.method.aspectj.annotation.MonitorMethodAdvice;
+import app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController;
 
 /**
  * 扫描当前package下的 {@link org.springframework.stereotype.Component}，并进行 Bean 的自动注册
  *
  * @author Jerry.Chen
- * @since 2018年4月11日 下午12:07:23
+ * @since 2018年12月28日 下午3:25:48
  */
-public class AopLogMethodRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
+public class AopLogControllerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
     private ResourceLoader resourceLoader;
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         AnnotationAttributes attributes = AnnotationAttributes
-                .fromMap(importingClassMetadata.getAnnotationAttributes(EnableAopLogMethod.class.getName()));
+                .fromMap(importingClassMetadata.getAnnotationAttributes(EnableAopLogController.class.getName()));
         ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
         scanner.resetFilters(false);
         scanner.setResourceLoader(this.resourceLoader);
         List<String> scanPackages = new ArrayList<>();
 
-        // 监控 method 的入参和出参
-        boolean enableAopLogMethod = attributes.getBoolean("enableAopLogMethod");
-        if (!enableAopLogMethod) {
-            scanner.addExcludeFilter(new AnnotationTypeFilter(MonitorMethodAdvice.class));
+        // 监控 controller 异常
+        boolean enableAopLogControllerException = attributes.getBoolean("enableAopLogControllerException");
+        if (!enableAopLogControllerException) {
+            scanner.addExcludeFilter(new AnnotationTypeFilter(ControllerAdvice.class));
         } else {
-            scanner.addIncludeFilter(new AnnotationTypeFilter(MonitorMethodAdvice.class));
+            scanner.addIncludeFilter(new AnnotationTypeFilter(ControllerAdvice.class));
         }
 
         // 扫描注册
-        String packageName = ClassUtils.getPackageName(AopLogMethodRegistrar.class);
+        String packageName = ClassUtils.getPackageName(AopLogControllerRegistrar.class);
         scanPackages.add(packageName);
         scanner.scan(scanPackages.toArray(new String[0]));
     }

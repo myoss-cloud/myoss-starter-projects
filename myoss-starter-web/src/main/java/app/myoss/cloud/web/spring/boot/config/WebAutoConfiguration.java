@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
 
 import app.myoss.cloud.web.spring.boot.config.http.RestTemplate4OkHttp3ClientAutoConfiguration;
+import app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController;
 import app.myoss.cloud.web.utils.RestClient;
 
 /**
@@ -35,6 +36,7 @@ import app.myoss.cloud.web.utils.RestClient;
  * @author Jerry.Chen
  * @since 2018年12月26日 下午2:11:02
  */
+@EnableAopLogController
 @AutoConfigureAfter(RestTemplate4OkHttp3ClientAutoConfiguration.class)
 @Configuration
 public class WebAutoConfiguration extends AbstractWebMvcConfigurer {

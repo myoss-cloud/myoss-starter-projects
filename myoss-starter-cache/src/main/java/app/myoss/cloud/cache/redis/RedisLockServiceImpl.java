@@ -28,6 +28,7 @@ import app.myoss.cloud.cache.lock.functions.LockFunction;
 import app.myoss.cloud.cache.lock.functions.LockFunctionGeneric;
 import app.myoss.cloud.cache.lock.functions.LockFunctionGenericWithArgs;
 import app.myoss.cloud.cache.lock.functions.LockFunctionWithArgs;
+import app.myoss.cloud.core.exception.BizRuntimeException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -51,18 +52,18 @@ public class RedisLockServiceImpl implements LockService {
 
     @Override
     public boolean getLock(Serializable key, int expireTime) {
-        boolean result;
         try {
             Long value = redisTemplate.opsForValue().increment(key, 1);
             if (!Objects.equals(value, 1L)) {
                 return false;
             }
-        } finally {
-            // 防止万一 put 的时候异常，一定要设置过期时间
+        } catch (Throwable e) {
+            // 防止万一 INCR 的时候异常，一定要设置过期时间
             Boolean expire = redisTemplate.expire(key, expireTime, timeUnit);
-            result = Objects.equals(expire, true);
+            throw new BizRuntimeException("expire key [" + key + "] is " + expire, e);
         }
-        return result;
+        Boolean expire = redisTemplate.expire(key, expireTime, timeUnit);
+        return Objects.equals(expire, true);
     }
 
     @Override

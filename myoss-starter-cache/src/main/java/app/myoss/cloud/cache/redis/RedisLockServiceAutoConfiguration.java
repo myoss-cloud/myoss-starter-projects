@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * Redis 缓存锁服务自动配置
@@ -55,13 +55,13 @@ public class RedisLockServiceAutoConfiguration {
     /**
      * 初始化默认的Redis 缓存锁实现
      *
-     * @param redisTemplate Spring RedisTemplate
+     * @param redisTemplate Spring StringRedisTemplate
      * @return 默认的Redis 缓存锁实现
      */
     @ConditionalOnBean(name = "redisTemplate")
     @ConditionalOnMissingBean
     @Bean
-    public RedisLockServiceImpl redisLockService(RedisTemplate<Object, Object> redisTemplate) {
+    public RedisLockServiceImpl redisLockService(StringRedisTemplate redisTemplate) {
         TimeUnit timeUnit = redisProperties.getLockTimeUnit();
         return new RedisLockServiceImpl(redisTemplate, timeUnit);
     }

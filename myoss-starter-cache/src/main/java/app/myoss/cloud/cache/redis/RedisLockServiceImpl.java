@@ -70,6 +70,7 @@ public class RedisLockServiceImpl implements LockService {
 
     @Override
     public boolean executeByLock(Serializable key, int expireTime, LockFunction callback) {
+        long begin = System.currentTimeMillis();
         boolean isGetLock = getLock(key, expireTime);
         try {
             if (isGetLock) {
@@ -82,6 +83,7 @@ public class RedisLockServiceImpl implements LockService {
                     // 进行多次重试获取锁
                     for (int i = 1; i < tryLockTimes; i++) {
                         LockService.sleep(callback.tryLockSleepTime());
+                        begin = System.currentTimeMillis();
                         isGetLock = getLock(key, expireTime);
                         if (isGetLock) {
                             break;
@@ -97,7 +99,11 @@ public class RedisLockServiceImpl implements LockService {
         } finally {
             // 如果已经获取到锁，才释放锁
             if (isGetLock) {
-                releaseLock(key);
+                long cost = System.currentTimeMillis() - begin;
+                long expireTimeToMills = timeUnit.toMillis(expireTime);
+                if (cost < expireTimeToMills) {
+                    releaseLock(key);
+                }
             }
         }
         return isGetLock;
@@ -105,6 +111,7 @@ public class RedisLockServiceImpl implements LockService {
 
     @Override
     public boolean executeByLock(Serializable key, int expireTime, LockFunctionWithArgs callback, Object... args) {
+        long begin = System.currentTimeMillis();
         boolean isGetLock = getLock(key, expireTime);
         try {
             if (isGetLock) {
@@ -117,6 +124,7 @@ public class RedisLockServiceImpl implements LockService {
                     // 进行多次重试获取锁
                     for (int i = 1; i < tryLockTimes; i++) {
                         LockService.sleep(callback.tryLockSleepTime());
+                        begin = System.currentTimeMillis();
                         isGetLock = getLock(key, expireTime);
                         if (isGetLock) {
                             break;
@@ -132,7 +140,11 @@ public class RedisLockServiceImpl implements LockService {
         } finally {
             // 如果已经获取到锁，才释放锁
             if (isGetLock) {
-                releaseLock(key);
+                long cost = System.currentTimeMillis() - begin;
+                long expireTimeToMills = timeUnit.toMillis(expireTime);
+                if (cost < expireTimeToMills) {
+                    releaseLock(key);
+                }
             }
         }
         return isGetLock;
@@ -140,6 +152,7 @@ public class RedisLockServiceImpl implements LockService {
 
     @Override
     public <T> T executeByLock(Serializable key, int expireTime, LockFunctionGeneric<T> callback) {
+        long begin = System.currentTimeMillis();
         boolean isGetLock = getLock(key, expireTime);
         try {
             if (isGetLock) {
@@ -152,6 +165,7 @@ public class RedisLockServiceImpl implements LockService {
                     // 进行多次重试获取锁
                     for (int i = 1; i < tryLockTimes; i++) {
                         LockService.sleep(callback.tryLockSleepTime());
+                        begin = System.currentTimeMillis();
                         isGetLock = getLock(key, expireTime);
                         if (isGetLock) {
                             break;
@@ -167,7 +181,11 @@ public class RedisLockServiceImpl implements LockService {
         } finally {
             // 如果已经获取到锁，才释放锁
             if (isGetLock) {
-                releaseLock(key);
+                long cost = System.currentTimeMillis() - begin;
+                long expireTimeToMills = timeUnit.toMillis(expireTime);
+                if (cost < expireTimeToMills) {
+                    releaseLock(key);
+                }
             }
         }
     }
@@ -175,6 +193,7 @@ public class RedisLockServiceImpl implements LockService {
     @Override
     public <T> T executeByLock(Serializable key, int expireTime, LockFunctionGenericWithArgs<T> callback,
                                Object... args) {
+        long begin = System.currentTimeMillis();
         boolean isGetLock = getLock(key, expireTime);
         try {
             if (isGetLock) {
@@ -187,6 +206,7 @@ public class RedisLockServiceImpl implements LockService {
                     // 进行多次重试获取锁
                     for (int i = 1; i < tryLockTimes; i++) {
                         LockService.sleep(callback.tryLockSleepTime());
+                        begin = System.currentTimeMillis();
                         isGetLock = getLock(key, expireTime);
                         if (isGetLock) {
                             break;
@@ -202,7 +222,11 @@ public class RedisLockServiceImpl implements LockService {
         } finally {
             // 如果已经获取到锁，才释放锁
             if (isGetLock) {
-                releaseLock(key);
+                long cost = System.currentTimeMillis() - begin;
+                long expireTimeToMills = timeUnit.toMillis(expireTime);
+                if (cost < expireTimeToMills) {
+                    releaseLock(key);
+                }
             }
         }
     }

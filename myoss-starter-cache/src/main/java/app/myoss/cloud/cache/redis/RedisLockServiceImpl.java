@@ -28,7 +28,6 @@ import app.myoss.cloud.cache.lock.functions.LockFunction;
 import app.myoss.cloud.cache.lock.functions.LockFunctionGeneric;
 import app.myoss.cloud.cache.lock.functions.LockFunctionGenericWithArgs;
 import app.myoss.cloud.cache.lock.functions.LockFunctionWithArgs;
-import app.myoss.cloud.core.exception.BizRuntimeException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -44,28 +43,25 @@ public class RedisLockServiceImpl implements LockService {
     /**
      * Redis data access Template
      */
-    private RedisTemplate<Object, Object> redisTemplate;
+    private RedisTemplate redisTemplate;
     /**
      * 缓存锁的时间单位
      */
-    private TimeUnit                      timeUnit;
+    private TimeUnit      timeUnit;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean getLock(Serializable key, int expireTime, TimeUnit timeUnit) {
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, "1", expireTime, timeUnit);
+        return Objects.equals(result, true);
+    }
 
     @Override
     public boolean getLock(Serializable key, int expireTime) {
-        try {
-            Long value = redisTemplate.opsForValue().increment(key, 1);
-            if (!Objects.equals(value, 1L)) {
-                return false;
-            }
-        } catch (Throwable e) {
-            // 防止万一 INCR 的时候异常，一定要设置过期时间
-            Boolean expire = redisTemplate.expire(key, expireTime, timeUnit);
-            throw new BizRuntimeException("expire key [" + key + "] is " + expire, e);
-        }
-        Boolean expire = redisTemplate.expire(key, expireTime, timeUnit);
-        return Objects.equals(expire, true);
+        return getLock(key, expireTime, timeUnit);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean releaseLock(Serializable key) {
         Boolean delete = redisTemplate.delete(key);

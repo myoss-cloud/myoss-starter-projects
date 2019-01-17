@@ -56,6 +56,16 @@ public interface LockService {
      *
      * @param key 锁的名字
      * @param expireTime 锁的过期时间
+     * @param timeUnit 缓存锁的时间单位
+     * @return true：获取到锁，false：没有获取到锁
+     */
+    boolean getLock(Serializable key, int expireTime, TimeUnit timeUnit);
+
+    /**
+     * 获取锁
+     *
+     * @param key 锁的名字
+     * @param expireTime 锁的过期时间
      * @return true：获取到锁，false：没有获取到锁
      */
     boolean getLock(Serializable key, int expireTime);

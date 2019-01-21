@@ -17,7 +17,6 @@
 
 package app.myoss.cloud.apm.spring.config;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +36,7 @@ import app.myoss.cloud.apm.spring.job.AutoRollingLogFileProperties;
  */
 @EnableAopLogMethod
 @EnableScheduling
-@Configurable
+@Configuration
 public class ApmAutoConfiguration {
     /**
      * 初始化

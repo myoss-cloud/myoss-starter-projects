@@ -68,5 +68,24 @@
             <artifactId>janino</artifactId>
         </dependency>
         <!-- log end -->
+
+        <!-- spring boot endpoint begin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- prometheus Hotspot JVM metrics-->
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_common</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- spring boot endpoint end -->
     </dependencies>
 </project>

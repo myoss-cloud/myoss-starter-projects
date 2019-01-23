@@ -108,7 +108,14 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
                         LinkedHashMap::new));
     }
 
-    private void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {
+    /**
+     * 增加或者替换配置属性：{@link #PROPERTY_SOURCE_NAME}
+     *
+     * @param propertySources
+     *        {@link ConfigurableEnvironment#getPropertySources()}
+     * @param map 新配置的属性
+     */
+    public static void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {
         if (map == null) {
             return;
         }

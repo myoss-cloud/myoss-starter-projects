@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="600 seconds" debug="false">
+    <property name="logging.level" value="INFO"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%thread] %-5p [%c] [%F:%L] [trace=%X{X-B3-TraceId:-},span=%X{X-B3-SpanId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root>
+        <level value="${logging.level}"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

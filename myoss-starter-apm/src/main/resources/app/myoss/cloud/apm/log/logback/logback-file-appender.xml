@@ -168,14 +168,6 @@
         <level value="INFO"/>
     </logger>
 
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-        <level value="TRACE"/>
-    </logger>
-
-    <logger name="org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping">
-        <level value="TRACE"/>
-    </logger>
-
     <logger name="WebRequest" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="requestInfoAppenderAsync"/>

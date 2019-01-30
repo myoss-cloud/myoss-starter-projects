@@ -28,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import app.myoss.cloud.web.spring.boot.config.http.RestTemplate4OkHttp3ClientAutoConfiguration;
 import app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController;
+import app.myoss.cloud.web.spring.web.method.handler.PrintRequestMappingHandler;
 import app.myoss.cloud.web.utils.RestClient;
 
 /**
@@ -57,5 +58,15 @@ public class WebAutoConfiguration extends AbstractWebMvcConfigurer {
     @Bean
     public RestClient restClient() {
         return new RestClient();
+    }
+
+    /**
+     * 打印 Web 所有的接口映射关系
+     *
+     * @return PrintRequestMappingHandler
+     */
+    @Bean
+    public PrintRequestMappingHandler printRequestMappingHandler() {
+        return new PrintRequestMappingHandler();
     }
 }

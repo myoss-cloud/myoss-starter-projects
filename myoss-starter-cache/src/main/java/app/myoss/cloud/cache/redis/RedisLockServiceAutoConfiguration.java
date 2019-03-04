@@ -17,6 +17,7 @@
 
 package app.myoss.cloud.cache.redis;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -62,6 +63,10 @@ public class RedisLockServiceAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RedisLockServiceImpl redisLockService(StringRedisTemplate redisTemplate) {
+        // 在应用启动的时候提前初始化 redis 连接池，加快第一次使用的访问速度
+        String key = this.getClass().getName() + ".test";
+        redisTemplate.opsForValue().setIfAbsent(key, "init redis connection", Duration.ofSeconds(10));
+
         TimeUnit timeUnit = redisProperties.getLockTimeUnit();
         return new RedisLockServiceImpl(redisTemplate, timeUnit);
     }

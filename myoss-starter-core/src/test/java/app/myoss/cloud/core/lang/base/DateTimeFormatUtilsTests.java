@@ -74,9 +74,11 @@ public class DateTimeFormatUtilsTests {
         Date date2 = DateTimeFormatUtils.parse2DateEN("19870412");
         Date date3 = DateTimeFormatUtils.parse2DateTimeCN("1987-04-12 00:00:00");
         Date date4 = DateTimeFormatUtils.parse2DateTimeEN("19870412000000");
+        Date date5 = DateTimeFormatUtils.parse2DateCN("1987年04月12日");
         Assert.assertEquals(date1, date2);
         Assert.assertEquals(date1, date3);
         Assert.assertEquals(date1, date4);
+        Assert.assertEquals(date1, date5);
     }
 
     @Test
@@ -120,11 +122,15 @@ public class DateTimeFormatUtilsTests {
         LocalDateTime null2 = null;
         Assert.assertNull(DateTimeFormatUtils.print2Date(null1));
         Assert.assertNull(DateTimeFormatUtils.print2Date(null2));
+        Assert.assertNull(DateTimeFormatUtils.print2DateCN(null1));
+        Assert.assertNull(DateTimeFormatUtils.print2DateCN(null2));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 0, 0, 0, 0);
         Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals("2016-08-08", DateTimeFormatUtils.print2Date(date));
         Assert.assertEquals("2016-08-08", DateTimeFormatUtils.print2Date(dateTime));
+        Assert.assertEquals("2016年08月08日", DateTimeFormatUtils.print2DateCN(date));
+        Assert.assertEquals("2016年08月08日", DateTimeFormatUtils.print2DateCN(dateTime));
     }
 
     @Test
@@ -133,11 +139,14 @@ public class DateTimeFormatUtilsTests {
         Assert.assertNull(DateTimeFormatUtils.parse2Date(null));
         Assert.assertNull(DateTimeFormatUtils.parseToDateTimeCN(null));
         Assert.assertNull(DateTimeFormatUtils.parseToDate(null));
+        Assert.assertNull(DateTimeFormatUtils.parseToDateCN(null));
 
         LocalDateTime dateTime = LocalDateTime.of(2016, 8, 8, 0, 0, 0, 0);
         Date date = DateTimeFormatUtils.toDate(dateTime);
         Assert.assertEquals(date, DateTimeFormatUtils.parse2Date("2016-08-08"));
+        Assert.assertEquals(date, DateTimeFormatUtils.parse2DateCN("2016年08月08日"));
         Assert.assertEquals(dateTime.toLocalDate(), DateTimeFormatUtils.parseToDate("2016-08-08"));
+        Assert.assertEquals(dateTime.toLocalDate(), DateTimeFormatUtils.parseToDateCN("2016年08月08日"));
     }
 
     @Test

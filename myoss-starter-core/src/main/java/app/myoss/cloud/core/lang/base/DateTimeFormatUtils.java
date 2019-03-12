@@ -46,6 +46,10 @@ public class DateTimeFormatUtils {
      */
     public static final String             YYYY_MM_DD              = "yyyy-MM-dd";
     /**
+     * yyyy年MM月dd日
+     */
+    public static final String             YYYY_MM_DD_CN           = "yyyy年MM月dd日";
+    /**
      * yyyyMMddHHmmss
      */
     public static final String             YYYYMMDDHHMMSS          = "yyyyMMddHHmmss";
@@ -63,6 +67,7 @@ public class DateTimeFormatUtils {
     public static final String             HH_MM_SS                = "HH:mm:ss";
     private static final DateTimeFormatter DATE_TIME_FORMATTER_CN  = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS);
     private static final DateTimeFormatter DATE_FORMATTER          = DateTimeFormatter.ofPattern(YYYY_MM_DD);
+    private static final DateTimeFormatter DATE_FORMATTER_CN       = DateTimeFormatter.ofPattern(YYYY_MM_DD_CN);
     private static final DateTimeFormatter DATE_TIME_FORMATTER_EN  = DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS);
     private static final DateTimeFormatter DATE_FORMATTER_EN       = DateTimeFormatter.ofPattern(YYYYMMDD);
     private static final DateTimeFormatter YEAR_MONTH_FORMATTER_EN = DateTimeFormatter.ofPattern(YYYYMM);
@@ -243,6 +248,50 @@ public class DateTimeFormatUtils {
      */
     public static LocalDate parseToDate(String date) {
         return (StringUtils.isNotBlank(date) ? LocalDate.parse(date, DATE_FORMATTER) : null);
+    }
+
+    /**
+     * 转换日期为：yyyy年MM月dd日
+     *
+     * @param date 待转换的日期
+     * @return 格式化后的“yyyy年MM月dd日”字符串
+     */
+    public static String print2DateCN(Date date) {
+        return (date != null ? DATE_FORMATTER_CN.format(date.toInstant().atZone(ZoneId.systemDefault())) : null);
+    }
+
+    /**
+     * 转换日期为：yyyy年MM月dd日
+     *
+     * @param date 待转换的日期
+     * @return 格式化后的“yyyy年MM月dd日”字符串
+     */
+    public static String print2DateCN(LocalDateTime date) {
+        return (date != null ? DATE_FORMATTER_CN.format(date) : null);
+    }
+
+    /**
+     * 将字符串日期：yyyy年MM月dd日 转换为日期
+     *
+     * @param date “yyyy年MM月dd日”字符串
+     * @return 日期
+     */
+    public static Date parse2DateCN(String date) {
+        if (StringUtils.isBlank(date)) {
+            return null;
+        }
+        LocalDate localDate = LocalDate.parse(date, DATE_FORMATTER_CN);
+        return toDate(localDate);
+    }
+
+    /**
+     * 将字符串日期：yyyy年MM月dd日 转换为日期
+     *
+     * @param date “yyyy年MM月dd日”字符串
+     * @return 日期
+     */
+    public static LocalDate parseToDateCN(String date) {
+        return (StringUtils.isNotBlank(date) ? LocalDate.parse(date, DATE_FORMATTER_CN) : null);
     }
 
     /**

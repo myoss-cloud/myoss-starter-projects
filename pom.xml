@@ -47,6 +47,7 @@
         <module>myoss-starter-apm</module>
         <module>myoss-starter-cache</module>
         <module>myoss-starter-web</module>
+        <module>myoss-starter-webflux</module>
     </modules>
 
     <properties>

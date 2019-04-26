@@ -190,6 +190,23 @@ public class RestUtils {
     }
 
     /**
+     * 以POST方法发送HTTP请求，请求的内容为JSON
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param requestBody 请求的内容
+     * @param uriVariables url中占位符的参数值
+     * @return 请求结果
+     */
+    public static String postJson(RestTemplate restTemplate, HttpHeaders httpHeaders, String url, String requestBody,
+                                  Object... uriVariables) {
+        URI expanded = restTemplate.getUriTemplateHandler().expand(url, uriVariables);
+        return exchange(restTemplate, httpHeaders, MediaType.APPLICATION_JSON_UTF8, expanded, HttpMethod.POST,
+                requestBody, String.class);
+    }
+
+    /**
      * 以POST方法发送HTTP请求，请求的内容为form数据格式
      *
      * @param restTemplate RestTemplate
@@ -202,6 +219,23 @@ public class RestUtils {
                                   LinkedMultiValueMap<String, String> requestBody, Object... uriVariables) {
         return exchange(restTemplate, MediaType.APPLICATION_FORM_URLENCODED, url, HttpMethod.POST, requestBody,
                 String.class, uriVariables);
+    }
+
+    /**
+     * 以POST方法发送HTTP请求，请求的内容为form数据格式
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param requestBody 请求的内容
+     * @param uriVariables url中占位符的参数值
+     * @return 请求结果
+     */
+    public static String postForm(RestTemplate restTemplate, HttpHeaders httpHeaders, String url,
+                                  LinkedMultiValueMap<String, String> requestBody, Object... uriVariables) {
+        URI expanded = restTemplate.getUriTemplateHandler().expand(url, uriVariables);
+        return exchange(restTemplate, httpHeaders, MediaType.APPLICATION_FORM_URLENCODED, expanded, HttpMethod.POST,
+                requestBody, String.class);
     }
 
     /**
@@ -222,6 +256,24 @@ public class RestUtils {
     }
 
     /**
+     * 以GET方法发送HTTP请求，并在请求的url中添加动态参数 {@code parameterMap}
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param parameterMap 请求的参数，将会添加到url中
+     * @param responseType 返回的数据类型
+     * @param uriVariables url中占位符的参数值
+     * @param <T> 泛型
+     * @return 请求结果
+     */
+    public static <T> T getForObject(RestTemplate restTemplate, HttpHeaders httpHeaders, String url,
+                                     Map<String, String> parameterMap, Class<T> responseType, Object... uriVariables) {
+        URI uri = uriBuild2(url, parameterMap, uriVariables).toUri();
+        return exchange(restTemplate, httpHeaders, null, uri, HttpMethod.GET, null, responseType);
+    }
+
+    /**
      * 以GET方法发送HTTP请求，并在请求的url中添加动态参数 {@code parameterMap}，返回的数据是字符串类型
      *
      * @param restTemplate RestTemplate
@@ -236,6 +288,21 @@ public class RestUtils {
     }
 
     /**
+     * 以GET方法发送HTTP请求，并在请求的url中添加动态参数 {@code parameterMap}，返回的数据是字符串类型
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param parameterMap 请求的参数，将会添加到url中
+     * @param uriVariables url中占位符的参数值
+     * @return 请求结果
+     */
+    public static String getForString(RestTemplate restTemplate, HttpHeaders httpHeaders, String url,
+                                      Map<String, String> parameterMap, Object... uriVariables) {
+        return getForObject(restTemplate, httpHeaders, url, parameterMap, String.class, uriVariables);
+    }
+
+    /**
      * 以GET方法发送HTTP请求，返回的数据是字符串类型
      *
      * @param restTemplate RestTemplate
@@ -245,6 +312,21 @@ public class RestUtils {
      */
     public static String getForString(RestTemplate restTemplate, String url, Object... uriVariables) {
         return exchange(restTemplate, null, url, HttpMethod.GET, null, String.class, uriVariables);
+    }
+
+    /**
+     * 以GET方法发送HTTP请求，返回的数据是字符串类型
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param uriVariables url中占位符的参数值
+     * @return 请求结果
+     */
+    public static String getForString(RestTemplate restTemplate, HttpHeaders httpHeaders, String url,
+                                      Object... uriVariables) {
+        URI expanded = restTemplate.getUriTemplateHandler().expand(url, uriVariables);
+        return exchange(restTemplate, httpHeaders, null, expanded, HttpMethod.GET, null, String.class);
     }
 
     /**
@@ -266,6 +348,25 @@ public class RestUtils {
     }
 
     /**
+     * 以GET方法发送HTTP请求，并在请求的url中添加动态参数 {@code parameterMap}
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param parameterMap 请求的参数，将会添加到url中
+     * @param responseType 返回的数据类型
+     * @param uriVariables url中占位符的参数值
+     * @param <T> 泛型
+     * @return 请求结果
+     */
+    public static <T> T getForObject(RestTemplate restTemplate, HttpHeaders httpHeaders, String url,
+                                     LinkedMultiValueMap<String, String> parameterMap, Class<T> responseType,
+                                     Object... uriVariables) {
+        URI uri = uriBuild(url, parameterMap, uriVariables).toUri();
+        return exchange(restTemplate, httpHeaders, null, uri, HttpMethod.GET, null, responseType);
+    }
+
+    /**
      * 以GET方法发送HTTP请求，并在请求的url中添加动态参数 {@code parameterMap}，返回的数据是字符串类型
      *
      * @param restTemplate RestTemplate
@@ -277,6 +378,21 @@ public class RestUtils {
     public static String getForString(RestTemplate restTemplate, String url,
                                       LinkedMultiValueMap<String, String> parameterMap, Object... uriVariables) {
         return getForObject(restTemplate, url, parameterMap, String.class, uriVariables);
+    }
+
+    /**
+     * 以GET方法发送HTTP请求，并在请求的url中添加动态参数 {@code parameterMap}，返回的数据是字符串类型
+     *
+     * @param restTemplate RestTemplate
+     * @param httpHeaders 自定义HttpHeaders
+     * @param url 请求的url，url中可以包含占位符{0}, {1}, {n}
+     * @param parameterMap 请求的参数，将会添加到url中
+     * @param uriVariables url中占位符的参数值
+     * @return 请求结果
+     */
+    public static String getForString(RestTemplate restTemplate, HttpHeaders httpHeaders, String url,
+                                      LinkedMultiValueMap<String, String> parameterMap, Object... uriVariables) {
+        return getForObject(restTemplate, httpHeaders, url, parameterMap, String.class, uriVariables);
     }
 
     /**

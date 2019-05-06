@@ -68,6 +68,10 @@ public interface MyossConstants {
      */
     String  UNDERLINE          = "_";
     /**
+     * 英文逗号
+     */
+    String  COMMA              = ",";
+    /**
      * 字符串常量: Y
      */
     String  Y                  = "Y";

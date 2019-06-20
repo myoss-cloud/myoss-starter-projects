@@ -48,6 +48,7 @@
         <module>myoss-starter-cache</module>
         <module>myoss-starter-web</module>
         <module>myoss-starter-webflux</module>
+        <module>myoss-starter-webmvc</module>
     </modules>
 
     <properties>

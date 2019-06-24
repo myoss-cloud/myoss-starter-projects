@@ -78,14 +78,6 @@ import reactor.core.publisher.Mono;
  * <td>Querydata</td>
  * </tr>
  * <tr>
- * <td>%X{cookies}</td>
- * <td>所有cookie的名称，以逗号分隔</td>
- * </tr>
- * <tr>
- * <td>%X{cookie.*}</td>
- * <td>指定cookie的值，例如：cookie.JSESSIONID</td>
- * </tr>
- * <tr>
  * <td colspan="2"><strong>客户端信息</strong></td>
  * </tr>
  * <tr>

@@ -18,17 +18,13 @@
 package app.myoss.cloud.web.spring.web.servlet.filter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,17 +69,6 @@ import lombok.extern.slf4j.Slf4j;
  * <tr>
  * <td>%X{queryString}</td>
  * <td>Querydata</td>
- * </tr>
- * <tr>
- * <td>%X{cookies}</td>
- * <td>所有cookie的名称，以逗号分隔</td>
- * </tr>
- * <tr>
- * <td>%X{cookie.*}</td>
- * <td>指定cookie的值，例如：cookie.JSESSIONID</td>
- * </tr>
- * <tr>
- * <td colspan="2"><strong>客户端信息</strong></td>
  * </tr>
  * <tr>
  * <td>%X{remoteAddr}</td>
@@ -172,14 +157,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
      * referrer
      */
     public static final String MDC_REFERRER                      = "referrer";
-    /**
-     * cookies
-     */
-    public static final String MDC_COOKIES                       = "cookies";
-    /**
-     * cookies key prefix
-     */
-    public static final String MDC_COOKIE_PREFIX                 = "cookie.";
+
     private boolean            logOnFilter                       = false;
     private boolean            putRequestInfoToMDC               = false;
     private String             traceIdName;
@@ -308,19 +286,6 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
         // referrer
         putMDC(mdc, MDC_REFERRER, request.getHeader("Referer"));
 
-        // cookies
-        Cookie[] cookies = request.getCookies();
-        List<String> names = Collections.emptyList();
-        if (cookies != null) {
-            names = new ArrayList<>(cookies.length);
-            for (Cookie cookie : cookies) {
-                names.add(cookie.getName());
-                putMDC(mdc, MDC_COOKIE_PREFIX + cookie.getName(), cookie.getValue());
-            }
-            Collections.sort(names);
-        }
-        putMDC(mdc, MDC_COOKIES, names.toString());
-
         // 将map中的值设置到MDC中。
         MDC.setContextMap(mdc);
     }
@@ -389,8 +354,6 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
             MDC.remove(MDC_REMOTE_HOST);
             MDC.remove(MDC_USER_AGENT);
             MDC.remove(MDC_REFERRER);
-            MDC.remove(MDC_COOKIES);
-            MDC.remove(MDC_COOKIE_PREFIX);
         }
     }
 }

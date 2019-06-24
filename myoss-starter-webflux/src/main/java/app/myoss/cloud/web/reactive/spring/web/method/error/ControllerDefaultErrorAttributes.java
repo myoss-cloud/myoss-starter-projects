@@ -62,7 +62,6 @@ public class ControllerDefaultErrorAttributes implements ErrorAttributes {
         Throwable error = getError(request);
         HttpStatus errorStatus = determineHttpStatus(error);
         URI requestUrl = request.uri();
-        String requestBody = null;
         HttpMethod method = request.method();
         String contentType = request.headers().contentType().map(MimeType::getType).orElse(null);
         if (error instanceof RestClientResponseException) {
@@ -70,11 +69,10 @@ public class ControllerDefaultErrorAttributes implements ErrorAttributes {
             // 打印出发送http请求的错误信息，帮助追踪错误源
             String responseBody = exception.getResponseBodyAsString();
             log.error(
-                    "requestUrl: {}, requestMethod: {}, requestBody: {}, contentType: {}\norg.springframework.web.client.RestClientResponseException: {}, responseBody: {} ",
-                    requestUrl, method, requestBody, contentType, exception.getMessage(), responseBody, error);
+                    "requestUrl: {}, requestMethod: {}, contentType: {}\norg.springframework.web.client.RestClientResponseException: {}, responseBody: {} ",
+                    requestUrl, method, contentType, exception.getMessage(), responseBody, error);
         } else {
-            log.error("requestUrl: {}, requestMethod: {}, requestBody: {}, contentType: {}", requestUrl, method,
-                    requestBody, contentType, error);
+            log.error("requestUrl: {}, requestMethod: {}, contentType: {}", requestUrl, method, contentType, error);
         }
 
         String traceId = ApplicationEventTracer.getTraceId();

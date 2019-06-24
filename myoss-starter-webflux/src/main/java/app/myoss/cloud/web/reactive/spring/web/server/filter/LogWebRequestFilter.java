@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2018 https://github.com/myoss
+ * Copyright 2018-2019 https://github.com/myoss
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,36 @@
  *
  */
 
-package app.myoss.cloud.web.spring.web.servlet.filter;
+package app.myoss.cloud.web.reactive.spring.web.server.filter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.MDC;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.cloud.sleuth.instrument.web.TraceWebFilter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 
 import app.myoss.cloud.apm.constants.ApmConstants;
-import app.myoss.cloud.web.utils.IpUtils;
+import app.myoss.cloud.web.reactive.spring.web.method.error.ControllerDefaultErrorAttributes;
+import app.myoss.cloud.web.reactive.utils.IpUtils;
+import brave.Span;
 import brave.internal.HexCodec;
 import brave.propagation.TraceContext;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 /**
  * 记录web请求的日志信息，设置请求的信息 到 {@link MDC Mapped Diagnostic Context(映射调试上下文)}
@@ -111,7 +114,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2018年4月11日 下午12:39:20
  */
 @Slf4j(topic = "WebRequest")
-public class LogWebRequestFilter extends OncePerRequestFilter {
+public class LogWebRequestFilter implements WebFilter {
     /**
      * HTTP request start time
      */
@@ -172,14 +175,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
      * referrer
      */
     public static final String MDC_REFERRER                      = "referrer";
-    /**
-     * cookies
-     */
-    public static final String MDC_COOKIES                       = "cookies";
-    /**
-     * cookies key prefix
-     */
-    public static final String MDC_COOKIE_PREFIX                 = "cookie.";
+
     private boolean            logOnFilter                       = false;
     private boolean            putRequestInfoToMDC               = false;
     private String             traceIdName;
@@ -188,8 +184,8 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     /**
      * 记录web请求的日志信息
      *
-     * @param logOnFilter 是否在 {@link #doFilterInternal} 输出 log
-     *            日志，用于当前过滤器（默认值：false）
+     * @param logOnFilter 是否在 {@link #filter(ServerWebExchange, WebFilterChain)}
+     *            输出 log 日志，用于当前过滤器（默认值：false）
      * @param putRequestInfoToMDC 是否将请求的信息放入MDC中，默认只放 {@link #MDC_START_TIME}、
      *            {@link #MDC_COST_TIME}、{@link #MDC_STATUS} 这个key（默认值：false）
      */
@@ -200,8 +196,8 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     /**
      * 记录web请求的日志信息
      *
-     * @param logOnFilter 是否在 {@link #doFilterInternal} 输出 log
-     *            日志，用于当前过滤器（默认值：false）
+     * @param logOnFilter 是否在 {@link #filter(ServerWebExchange, WebFilterChain)}
+     *            输出 log 日志，用于当前过滤器（默认值：false）
      * @param putRequestInfoToMDC 是否将请求的信息放入MDC中，默认只放 {@link #MDC_START_TIME}、
      *            {@link #MDC_COST_TIME}、{@link #MDC_STATUS} 这个key（默认值：false）
      * @param traceIdName {@link ApmConstants#LEGACY_TRACE_ID_NAME}
@@ -218,35 +214,41 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain filterChain) {
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
+
         // 开始时间
         long startNs = System.nanoTime();
         Date date = new Date();
         String time = DateFormatUtils.format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        try {
-            // 在请求处理之前进行调用，执行key=value的设置
-            putMDC(request, time);
-            // 输出traceId/spanId到response head中
-            Object traceContext = request.getAttribute(TraceContext.class.getName());
-            if (traceContext != null) {
-                TraceContext context = (TraceContext) traceContext;
-                String traceId = context.traceIdString();
-                String spanId = HexCodec.toLowerHex(context.spanId());
-                response.addHeader(this.traceIdName, traceId);
-                response.addHeader(this.spanIdName, spanId);
-            }
 
-            // 调用下一个 filter
-            filterChain.doFilter(request, response);
-        } finally {
+        // 在请求处理之前进行调用，执行key=value的设置
+        putMDC(request, time);
+        // 输出traceId/spanId到response head中
+        Object traceContext = exchange.getAttribute(TraceWebFilter.class.getName() + ".TRACE");
+        if (traceContext != null) {
+            Span span = (Span) traceContext;
+            TraceContext context = span.context();
+            String traceId = context.traceIdString();
+            String spanId = HexCodec.toLowerHex(context.spanId());
+            HttpHeaders responseHeaders = response.getHeaders();
+            responseHeaders.add(this.traceIdName, traceId);
+            responseHeaders.add(this.spanIdName, spanId);
+            MDC.put(ApmConstants.LEGACY_TRACE_ID_NAME, traceId);
+            MDC.put(ApmConstants.LEGACY_SPAN_ID_NAME, spanId);
+        }
+
+        // 调用下一个 filter
+        return filterChain.filter(exchange).doOnError(throwable -> {
             Map<String, String> mdc = getMDCCopy();
             // 接口消耗时间
             long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
             putMDC(mdc, MDC_COST_TIME, String.valueOf(tookMs));
 
             // 状态
-            putMDC(mdc, MDC_STATUS, String.valueOf(response.getStatus()));
+            HttpStatus httpStatus = ControllerDefaultErrorAttributes.determineHttpStatus(throwable);
+            putMDC(mdc, MDC_STATUS, String.valueOf(httpStatus.value()));
 
             // 将map中的值设置到MDC中。
             MDC.setContextMap(mdc);
@@ -258,8 +260,26 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
 
             // 在整个请求结束之后进行调用，执行清理动作
             clearMDC();
+        }).doOnSuccess(aVoid -> {
+            Map<String, String> mdc = getMDCCopy();
+            // 接口消耗时间
+            long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
+            putMDC(mdc, MDC_COST_TIME, String.valueOf(tookMs));
 
-        }
+            // 状态
+            putMDC(mdc, MDC_STATUS, String.valueOf(response.getStatusCode().value()));
+
+            // 将map中的值设置到MDC中。
+            MDC.setContextMap(mdc);
+
+            // 打印日志
+            if (logOnFilter) {
+                log.info("");
+            }
+
+            // 在整个请求结束之后进行调用，执行清理动作
+            clearMDC();
+        });
     }
 
     /**
@@ -268,7 +288,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
      * @param request 客户端请求信息
      * @param startTime 请求开始时间
      */
-    protected void putMDC(HttpServletRequest request, String startTime) {
+    protected void putMDC(ServerHttpRequest request, String startTime) {
         Map<String, String> mdc = getMDCCopy();
         putMDC(mdc, MDC_START_TIME, startTime);
         if (!this.putRequestInfoToMDC) {
@@ -276,21 +296,22 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
             MDC.setContextMap(mdc);
             return;
         }
+        URI uri = request.getURI();
+        HttpHeaders headers = request.getHeaders();
 
         // GET or POST
-        putMDC(mdc, MDC_METHOD, request.getMethod());
-        putMDC(mdc, MDC_REQUEST_SERVER_INFO,
-                request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort());
+        putMDC(mdc, MDC_METHOD, request.getMethod().name());
+        StringBuilder requestURL = new StringBuilder(uri.getScheme() + "://" + uri.getRawAuthority());
+        putMDC(mdc, MDC_REQUEST_SERVER_INFO, requestURL.toString());
 
         // request URL：完整的URL
-        StringBuilder requestURL = new StringBuilder(request.getRequestURL());
-        String queryString = StringUtils.trimToNull(request.getQueryString());
+        String queryString = StringUtils.trimToNull(uri.getRawQuery());
 
-        putMDC(mdc, MDC_REQUEST_URL, getRequestURL(requestURL, null));
-        putMDC(mdc, MDC_REQUEST_URL_WITH_QUERY_STRING, getRequestURL(requestURL, queryString));
+        putMDC(mdc, MDC_REQUEST_URL, requestURL.append(uri.getRawPath()).toString());
+        putMDC(mdc, MDC_REQUEST_URL_WITH_QUERY_STRING, uri.toString());
 
         // request URI：不包括host信息的URL
-        String requestURI = request.getRequestURI();
+        String requestURI = uri.getRawPath();
         String requestURIWithQueryString = (queryString != null ? requestURI + "?" + queryString : requestURI);
 
         putMDC(mdc, MDC_REQUEST_URI, requestURI);
@@ -298,50 +319,22 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
         putMDC(mdc, MDC_QUERY_STRING, queryString);
 
         // client info
-        putMDC(mdc, MDC_REMOTE_HOST, request.getRemoteHost());
-        putMDC(mdc, MDC_REMOTE_ADDR, request.getRemoteAddr());
+        InetSocketAddress remoteAddress = request.getRemoteAddress();
+        if (remoteAddress != null && remoteAddress.getAddress() != null) {
+            InetAddress address = remoteAddress.getAddress();
+            putMDC(mdc, MDC_REMOTE_HOST, remoteAddress.getHostName());
+            putMDC(mdc, MDC_REMOTE_ADDR, address.getHostAddress());
+        }
         putMDC(mdc, MDC_REMOTE_REAL_IP, IpUtils.getIpAddress(request));
 
         // user agent
-        putMDC(mdc, MDC_USER_AGENT, request.getHeader("User-Agent"));
+        putMDC(mdc, MDC_USER_AGENT, headers.getFirst("User-Agent"));
 
         // referrer
-        putMDC(mdc, MDC_REFERRER, request.getHeader("Referer"));
-
-        // cookies
-        Cookie[] cookies = request.getCookies();
-        List<String> names = Collections.emptyList();
-        if (cookies != null) {
-            names = new ArrayList<>(cookies.length);
-            for (Cookie cookie : cookies) {
-                names.add(cookie.getName());
-                putMDC(mdc, MDC_COOKIE_PREFIX + cookie.getName(), cookie.getValue());
-            }
-            Collections.sort(names);
-        }
-        putMDC(mdc, MDC_COOKIES, names.toString());
+        putMDC(mdc, MDC_REFERRER, headers.getFirst("Referer"));
 
         // 将map中的值设置到MDC中。
         MDC.setContextMap(mdc);
-    }
-
-    /**
-     * 取得当前的request URL，包括query string。
-     *
-     * @param requestURL request URL
-     * @param queryString query string
-     * @return 当前请求的request URL
-     */
-    private String getRequestURL(StringBuilder requestURL, String queryString) {
-        int length = requestURL.length();
-        try {
-            if (queryString != null) {
-                requestURL.append('?').append(queryString);
-            }
-            return requestURL.toString();
-        } finally {
-            requestURL.setLength(length);
-        }
     }
 
     /**
@@ -365,7 +358,7 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
     protected Map<String, String> getMDCCopy() {
         Map<String, String> mdc = MDC.getCopyOfContextMap();
         if (mdc == null) {
-            mdc = new HashMap<>();
+            mdc = new HashMap<>(16);
         }
         return mdc;
     }
@@ -389,8 +382,6 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
             MDC.remove(MDC_REMOTE_HOST);
             MDC.remove(MDC_USER_AGENT);
             MDC.remove(MDC_REFERRER);
-            MDC.remove(MDC_COOKIES);
-            MDC.remove(MDC_COOKIE_PREFIX);
         }
     }
 }

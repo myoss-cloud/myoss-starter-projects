@@ -41,7 +41,9 @@ public class FastJsonWebConfig {
      * <p>
      * 正因为添加了转义符，导致“服务端响应”将String类型的数据发送给“业务系统”、回写给“客户端”，出现了本不应该出现的转义符
      * <p>
-     * 解决办法：不直接注入，使用 {@link AbstractWebMvcConfigurer#extendMessageConverters} 添加
+     * 解决办法：不直接注入，使用
+     * {@code app.myoss.cloud.web.spring.boot.config.AbstractWebMvcConfigurer#extendMessageConverters}
+     * 添加
      *
      * @param fastJsonConfig Fast Json的配置信息
      * @return Fast Json SpringMVC转换器

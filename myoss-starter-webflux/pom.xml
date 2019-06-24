@@ -47,6 +47,10 @@
             <groupId>app.myoss.cloud.boot</groupId>
             <artifactId>myoss-starter-apm</artifactId>
         </dependency>
+        <dependency>
+            <groupId>app.myoss.cloud.boot</groupId>
+            <artifactId>myoss-starter-web</artifactId>
+        </dependency>
         <!-- myoss cloud dependencies end -->
 
         <!-- spring boot start -->

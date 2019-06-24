@@ -61,6 +61,8 @@ public class HttpUrlBuilder {
      * resolution. The returned string may be null (for URLs with no query),
      * empty (for URLs with an empty query) or non-empty (all other URLs).
      * <p>
+     * <em></em>
+     * </p>
      * <table summary="">
      * <tr>
      * <th>URL</th>
@@ -105,6 +107,8 @@ public class HttpUrlBuilder {
      * Returns this URL's query, like {@code "abc"} for
      * {@code http://host/?abc}.
      * <p>
+     * <em></em>
+     * </p>
      * <table summary="">
      * <tr>
      * <th>URL</th>

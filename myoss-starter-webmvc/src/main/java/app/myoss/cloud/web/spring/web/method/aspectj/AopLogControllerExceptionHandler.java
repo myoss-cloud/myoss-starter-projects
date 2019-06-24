@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -66,7 +67,7 @@ import lombok.extern.slf4j.Slf4j;
  * @see ResponseEntityExceptionHandler
  * @see app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController
  */
-@ConditionalOnWebApplication
+@ConditionalOnWebApplication(type = Type.SERVLET)
 @Slf4j
 @ControllerAdvice
 public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHandler {

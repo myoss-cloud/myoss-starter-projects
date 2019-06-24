@@ -20,11 +20,15 @@ package app.myoss.cloud.web.reactive.utils;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.CollectionUtils;
 
+import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.core.exception.BizRuntimeException;
 
 /**
@@ -37,7 +41,12 @@ public class IpUtils {
     /**
      * 未知IP地址
      */
-    public static final String UNKNOWN = "unknown";
+    public static final String UNKNOWN           = "unknown";
+    /**
+     * 代理服务器客户端 IP 地址设置的 Header key
+     */
+    public static String[]     PROXY_HEADER_KEYS = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+            "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
 
     /**
      * 获取本机IP地址
@@ -61,20 +70,22 @@ public class IpUtils {
      */
     public static String getIpAddress(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
-        String ipAddress = headers.getFirst("X-Forwarded-For");
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = headers.getFirst("Proxy-Client-IP");
+        String ipAddress = null;
+        boolean flag = true;
+        for (String key : PROXY_HEADER_KEYS) {
+            List<String> values = headers.get(key);
+            if (CollectionUtils.isEmpty(values)) {
+                continue;
+            }
+            ipAddress = values.stream()
+                    .filter(item -> !UNKNOWN.equalsIgnoreCase(item))
+                    .collect(Collectors.joining(MyossConstants.COMMA));
+            if (StringUtils.isNotBlank(ipAddress)) {
+                flag = false;
+                break;
+            }
         }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = headers.getFirst("WL-Proxy-Client-IP");
-        }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = headers.getFirst("HTTP_CLIENT_IP");
-        }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = headers.getFirst("HTTP_X_FORWARDED_FOR");
-        }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
+        if (flag) {
             InetSocketAddress remoteAddress = request.getRemoteAddress();
             InetAddress address = remoteAddress != null ? remoteAddress.getAddress() : null;
             ipAddress = address != null ? address.getHostAddress() : null;

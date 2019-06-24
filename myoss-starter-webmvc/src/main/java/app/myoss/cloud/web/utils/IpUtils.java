@@ -36,7 +36,12 @@ public class IpUtils {
     /**
      * 未知IP地址
      */
-    public static final String UNKNOWN = "unknown";
+    public static final String UNKNOWN           = "unknown";
+    /**
+     * 代理服务器客户端 IP 地址设置的 Header key
+     */
+    public static String[]     PROXY_HEADER_KEYS = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+            "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
 
     /**
      * 获取本机IP地址
@@ -59,20 +64,16 @@ public class IpUtils {
      * @return 客户端的真实地址
      */
     public static String getIpAddress(HttpServletRequest request) {
-        String ipAddress = request.getHeader("X-Forwarded-For");
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
+        String ipAddress = null;
+        boolean flag = true;
+        for (String key : PROXY_HEADER_KEYS) {
+            ipAddress = request.getHeader(key);
+            if (StringUtils.isNotBlank(ipAddress) && !UNKNOWN.equalsIgnoreCase(ipAddress)) {
+                flag = false;
+                break;
+            }
         }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (StringUtils.isBlank(ipAddress) || UNKNOWN.equalsIgnoreCase(ipAddress)) {
+        if (flag) {
             ipAddress = request.getRemoteAddr();
             if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
                 ipAddress = getLocalIp();

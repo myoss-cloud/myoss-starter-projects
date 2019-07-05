@@ -41,6 +41,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import app.myoss.cloud.core.constants.DeployEnvEnum;
+import app.myoss.cloud.core.constants.MyossConstants;
 
 /**
  * 加载核心自定义基础配置信息，保存到 spring {@link org.springframework.core.env.Environment} 中
@@ -82,6 +83,10 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
 
         // 加载当前环境的配置文件，进行覆盖
         String deployEnv = DeployEnvEnum.getDeployEnv();
+        if (deployEnv == null) {
+            // 跑 test case 的时候，可以考虑加下这个： @SpringBootTest(properties = {"DEPLOY_ENV:test"})
+            deployEnv = environment.getProperty(MyossConstants.DEPLOY_ENV);
+        }
         path = new ClassPathResource("core-config/application-" + deployEnv + ".yml");
         linkedHashMap = loadYaml2Map(path);
         addOrReplace(environment.getPropertySources(), linkedHashMap);
@@ -112,7 +117,7 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
      * 增加或者替换配置属性：{@link #PROPERTY_SOURCE_NAME}
      *
      * @param propertySources
-     *        {@link ConfigurableEnvironment#getPropertySources()}
+     *            {@link ConfigurableEnvironment#getPropertySources()}
      * @param map 新配置的属性
      */
     public static void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {

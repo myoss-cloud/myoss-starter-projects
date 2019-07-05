@@ -21,28 +21,24 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.slf4j.MDC;
-import org.springframework.cloud.sleuth.instrument.web.TraceWebFilter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
-import app.myoss.cloud.apm.constants.ApmConstants;
-import app.myoss.cloud.web.reactive.spring.web.method.error.ControllerDefaultErrorAttributes;
+import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.web.reactive.utils.IpUtils;
-import brave.Span;
-import brave.internal.HexCodec;
-import brave.propagation.TraceContext;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -87,10 +83,6 @@ import reactor.core.publisher.Mono;
  * <tr>
  * <td>%X{remoteRealIp}</td>
  * <td>客户端的真实ip地址</td>
- * </tr>
- * <tr>
- * <td>%X{remoteHost}</td>
- * <td>用户域名（也可能是IP地址）</td>
  * </tr>
  * <tr>
  * <td>%X{userAgent}</td>
@@ -156,10 +148,6 @@ public class LogWebRequestFilter implements WebFilter {
      */
     public static final String MDC_REMOTE_REAL_IP                = "remoteRealIp";
     /**
-     * 客户端的主机名
-     */
-    public static final String MDC_REMOTE_HOST                   = "remoteHost";
-    /**
      * user agent
      */
     public static final String MDC_USER_AGENT                    = "userAgent";
@@ -170,8 +158,8 @@ public class LogWebRequestFilter implements WebFilter {
 
     private boolean            logOnFilter                       = false;
     private boolean            putRequestInfoToMDC               = false;
-    private String             traceIdName;
-    private String             spanIdName;
+    private FastDateFormat     dateFormat;
+    private String             localIp;
 
     /**
      * 记录web请求的日志信息
@@ -182,7 +170,7 @@ public class LogWebRequestFilter implements WebFilter {
      *            {@link #MDC_COST_TIME}、{@link #MDC_STATUS} 这个key（默认值：false）
      */
     public LogWebRequestFilter(boolean logOnFilter, boolean putRequestInfoToMDC) {
-        this(logOnFilter, putRequestInfoToMDC, null, null);
+        this(logOnFilter, putRequestInfoToMDC, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     }
 
     /**
@@ -192,86 +180,59 @@ public class LogWebRequestFilter implements WebFilter {
      *            输出 log 日志，用于当前过滤器（默认值：false）
      * @param putRequestInfoToMDC 是否将请求的信息放入MDC中，默认只放 {@link #MDC_START_TIME}、
      *            {@link #MDC_COST_TIME}、{@link #MDC_STATUS} 这个key（默认值：false）
-     * @param traceIdName {@link ApmConstants#LEGACY_TRACE_ID_NAME}
-     *            输出调用链的TraceId到response header中
-     * @param spanIdName {@link ApmConstants#LEGACY_SPAN_ID_NAME}
-     *            输出调用链的SpanId到response header中
+     * @param pattern {@link #MDC_START_TIME} 日期格式化 pattern
      */
-    public LogWebRequestFilter(boolean logOnFilter, boolean putRequestInfoToMDC, String traceIdName,
-                               String spanIdName) {
+    public LogWebRequestFilter(boolean logOnFilter, boolean putRequestInfoToMDC, String pattern) {
         this.logOnFilter = logOnFilter;
         this.putRequestInfoToMDC = putRequestInfoToMDC;
-        this.traceIdName = (StringUtils.isNotBlank(traceIdName) ? traceIdName : ApmConstants.LEGACY_TRACE_ID_NAME);
-        this.spanIdName = (StringUtils.isNotBlank(spanIdName) ? spanIdName : ApmConstants.LEGACY_SPAN_ID_NAME);
+        this.dateFormat = FastDateFormat.getInstance(pattern, null, null);
+        this.localIp = IpUtils.getLocalIp();
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain filterChain) {
-        ServerHttpRequest request = exchange.getRequest();
-        ServerHttpResponse response = exchange.getResponse();
-
         // 开始时间
         long startNs = System.nanoTime();
         Date date = new Date();
-        String time = DateFormatUtils.format(date, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
-        // 在请求处理之前进行调用，执行key=value的设置
-        putMDC(request, time);
-        // 输出traceId/spanId到response head中
-        Object traceContext = exchange.getAttribute(TraceWebFilter.class.getName() + ".TRACE");
-        if (traceContext != null) {
-            Span span = (Span) traceContext;
-            TraceContext context = span.context();
-            String traceId = context.traceIdString();
-            String spanId = HexCodec.toLowerHex(context.spanId());
-            HttpHeaders responseHeaders = response.getHeaders();
-            responseHeaders.add(this.traceIdName, traceId);
-            responseHeaders.add(this.spanIdName, spanId);
-            MDC.put(ApmConstants.LEGACY_TRACE_ID_NAME, traceId);
-            MDC.put(ApmConstants.LEGACY_SPAN_ID_NAME, spanId);
-        }
 
         // 调用下一个 filter
-        return filterChain.filter(exchange).doOnError(throwable -> {
-            Map<String, String> mdc = getMDCCopy();
-            // 接口消耗时间
-            long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
-            putMDC(mdc, MDC_COST_TIME, String.valueOf(tookMs));
+        return filterChain.filter(exchange).compose((call) -> filter(exchange, call, startNs, date));
+    }
 
-            // 状态
-            HttpStatus httpStatus = ControllerDefaultErrorAttributes.determineHttpStatus(throwable);
-            putMDC(mdc, MDC_STATUS, String.valueOf(httpStatus.value()));
-
-            // 将map中的值设置到MDC中。
-            MDC.setContextMap(mdc);
-
-            // 打印日志
-            if (logOnFilter) {
-                log.info("");
+    private Mono<Void> filter(ServerWebExchange exchange, Mono<Void> call, long startNs, Date date) {
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
+        return call.doFinally(signalType -> {
+            if (response.isCommitted()) {
+                log(startNs, date, request, response);
+            } else {
+                response.beforeCommit(() -> {
+                    log(startNs, date, request, response);
+                    return Mono.empty();
+                });
             }
-
-            // 在整个请求结束之后进行调用，执行清理动作
-            clearMDC();
-        }).doOnSuccess(aVoid -> {
-            Map<String, String> mdc = getMDCCopy();
-            // 接口消耗时间
-            long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
-            putMDC(mdc, MDC_COST_TIME, String.valueOf(tookMs));
-
-            // 状态
-            putMDC(mdc, MDC_STATUS, String.valueOf(response.getStatusCode().value()));
-
-            // 将map中的值设置到MDC中。
-            MDC.setContextMap(mdc);
-
-            // 打印日志
-            if (logOnFilter) {
-                log.info("");
-            }
-
-            // 在整个请求结束之后进行调用，执行清理动作
-            clearMDC();
         });
+    }
+
+    private void log(long startNs, Date date, ServerHttpRequest request, ServerHttpResponse response) {
+        String time = dateFormat.format(date);
+        putRequestInfo(request, time);
+
+        // 接口消耗时间
+        long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
+        putMDC(MDC_COST_TIME, String.valueOf(tookMs));
+
+        // 状态
+        HttpStatus httpStatus = response.getStatusCode();
+        putMDC(MDC_STATUS, String.valueOf(httpStatus.value()));
+
+        // 打印日志
+        if (logOnFilter) {
+            log.info("");
+        }
+
+        // 在整个请求结束之后进行调用，执行清理动作
+        clearMDC();
     }
 
     /**
@@ -280,79 +241,85 @@ public class LogWebRequestFilter implements WebFilter {
      * @param request 客户端请求信息
      * @param startTime 请求开始时间
      */
-    protected void putMDC(ServerHttpRequest request, String startTime) {
-        Map<String, String> mdc = getMDCCopy();
-        putMDC(mdc, MDC_START_TIME, startTime);
+    protected void putRequestInfo(ServerHttpRequest request, String startTime) {
+        putMDC(MDC_START_TIME, startTime);
         if (!this.putRequestInfoToMDC) {
-            // 将map中的值设置到MDC中。
-            MDC.setContextMap(mdc);
             return;
         }
         URI uri = request.getURI();
         HttpHeaders headers = request.getHeaders();
 
         // GET or POST
-        putMDC(mdc, MDC_METHOD, request.getMethod().name());
+        putMDC(MDC_METHOD, request.getMethod().name());
         StringBuilder requestURL = new StringBuilder(uri.getScheme() + "://" + uri.getRawAuthority());
-        putMDC(mdc, MDC_REQUEST_SERVER_INFO, requestURL.toString());
+        putMDC(MDC_REQUEST_SERVER_INFO, requestURL.toString());
 
         // request URL：完整的URL
-        String queryString = StringUtils.trimToNull(uri.getRawQuery());
+        String queryString = StringUtils.isEmpty(uri.getRawQuery()) ? null : uri.getRawQuery();
 
-        putMDC(mdc, MDC_REQUEST_URL, requestURL.append(uri.getRawPath()).toString());
-        putMDC(mdc, MDC_REQUEST_URL_WITH_QUERY_STRING, uri.toString());
+        putMDC(MDC_REQUEST_URL, requestURL.append(uri.getRawPath()).toString());
+        putMDC(MDC_REQUEST_URL_WITH_QUERY_STRING, uri.toString());
 
         // request URI：不包括host信息的URL
         String requestURI = uri.getRawPath();
         String requestURIWithQueryString = (queryString != null ? requestURI + "?" + queryString : requestURI);
 
-        putMDC(mdc, MDC_REQUEST_URI, requestURI);
-        putMDC(mdc, MDC_REQUEST_URI_WITH_QUERY_STRING, requestURIWithQueryString);
-        putMDC(mdc, MDC_QUERY_STRING, queryString);
+        putMDC(MDC_REQUEST_URI, requestURI);
+        putMDC(MDC_REQUEST_URI_WITH_QUERY_STRING, requestURIWithQueryString);
+        putMDC(MDC_QUERY_STRING, queryString);
 
         // client info
         InetSocketAddress remoteAddress = request.getRemoteAddress();
-        if (remoteAddress != null && remoteAddress.getAddress() != null) {
-            InetAddress address = remoteAddress.getAddress();
-            putMDC(mdc, MDC_REMOTE_HOST, remoteAddress.getHostName());
-            putMDC(mdc, MDC_REMOTE_ADDR, address.getHostAddress());
+        InetAddress address = remoteAddress != null ? remoteAddress.getAddress() : null;
+        String hostAddress = address != null ? address.getHostAddress() : null;
+        putMDC(MDC_REMOTE_ADDR, hostAddress);
+
+        String ipAddress = null;
+        boolean flag = true;
+        for (String key : IpUtils.PROXY_HEADER_KEYS) {
+            List<String> values = headers.get(key);
+            if (CollectionUtils.isEmpty(values)) {
+                continue;
+            }
+            ipAddress = values.stream()
+                    .filter(item -> !IpUtils.UNKNOWN.equalsIgnoreCase(item))
+                    .collect(Collectors.joining(MyossConstants.COMMA));
+            if (StringUtils.isNotBlank(ipAddress)) {
+                flag = false;
+                break;
+            }
         }
-        putMDC(mdc, MDC_REMOTE_REAL_IP, IpUtils.getIpAddress(request));
+        if (flag) {
+            ipAddress = hostAddress;
+            if (ipAddress == null || "127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
+                ipAddress = this.localIp;
+            }
+        }
+        // 对于通过多个代理的情况，第一个IP为客户端真实IP，多个IP按照','分割。**.***.***.***".length() = 15
+        if (ipAddress != null && ipAddress.length() > 15) {
+            if (ipAddress.indexOf(",") > 0) {
+                ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
+            }
+        }
+        putMDC(MDC_REMOTE_REAL_IP, ipAddress);
 
         // user agent
-        putMDC(mdc, MDC_USER_AGENT, headers.getFirst("User-Agent"));
+        putMDC(MDC_USER_AGENT, headers.getFirst("User-Agent"));
 
         // referrer
-        putMDC(mdc, MDC_REFERRER, headers.getFirst("Referer"));
-
-        // 将map中的值设置到MDC中。
-        MDC.setContextMap(mdc);
+        putMDC(MDC_REFERRER, headers.getFirst("Referer"));
     }
 
     /**
      * 设置mdc，如果value为空，则不置入。
      *
-     * @param mdc {@link MDC} 属性值
      * @param key set key
      * @param value set value
      */
-    private void putMDC(Map<String, String> mdc, String key, String value) {
+    private void putMDC(String key, String value) {
         if (value != null) {
-            mdc.put(key, value);
+            MDC.put(key, value);
         }
-    }
-
-    /**
-     * 取得当前MDC map的复本。
-     *
-     * @return MDC上下文中的信息
-     */
-    protected Map<String, String> getMDCCopy() {
-        Map<String, String> mdc = MDC.getCopyOfContextMap();
-        if (mdc == null) {
-            mdc = new HashMap<>(16);
-        }
-        return mdc;
     }
 
     /**
@@ -371,7 +338,6 @@ public class LogWebRequestFilter implements WebFilter {
             MDC.remove(MDC_QUERY_STRING);
             MDC.remove(MDC_REMOTE_ADDR);
             MDC.remove(MDC_REMOTE_REAL_IP);
-            MDC.remove(MDC_REMOTE_HOST);
             MDC.remove(MDC_USER_AGENT);
             MDC.remove(MDC_REFERRER);
         }

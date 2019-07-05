@@ -43,14 +43,20 @@ public class IpUtils {
     public static String[]     PROXY_HEADER_KEYS = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
             "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
 
+    private static String      LOCAL_HOST_IP;
+
     /**
      * 获取本机IP地址
      *
      * @return 本机IP地址
      */
     public static String getLocalIp() {
+        if (LOCAL_HOST_IP != null) {
+            return LOCAL_HOST_IP;
+        }
         try {
-            return InetAddress.getLocalHost().getHostAddress();
+            LOCAL_HOST_IP = InetAddress.getLocalHost().getHostAddress();
+            return LOCAL_HOST_IP;
         } catch (UnknownHostException e) {
             throw new BizRuntimeException("Thrown to indicate that the IP address of a host could not be determined",
                     e);

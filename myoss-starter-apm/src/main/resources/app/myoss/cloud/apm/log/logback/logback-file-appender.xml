@@ -168,6 +168,10 @@
         <level value="INFO"/>
     </logger>
 
+    <logger name="com.alibaba.nacos.client.naming">
+        <level value="WARN"/>
+    </logger>
+
     <logger name="WebRequest" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="requestInfoAppenderAsync"/>

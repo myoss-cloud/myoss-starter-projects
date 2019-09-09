@@ -20,6 +20,7 @@ package app.myoss.cloud.web.http.okhttp3;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ import okio.GzipSource;
  */
 @Slf4j(topic = "HttpLoggingInterceptor")
 public final class HttpLoggingInterceptor implements Interceptor {
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
      * Log level

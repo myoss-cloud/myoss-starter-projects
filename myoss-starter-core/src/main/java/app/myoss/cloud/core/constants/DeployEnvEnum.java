@@ -36,6 +36,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum DeployEnvEnum {
     /**
+     * 自定义本地开发环境: 运行在办公室开发者的电脑中
+     */
+    CUSTOMIZE_DEV("DEPLOY_ENV_CUSTOMIZE_DEV", "自定义本地开发环境"),
+    /**
+     * 本地开发环境: 运行在办公室开发者的电脑中
+     */
+    LOCAL("local", "本地开发环境"),
+    /**
      * 开发环境
      */
     DEV("dev", "开发环境"),
@@ -77,7 +85,45 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为开发环境或者测试环境
+     * 是否为自定义开发环境, 实际业务场景中: 不是用 dev 代表开发环境
+     *
+     * @return true: 是; false: 不是
+     * @see app.myoss.cloud.core.spring.boot.config.DeployEnvEnvironmentPostProcessor
+     *      请参考文档进行设置
+     */
+    public static boolean isCustomizeDev() {
+        String value = getDeployEnv();
+        String customizeDev = StringUtils.defaultIfBlank(System.getProperty(CUSTOMIZE_DEV.getValue()),
+                System.getenv(CUSTOMIZE_DEV.getValue()));
+        if (StringUtils.isNotBlank(customizeDev)) {
+            return StringUtils.equals(value, customizeDev);
+        } else {
+            return isDev(value);
+        }
+    }
+
+    /**
+     * 是否为本地开发环境: DEPLOY_ENV=local
+     *
+     * @param value 部署的环境变量
+     * @return true: 是; false: 不是
+     */
+    public static boolean isLocal(String value) {
+        return LOCAL.getValue().equals(value);
+    }
+
+    /**
+     * 是否为开发环境: DEPLOY_ENV=local
+     *
+     * @return true: 是; false: 不是
+     */
+    public static boolean isLocal() {
+        String value = getDeployEnv();
+        return LOCAL.getValue().equals(value);
+    }
+
+    /**
+     * 是否为开发环境或者测试环境: dev or test
      *
      * @param value 部署的环境变量
      * @return true: 是; false: 不是
@@ -87,7 +133,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为开发环境或者测试环境
+     * 是否为开发环境或者测试环境: dev or test
      *
      * @return true: 是; false: 不是
      */
@@ -97,7 +143,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为开发环境
+     * 是否为开发环境: DEPLOY_ENV=dev
      *
      * @param value 部署的环境变量
      * @return true: 是; false: 不是
@@ -107,7 +153,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为开发环境
+     * 是否为开发环境: DEPLOY_ENV=dev
      *
      * @return true: 是; false: 不是
      */
@@ -117,7 +163,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为测试环境
+     * 是否为测试环境: DEPLOY_ENV=test
      *
      * @param value 部署的环境变量
      * @return true: 是; false: 不是
@@ -127,7 +173,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为测试环境
+     * 是否为测试环境: DEPLOY_ENV=test
      *
      * @return true: 是; false: 不是
      */
@@ -137,7 +183,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为预发环境
+     * 是否为预发环境: DEPLOY_ENV=pre
      *
      * @param value 部署的环境变量
      * @return true: 是; false: 不是
@@ -147,7 +193,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为预发环境
+     * 是否为预发环境: DEPLOY_ENV==pre
      *
      * @return true: 是; false: 不是
      */
@@ -157,7 +203,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为生产环境
+     * 是否为生产环境: DEPLOY_ENV=prd
      *
      * @param value 部署的环境变量
      * @return true: 是; false: 不是
@@ -167,7 +213,7 @@ public enum DeployEnvEnum {
     }
 
     /**
-     * 是否为生产环境
+     * 是否为生产环境: DEPLOY_ENV=prd
      *
      * @return true: 是; false: 不是
      */
@@ -197,5 +243,14 @@ public enum DeployEnvEnum {
     public static DeployEnvEnum getDeployEnvEnum() {
         String deployEnv = getDeployEnv();
         return getEnumByValue(deployEnv);
+    }
+
+    /**
+     * 设置应用部署的环境变量
+     *
+     * @param deployEnv 部署的环境变量
+     */
+    public static void setDeployEnv(String deployEnv) {
+        System.setProperty(DEPLOY_ENV, deployEnv);
     }
 }

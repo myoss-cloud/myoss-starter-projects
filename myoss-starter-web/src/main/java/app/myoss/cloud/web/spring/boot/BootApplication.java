@@ -29,6 +29,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.ClassUtils;
 
 import app.myoss.cloud.apm.spring.cloud.sleuth.trace.ApplicationEventTracer;
+import app.myoss.cloud.core.constants.DeployEnvEnum;
 import app.myoss.cloud.core.constants.MyossConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -60,7 +61,7 @@ public class BootApplication {
         if (StringUtils.isBlank(deployEnv)) {
             // 设置部署的默认环境为：dev（即本机开发）
             deployEnv = "dev";
-            System.setProperty(DEPLOY_ENV, deployEnv);
+            DeployEnvEnum.setDeployEnv(deployEnv);
             logger.info("DEPLOY_ENV set to {}", deployEnv);
         }
         return deployEnv;

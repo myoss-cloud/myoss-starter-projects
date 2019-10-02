@@ -60,7 +60,7 @@ public class ApmWebEndpointEnvironmentPostProcessor
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         MutablePropertySources propertySources = environment.getPropertySources();
         Map<String, Object> map = new HashMap<>();
-        if (!DeployEnvEnum.isDev()) {
+        if (!DeployEnvEnum.isCustomizeDev()) {
             map.put("management.server.port", "8088");
         }
         map.put("management.endpoints.enabled-by-default", "true");

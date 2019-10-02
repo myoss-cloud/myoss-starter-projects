@@ -17,19 +17,14 @@
 
 package app.myoss.cloud.core.spring.boot.config;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.env.EnvironmentPostProcessor;
-import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.boot.logging.DeferredLog;
-import org.springframework.boot.origin.OriginTrackedValue;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
 import org.springframework.core.Ordered;
@@ -42,6 +37,7 @@ import org.springframework.core.io.Resource;
 
 import app.myoss.cloud.core.constants.DeployEnvEnum;
 import app.myoss.cloud.core.constants.MyossConstants;
+import app.myoss.cloud.core.utils.YamlUtils;
 
 /**
  * 加载核心自定义基础配置信息，保存到 spring {@link org.springframework.core.env.Environment} 中
@@ -63,22 +59,21 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
     /**
      * {@link EnvironmentPostProcessor} 中比较特殊，不能直接用 @Slf4j 进行输出日志
      */
-    private static final DeferredLog       LOGGER               = new DeferredLog();
+    private static final DeferredLog LOGGER               = new DeferredLog();
     /**
      * The default order for the processor.
      */
-    public static final int                DEFAULT_ORDER        = ConfigFileApplicationListener.DEFAULT_ORDER + 9;
+    public static final int          DEFAULT_ORDER        = ConfigFileApplicationListener.DEFAULT_ORDER + 9;
     /**
      * 属性配置名字
      */
-    public static final String             PROPERTY_SOURCE_NAME = "defaultProperties";
-    private final YamlPropertySourceLoader loader               = new YamlPropertySourceLoader();
+    public static final String       PROPERTY_SOURCE_NAME = "defaultProperties";
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         // 加载默认的配置文件
         Resource path = new ClassPathResource("core-config/application.yml");
-        LinkedHashMap<String, Object> linkedHashMap = loadYaml2Map(path);
+        LinkedHashMap<String, Object> linkedHashMap = YamlUtils.loadYaml2Map(path);
         addOrReplace(environment.getPropertySources(), linkedHashMap);
 
         // 加载当前环境的配置文件，进行覆盖
@@ -88,29 +83,8 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
             deployEnv = environment.getProperty(MyossConstants.DEPLOY_ENV);
         }
         path = new ClassPathResource("core-config/application-" + deployEnv + ".yml");
-        linkedHashMap = loadYaml2Map(path);
+        linkedHashMap = YamlUtils.loadYaml2Map(path);
         addOrReplace(environment.getPropertySources(), linkedHashMap);
-    }
-
-    @SuppressWarnings("unchecked")
-    private LinkedHashMap<String, Object> loadYaml2Map(Resource path) {
-        if (!path.exists()) {
-            LOGGER.info("Resource " + path + " does not exist, ignore add to environment");
-            return null;
-        }
-
-        PropertySource<Map<String, OriginTrackedValue>> propertySource;
-        try {
-            propertySource = (PropertySource<Map<String, OriginTrackedValue>>) this.loader.load("config", path).get(0);
-        } catch (IOException ex) {
-            throw new IllegalStateException("Failed to load yaml configuration from " + path, ex);
-        }
-
-        return propertySource.getSource()
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().getValue(), (oldValue, newValue) -> newValue,
-                        LinkedHashMap::new));
     }
 
     /**

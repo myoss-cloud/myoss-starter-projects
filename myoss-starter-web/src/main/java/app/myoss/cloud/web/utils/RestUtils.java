@@ -85,7 +85,12 @@ public class RestUtils {
             ResponseEntity<T> responseEntity = restTemplate.exchange(uri, method, httpEntity, responseType);
             T responseBody = responseEntity.getBody();
             long costTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-            log.info("requestUrl: {}, costTime: {}, responseBody: {}", uri, costTime, responseBody);
+            if (responseBody instanceof byte[]) {
+                log.info("requestUrl: {}, costTime: {}, responseBody: {}", uri, costTime,
+                        ((byte[]) responseBody).length);
+            } else {
+                log.info("requestUrl: {}, costTime: {}, responseBody: {}", uri, costTime, responseBody);
+            }
             if (restRequestCallback != null) {
                 // 执行后置操作
                 responseBody = restRequestCallback.afterRequest(restTemplate, uri, method, httpEntity, responseType,

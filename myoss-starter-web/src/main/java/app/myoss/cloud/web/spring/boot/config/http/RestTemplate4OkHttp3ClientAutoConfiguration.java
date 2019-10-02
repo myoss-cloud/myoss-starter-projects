@@ -19,17 +19,25 @@ package app.myoss.cloud.web.spring.boot.config.http;
 
 import static app.myoss.cloud.web.spring.boot.config.FastJsonWebConfig.fastJsonHttpMessageConverter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerRequestTransformer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -42,6 +50,8 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.core.spring.boot.config.FastJsonAutoConfiguration;
 import app.myoss.cloud.web.constants.WebConstants;
+import app.myoss.cloud.web.http.loadbalancer.LoadBalancerClientRequestFactory;
+import app.myoss.cloud.web.http.loadbalancer.LoadBalancerClientRequestInterceptor;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -60,6 +70,7 @@ import okhttp3.OkHttpClient.Builder;
  * @since 2018年5月21日 上午11:06:44
  * @see OkHttp3ConnectionPoolProperties
  */
+@AutoConfigureAfter(name = "org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration")
 @ConditionalOnClass({ ConnectionPool.class, RestTemplate.class })
 @EnableConfigurationProperties(OkHttp3ConnectionPoolProperties.class)
 @ConditionalOnProperty(prefix = WebConstants.OK_HTTP3_CONNECTION_CONFIG_PREFIX, value = "enabled", matchIfMissing = false)
@@ -122,6 +133,7 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
      *            {@link #restTemplate4OkHttp3Interceptor()}
      * @param restTemplate4OkHttp3NetworkInterceptor 参考：
      *            {@link #restTemplate4OkHttp3NetworkInterceptor()}
+     * @param loadBalancerClientRequestInterceptorProvider RestTemplate拦截器
      * @return OkHttp3 RestTemplate 对象
      */
     @ConditionalOnMissingBean(name = WebConstants.REST_TEMPLATE4_OK_HTTP3_BEAN_NAME)
@@ -129,7 +141,8 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
     public RestTemplate restTemplate4OkHttp3(FastJsonConfig defaultFastJsonConfig,
                                              ConnectionPool restTemplate4OkHttp3ConnectionPool,
                                              List<Interceptor> restTemplate4OkHttp3Interceptor,
-                                             List<Interceptor> restTemplate4OkHttp3NetworkInterceptor) {
+                                             List<Interceptor> restTemplate4OkHttp3NetworkInterceptor,
+                                             ObjectProvider<LoadBalancerClientRequestInterceptor> loadBalancerClientRequestInterceptorProvider) {
         Builder builder = new OkHttpClient().newBuilder();
         if (!CollectionUtils.isEmpty(restTemplate4OkHttp3Interceptor)) {
             for (Interceptor item : restTemplate4OkHttp3Interceptor) {
@@ -158,9 +171,49 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = fastJsonHttpMessageConverter(defaultFastJsonConfig);
 
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
+        LoadBalancerClientRequestInterceptor loadBalancerClientRequestInterceptor = loadBalancerClientRequestInterceptorProvider
+                .getIfAvailable();
+        if (loadBalancerClientRequestInterceptor != null) {
+            List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>(restTemplate.getInterceptors());
+            interceptors.add(0, loadBalancerClientRequestInterceptor);
+            restTemplate.setInterceptors(interceptors);
+        }
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         messageConverters.add(1, stringHttpMessageConverter);
         messageConverters.add(3, fastJsonHttpMessageConverter);
         return restTemplate;
+    }
+
+    /**
+     * Spring Cloud 项目，RestTemplate 自动配置
+     * LoadBalancer拦截器，默认会注册：{@link LoadBalancerClientRequestInterceptor}
+     */
+    @ConditionalOnBean(LoadBalancerClient.class)
+    @Configuration
+    public static class SpringCloudProjectAutoConfiguration {
+        @Autowired
+        private LoadBalancerClient                   loadBalancerClient;
+        @Autowired(required = false)
+        private List<LoadBalancerRequestTransformer> transformers = Collections.emptyList();
+
+        @ConditionalOnMissingBean
+        @Bean
+        public LoadBalancerClientRequestFactory loadBalancerClientRequestFactory() {
+            return new LoadBalancerClientRequestFactory(loadBalancerClient, transformers);
+        }
+
+        /**
+         * RestTemplate LoadBalancer拦截器，用于{@link #restTemplate4OkHttp3}，使用
+         * spring 管理，方便项目中替换此对象或者获取此对象
+         *
+         * @param loadBalancerClientRequestFactory
+         *            LoadBalancerClientRequestFactory
+         * @return 应用拦截器对象，默认为空
+         */
+        @ConditionalOnMissingBean(name = "loadBalancerClientRequestInterceptor")
+        @Bean(name = "loadBalancerClientRequestInterceptor")
+        public LoadBalancerClientRequestInterceptor loadBalancerClientRequestInterceptor(LoadBalancerClientRequestFactory loadBalancerClientRequestFactory) {
+            return new LoadBalancerClientRequestInterceptor(loadBalancerClient, loadBalancerClientRequestFactory);
+        }
     }
 }

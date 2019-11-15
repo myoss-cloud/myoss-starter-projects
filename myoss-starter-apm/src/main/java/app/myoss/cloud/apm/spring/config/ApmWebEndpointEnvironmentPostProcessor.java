@@ -18,7 +18,9 @@
 package app.myoss.cloud.apm.spring.config;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
@@ -60,13 +62,17 @@ public class ApmWebEndpointEnvironmentPostProcessor
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         MutablePropertySources propertySources = environment.getPropertySources();
         Map<String, Object> map = new HashMap<>();
+        Set<String> include = new LinkedHashSet<>();
         if (!DeployEnvEnum.isCustomizeDev()) {
             map.put("management.server.port", "8088");
         }
         map.put("management.endpoints.enabled-by-default", "true");
         map.put("management.endpoints.web.base-path", "/");
+
         // 默认开启 loggers endpoint, 可用于在线配置日志
         map.put("management.endpoint.loggers.enabled", "true");
+        include.add("loggers");
+
         ClassLoader classLoader = this.getClass().getClassLoader();
         if (ClassUtils.isPresent("io.prometheus.client.exporter.common.TextFormat", classLoader)
                 && ClassUtils.isPresent("io.prometheus.client.CollectorRegistry", classLoader)
@@ -75,7 +81,12 @@ public class ApmWebEndpointEnvironmentPostProcessor
                         classLoader)) {
             // 启用 prometheus endpoint
             map.put("management.endpoint.prometheus.enabled", "true");
+            map.put("management.metrics.export.prometheus.enabled", "true");
+            include.add("prometheus");
         }
+
+        // 暴露哪些 endpoints: org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointAutoConfiguration#webExposeExcludePropertyEndpointFilter
+        map.put("management.endpoints.web.exposure.include", include);
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("config APM WebEndpoint: " + JSON.toJSONString(map));
         }

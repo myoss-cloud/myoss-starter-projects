@@ -1,11 +1,11 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
-app.myoss.cloud.apm.spring.config.ApmAutoConfiguration, \
-app.myoss.cloud.apm.spring.config.ApmWebEndpointAutoConfiguration, \
-app.myoss.cloud.apm.spring.config.PrometheusEndpointAutoConfiguration
+app.myoss.cloud.apm.spring.config.ApmAutoConfiguration
+
 # Environment Post Processors
 org.springframework.boot.env.EnvironmentPostProcessor = \
 app.myoss.cloud.apm.spring.config.ApmWebEndpointEnvironmentPostProcessor
+
 # Application Listeners
 org.springframework.context.ApplicationListener = \
 app.myoss.cloud.apm.spring.config.ApmWebEndpointEnvironmentPostProcessor

@@ -25,6 +25,7 @@ import java.util.Set;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.env.EnvironmentPostProcessor;
@@ -56,7 +57,13 @@ public class ApmWebEndpointEnvironmentPostProcessor
     /**
      * {@link EnvironmentPostProcessor} 中比较特殊，不能直接用 @Slf4j 进行输出日志
      */
-    private static final DeferredLog LOGGER = new DeferredLog();
+    private static final DeferredLog LOGGER        = new DeferredLog();
+    /**
+     * The default order for the processor.
+     */
+    public static final int          DEFAULT_ORDER = ConfigFileApplicationListener.DEFAULT_ORDER + 6;
+
+    private int                      order         = DEFAULT_ORDER;
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -95,7 +102,7 @@ public class ApmWebEndpointEnvironmentPostProcessor
 
     @Override
     public int getOrder() {
-        return CoreCommonEnvironmentPostProcessor.DEFAULT_ORDER + 1;
+        return order;
     }
 
     @Override

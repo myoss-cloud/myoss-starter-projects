@@ -69,6 +69,8 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
      */
     public static final String       PROPERTY_SOURCE_NAME = "defaultProperties";
 
+    private int                      order                = DEFAULT_ORDER;
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         // 加载默认的配置文件
@@ -133,6 +135,6 @@ public class CoreCommonEnvironmentPostProcessor implements EnvironmentPostProces
 
     @Override
     public int getOrder() {
-        return DEFAULT_ORDER;
+        return order;
     }
 }

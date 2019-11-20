@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.logging.DeferredLog;
@@ -55,7 +56,9 @@ public class DeployEnvEnvironmentPostProcessor implements EnvironmentPostProcess
     /**
      * The default order for the processor.
      */
-    public static final int          DEFAULT_ORDER = CoreCommonEnvironmentPostProcessor.DEFAULT_ORDER - 1;
+    public static final int          DEFAULT_ORDER = ConfigFileApplicationListener.DEFAULT_ORDER + 3;
+
+    private int                      order         = DEFAULT_ORDER;
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -103,6 +106,6 @@ public class DeployEnvEnvironmentPostProcessor implements EnvironmentPostProcess
 
     @Override
     public int getOrder() {
-        return DEFAULT_ORDER;
+        return order;
     }
 }

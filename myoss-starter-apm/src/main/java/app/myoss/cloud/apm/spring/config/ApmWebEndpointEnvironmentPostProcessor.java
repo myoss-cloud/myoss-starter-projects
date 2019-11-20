@@ -70,6 +70,7 @@ public class ApmWebEndpointEnvironmentPostProcessor
         MutablePropertySources propertySources = environment.getPropertySources();
         Map<String, Object> map = new HashMap<>();
         Set<String> include = new LinkedHashSet<>();
+        include.add("health");
         if (!DeployEnvEnum.isCustomizeDev()) {
             map.put("management.server.port", "8088");
         }

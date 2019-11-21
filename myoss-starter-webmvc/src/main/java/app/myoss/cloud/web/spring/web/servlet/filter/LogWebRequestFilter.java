@@ -34,7 +34,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import app.myoss.cloud.apm.constants.ApmConstants;
 import app.myoss.cloud.web.utils.IpUtils;
 import brave.internal.HexCodec;
-import brave.propagation.TraceContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -199,13 +198,23 @@ public class LogWebRequestFilter extends OncePerRequestFilter {
             // 在请求处理之前进行调用，执行key=value的设置
             putMDC(request, time);
             // 输出traceId/spanId到response head中
-            Object traceContext = request.getAttribute(TraceContext.class.getName());
-            if (traceContext != null) {
-                TraceContext context = (TraceContext) traceContext;
+            Object b3TraceContext = request.getAttribute("brave.propagation.TraceContext");
+            if (b3TraceContext != null) {
+                brave.propagation.TraceContext context = (brave.propagation.TraceContext) b3TraceContext;
                 String traceId = context.traceIdString();
                 String spanId = HexCodec.toLowerHex(context.spanId());
                 response.addHeader(this.traceIdName, traceId);
                 response.addHeader(this.spanIdName, spanId);
+            } else {
+                Object openTracingContext = request
+                        .getAttribute("io.opentracing.contrib.web.servlet.filter.TracingFilter.activeSpanContext");
+                if (openTracingContext != null) {
+                    io.opentracing.SpanContext context = (io.opentracing.SpanContext) openTracingContext;
+                    String traceId = context.toTraceId();
+                    String spanId = context.toTraceId();
+                    response.addHeader(this.traceIdName, traceId);
+                    response.addHeader(this.spanIdName, spanId);
+                }
             }
 
             // 调用下一个 filter

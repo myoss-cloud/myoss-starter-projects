@@ -63,5 +63,12 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
         <!-- spring boot end -->
+
+        <dependency>
+            <!-- jaeger 调用链路监控 -->
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-spring-jaeger-cloud-starter</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

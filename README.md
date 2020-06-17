@@ -22,7 +22,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-projects</artifactId>
-    <version>2.1.10.RELEASE</version>
+    <version>2.1.11-RC1</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-core</artifactId>
-    <version>2.1.10.RELEASE</version>
+    <version>2.1.11-RC1</version>
 </dependency>
 ```
 
@@ -38,7 +38,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-apm</artifactId>
-    <version>2.1.10.RELEASE</version>
+    <version>2.1.11-RC1</version>
 </dependency>
 ```
 
@@ -46,7 +46,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-web</artifactId>
-    <version>2.1.10.RELEASE</version>
+    <version>2.1.11-RC1</version>
 </dependency>
 ```
 
@@ -54,6 +54,6 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-cache</artifactId>
-    <version>2.1.10.RELEASE</version>
+    <version>2.1.11-RC1</version>
 </dependency>
 ```

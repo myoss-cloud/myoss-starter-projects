@@ -33,14 +33,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAfter;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAround;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodBefore;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodAfter;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.lang.json.JsonObject;
 
 /**
  * 注解 {@link LogMethodAfter} 放在类上
@@ -79,10 +78,10 @@ public class MonitorMethodAfterCase2Tests {
                 "[MonitorMethodAfter.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(json);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched1");
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(json);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched1");
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test
@@ -95,10 +94,10 @@ public class MonitorMethodAfterCase2Tests {
                 "[MonitorMethodAfter.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(json);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched2");
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(json);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched2");
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test
@@ -112,10 +111,10 @@ public class MonitorMethodAfterCase2Tests {
                 "[MonitorMethodAfter.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(json);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched3, " + name);
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(json);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched3, " + name);
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     // 开启AspectJ

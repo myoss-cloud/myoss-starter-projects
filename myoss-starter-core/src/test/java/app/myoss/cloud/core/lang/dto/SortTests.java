@@ -28,10 +28,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.rule.OutputCapture;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import app.myoss.cloud.core.lang.json.JsonApi;
 
 /**
  * {@link Sort} 测试类
@@ -50,7 +51,7 @@ public class SortTests {
         Order order = new Order(Direction.ASC, "id");
         Sort sort = new Sort(order);
         Assertions.assertThat(sort.getOrders()).hasSize(1).contains(order);
-        Assert.assertEquals(JSON.toJSONString(sort), sort.toString());
+        Assert.assertEquals(JsonApi.toJson(sort), sort.toString());
     }
 
     @Test
@@ -59,7 +60,7 @@ public class SortTests {
         Order name = new Order(Direction.DESC, "name");
         Sort sort = new Sort(id, name);
         Assertions.assertThat(sort.getOrders()).hasSize(2).contains(id, name);
-        Assert.assertEquals(JSON.toJSONString(sort), sort.toString());
+        Assert.assertEquals(JsonApi.toJson(sort), sort.toString());
     }
 
     @Test
@@ -69,7 +70,7 @@ public class SortTests {
         List<Order> orders = Lists.newArrayList(id, name);
         Sort sort = new Sort(orders);
         Assertions.assertThat(sort.getOrders()).hasSize(2).contains(id, name);
-        Assert.assertEquals(JSON.toJSONString(sort), sort.toString());
+        Assert.assertEquals(JsonApi.toJson(sort), sort.toString());
     }
 
     @Test
@@ -78,7 +79,7 @@ public class SortTests {
         Order name = new Order(Direction.ASC, "name");
         Sort sort = new Sort("id", "name");
         Assertions.assertThat(sort.getOrders()).hasSize(2).contains(id, name);
-        Assert.assertEquals(JSON.toJSONString(sort), sort.toString());
+        Assert.assertEquals(JsonApi.toJson(sort), sort.toString());
     }
 
     @Test
@@ -87,7 +88,7 @@ public class SortTests {
         Order name = new Order(Direction.DESC, "name");
         Sort sort = new Sort(Direction.DESC, id.getProperty(), name.getProperty());
         Assertions.assertThat(sort.getOrders()).hasSize(2).contains(id, name);
-        Assert.assertEquals(JSON.toJSONString(sort), sort.toString());
+        Assert.assertEquals(JsonApi.toJson(sort), sort.toString());
     }
 
     @Test
@@ -97,7 +98,7 @@ public class SortTests {
         List<String> properties = Lists.newArrayList(id.getProperty(), name.getProperty());
         Sort sort = new Sort(Direction.ASC, properties);
         Assertions.assertThat(sort.getOrders()).hasSize(2).contains(id, name);
-        Assert.assertEquals(JSON.toJSONString(sort), sort.toString());
+        Assert.assertEquals(JsonApi.toJson(sort), sort.toString());
     }
 
     @Test
@@ -197,13 +198,13 @@ public class SortTests {
     @Test
     public void sortDeserializeTest1() {
         Page<Integer> page = new Page<>(123);
-        String json = JSON.toJSONString(page, SerializerFeature.WriteMapNullValue);
+        String json = new GsonBuilder().serializeNulls().create().toJson(page);
         Assert.assertEquals(
-                "{\"errorCode\":null,\"errorMsg\":null,\"extraInfo\":null,\"pageNum\":1,\"pageSize\":20,\"param\":123,\"sort\":null,\"success\":true,\"totalCount\":0,\"value\":null}",
+                "{\"pageSize\":20,\"pageNum\":1,\"totalCount\":0,\"param\":123,\"sort\":null,\"value\":null,\"success\":true,\"errorMsg\":null,\"errorCode\":null,\"extraInfo\":null}",
                 json);
 
-        Page<Integer> actual = JSON.parseObject(json, new TypeReference<Page<Integer>>() {
-        });
+        Page<Integer> actual = JsonApi.fromJson(json, new TypeToken<Page<Integer>>() {
+        }.getType());
         Assert.assertEquals(page, actual);
     }
 
@@ -211,9 +212,35 @@ public class SortTests {
     public void sortDeserializeTest2() {
         Order order = new Order(Direction.ASC, "id");
         Sort sort = new Sort(order);
-        String json = JSON.toJSONString(sort);
+        String json = JsonApi.toJson(sort);
 
-        Sort actual = JSON.parseObject(json, Sort.class);
+        Sort actual = JsonApi.fromJson(json, Sort.class);
+        Assert.assertEquals(sort, actual);
+    }
+
+    @Test
+    public void sortSerializeTest1() {
+        Sort sort = JsonApi.fromJson("[{\"direction\":\"ASC\",\"property\":\"id\"}]", Sort.class);
+        Sort actual = new Sort(Direction.ASC, "id");
+
+        Assert.assertEquals(sort, actual);
+    }
+
+    @Test
+    public void sortSerializeTest2() {
+        Sort sort = JsonApi.fromJson("[{\"direction\":\"DESC\",\"property\":\"id\"}]", Sort.class);
+        Sort actual = new Sort(Direction.DESC, "id");
+
+        Assert.assertEquals(sort, actual);
+    }
+
+    @Test
+    public void sortSerializeTest3() {
+        Sort sort = JsonApi.fromJson(
+                "[{\"direction\":\"ASC\",\"property\":\"id\"},{\"direction\":\"DESC\",\"property\":\"name\"}]",
+                Sort.class);
+        Sort actual = new Sort(new Order(Direction.ASC, "id"), new Order(Direction.DESC, "name"));
+
         Assert.assertEquals(sort, actual);
     }
 }

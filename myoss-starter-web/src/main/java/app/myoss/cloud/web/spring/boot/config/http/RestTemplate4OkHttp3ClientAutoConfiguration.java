@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -44,10 +45,10 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
 import app.myoss.cloud.core.constants.MyossConstants;
+import app.myoss.cloud.core.lang.json.JsonApi;
 import app.myoss.cloud.core.spring.boot.config.FastJsonAutoConfiguration;
 import app.myoss.cloud.web.constants.WebConstants;
 import app.myoss.cloud.web.http.loadbalancer.LoadBalancerClientRequestFactory;
@@ -138,7 +139,7 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
      */
     @ConditionalOnMissingBean(name = WebConstants.REST_TEMPLATE4_OK_HTTP3_BEAN_NAME)
     @Bean(name = WebConstants.REST_TEMPLATE4_OK_HTTP3_BEAN_NAME)
-    public RestTemplate restTemplate4OkHttp3(FastJsonConfig defaultFastJsonConfig,
+    public RestTemplate restTemplate4OkHttp3(@Qualifier("defaultFastJsonConfig") ObjectProvider<?> defaultFastJsonConfig,
                                              ConnectionPool restTemplate4OkHttp3ConnectionPool,
                                              List<Interceptor> restTemplate4OkHttp3Interceptor,
                                              List<Interceptor> restTemplate4OkHttp3NetworkInterceptor,
@@ -168,7 +169,6 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(
                 MyossConstants.DEFAULT_CHARSET);
         stringHttpMessageConverter.setWriteAcceptCharset(false);
-        FastJsonHttpMessageConverter fastJsonHttpMessageConverter = fastJsonHttpMessageConverter(defaultFastJsonConfig);
 
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
         LoadBalancerClientRequestInterceptor loadBalancerClientRequestInterceptor = loadBalancerClientRequestInterceptorProvider
@@ -180,7 +180,15 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
         }
         List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
         messageConverters.add(1, stringHttpMessageConverter);
-        messageConverters.add(3, fastJsonHttpMessageConverter);
+        if (JsonApi.FASTJSON_PRESENT) {
+            com.alibaba.fastjson.support.config.FastJsonConfig fastJsonConfig = (com.alibaba.fastjson.support.config.FastJsonConfig) defaultFastJsonConfig
+                    .getIfAvailable();
+            if (fastJsonConfig != null) {
+                FastJsonHttpMessageConverter fastJsonHttpMessageConverter = fastJsonHttpMessageConverter(
+                        fastJsonConfig);
+                messageConverters.add(3, fastJsonHttpMessageConverter);
+            }
+        }
         return restTemplate;
     }
 

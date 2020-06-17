@@ -18,6 +18,7 @@
 package app.myoss.cloud.web.reactive.spring.web.method.error;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 
-import com.alibaba.fastjson.JSONObject;
-
 import app.myoss.cloud.apm.spring.cloud.sleuth.trace.ApplicationEventTracer;
+import app.myoss.cloud.core.lang.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -78,9 +78,9 @@ public class ControllerDefaultErrorAttributes implements ErrorAttributes {
         String traceId = ApplicationEventTracer.getTraceId();
         String errorCode = properties.getControllerExceptionErrorCode();
         String errorMsg = properties.getControllerExceptionErrorMsg();
-        JSONObject errorValue = new JSONObject(1);
+        Map<String, String> errorValue = new HashMap<>(1);
         errorValue.put("traceId", traceId);
-        JSONObject errorAttributes = new JSONObject();
+        JsonObject errorAttributes = new JsonObject(5);
         errorAttributes.put("status", errorStatus.value());
         errorAttributes.put("success", false);
         errorAttributes.put("errorCode", errorCode);

@@ -37,12 +37,11 @@ import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAfter;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodProperties;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.MonitorMethodAdvice;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.lang.json.JsonObject;
 
 /**
  * 测试 {@link MonitorMethodAfter} 的基本功能
@@ -127,10 +126,10 @@ public class MonitorMethodAfterCase0Tests {
                 "[MonitorMethodAfter.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(json);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched");
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(json);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched");
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test

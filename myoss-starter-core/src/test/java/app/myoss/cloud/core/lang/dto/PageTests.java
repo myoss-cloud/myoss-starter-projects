@@ -25,9 +25,11 @@ import org.assertj.core.util.Maps;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.Lists;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import app.myoss.cloud.core.lang.json.JsonApi;
 
 /**
  * {@link Page} 测试类
@@ -43,9 +45,9 @@ public class PageTests {
         result.setValue(Lists.newArrayList(12345L, 456789L));
         result.setErrorMsg("it's ok");
         result.setErrorCode("NONE");
-        String json = JSON.toJSONString(result);
+        String json = new GsonBuilder().disableHtmlEscaping().create().toJson(result);
         Assert.assertEquals(
-                "{\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\",\"pageNum\":1,\"pageSize\":20,\"param\":1000,\"success\":true,\"totalCount\":0,\"value\":[12345,456789]}",
+                "{\"pageSize\":20,\"pageNum\":1,\"totalCount\":0,\"param\":1000,\"value\":[12345,456789],\"success\":true,\"errorMsg\":\"it's ok\",\"errorCode\":\"NONE\"}",
                 json);
     }
 
@@ -57,12 +59,12 @@ public class PageTests {
         result.setValue(Lists.newArrayList(12345L, 456789L));
         result.setErrorMsg("it's ok");
         result.setErrorCode("NONE");
-        String json = JSON.toJSONString(result);
-        String expected = "{\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\",\"pageNum\":1,\"pageSize\":20,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"success\":true,\"totalCount\":0,\"value\":[12345,456789]}";
+        String json = new GsonBuilder().disableHtmlEscaping().create().toJson(result);
+        String expected = "{\"pageSize\":20,\"pageNum\":1,\"totalCount\":0,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"value\":[12345,456789],\"success\":true,\"errorMsg\":\"it's ok\",\"errorCode\":\"NONE\"}";
         Assert.assertEquals(expected, json);
 
-        Page<Long> page = JSON.parseObject(expected, new TypeReference<Page<Long>>() {
-        });
+        Page<Long> page = JsonApi.fromJson(expected, new TypeToken<Page<Long>>() {
+        }.getType());
         Assert.assertEquals(result, page);
         Assert.assertNull(result.getExtraInfo("name"));
     }
@@ -83,7 +85,7 @@ public class PageTests {
         extraInfo.put("key", new Sort(Direction.DESC, "userName", "userAge"));
         result.setExtraInfo(extraInfo);
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"01\",\"errorMsg\":\"it's ok, ba la ba la...\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]},\"pageNum\":109,\"pageSize\":150,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"success\":false,\"totalCount\":399,\"value\":[100,1001]}";
+        String expected = "{\"pageSize\":150,\"pageNum\":109,\"totalCount\":399,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"value\":[100,1001],\"success\":false,\"errorMsg\":\"it's ok, ba la ba la...\",\"errorCode\":\"01\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]}}";
         assertThat(result.getParam()).isEqualTo(1000L);
         Assert.assertEquals(expected, toString);
     }
@@ -103,7 +105,7 @@ public class PageTests {
         extraInfo.put("key", new Sort(Direction.DESC, "userName", "userAge"));
         result.setExtraInfo(extraInfo);
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"01\",\"errorMsg\":\"it's ok, ba la ba la...\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]},\"pageNum\":109,\"pageSize\":150,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"success\":false,\"totalCount\":399,\"value\":[100,1001]}";
+        String expected = "{\"pageSize\":150,\"pageNum\":109,\"totalCount\":399,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"value\":[100,1001],\"success\":false,\"errorMsg\":\"it's ok, ba la ba la...\",\"errorCode\":\"01\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]}}";
         assertThat(result.getParam()).isEqualTo(1000L);
         Assert.assertEquals(expected, toString);
     }
@@ -123,7 +125,7 @@ public class PageTests {
         extraInfo.put("key", new Sort(Direction.DESC, "userName", "userAge"));
         result.setExtraInfo(extraInfo);
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"01\",\"errorMsg\":\"it's ok, ba la ba la...\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]},\"pageNum\":109,\"pageSize\":150,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"success\":false,\"totalCount\":399,\"value\":[100,1001]}";
+        String expected = "{\"pageSize\":150,\"pageNum\":109,\"totalCount\":399,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"value\":[100,1001],\"success\":false,\"errorMsg\":\"it's ok, ba la ba la...\",\"errorCode\":\"01\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]}}";
         assertThat(result.getParam()).isEqualTo(1000L);
         Assert.assertEquals(expected, toString);
     }
@@ -141,7 +143,7 @@ public class PageTests {
         extraInfo.put("key", new Sort(Direction.DESC, "userName", "userAge"));
         result.setExtraInfo(extraInfo);
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"01\",\"errorMsg\":\"it's ok, ba la ba la...\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]},\"pageNum\":109,\"pageSize\":150,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"success\":false,\"totalCount\":399,\"value\":[100,1001]}";
+        String expected = "{\"pageSize\":150,\"pageNum\":109,\"totalCount\":399,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"value\":[100,1001],\"success\":false,\"errorMsg\":\"it's ok, ba la ba la...\",\"errorCode\":\"01\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]}}";
         assertThat(result.getParam()).isEqualTo(1000L);
         Assert.assertEquals(expected, toString);
     }
@@ -159,7 +161,7 @@ public class PageTests {
         extraInfo.put("key", new Sort(Direction.DESC, "userName", "userAge"));
         result.setExtraInfo(extraInfo);
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"01\",\"errorMsg\":\"it's ok, ba la ba la...\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]},\"pageNum\":109,\"pageSize\":150,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"success\":true,\"totalCount\":399,\"value\":[100,1001]}";
+        String expected = "{\"pageSize\":150,\"pageNum\":109,\"totalCount\":399,\"param\":1000,\"sort\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}],\"value\":[100,1001],\"success\":true,\"errorMsg\":\"it's ok, ba la ba la...\",\"errorCode\":\"01\",\"extraInfo\":{\"name\":\"HanMeiMei\",\"key\":[{\"direction\":\"DESC\",\"property\":\"userName\"},{\"direction\":\"DESC\",\"property\":\"userAge\"}]}}";
         assertThat(result.getParam()).isEqualTo(1000L);
         Assert.assertEquals(expected, toString);
         Assert.assertEquals("HanMeiMei", result.getExtraInfo("name"));

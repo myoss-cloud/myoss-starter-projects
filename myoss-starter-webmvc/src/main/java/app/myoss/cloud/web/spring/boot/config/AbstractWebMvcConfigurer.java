@@ -21,7 +21,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 
+import app.myoss.cloud.core.lang.json.JsonApi;
 import app.myoss.cloud.core.spring.boot.config.FastJsonAutoConfiguration;
 import app.myoss.cloud.web.constants.WebConstants;
 import app.myoss.cloud.web.spring.web.servlet.filter.LogWebRequestFilter;
@@ -43,8 +46,9 @@ import app.myoss.cloud.web.spring.web.servlet.filter.ReaderBodyHttpServletReques
  * @since 2018年4月12日 下午5:18:07
  */
 public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
+    @Qualifier("defaultFastJsonConfig")
     @Autowired
-    private FastJsonConfig defaultFastJsonConfig;
+    private ObjectProvider<?> defaultFastJsonConfig;
 
     /**
      * 增加自定义的 HttpMessageConverter
@@ -56,7 +60,13 @@ public abstract class AbstractWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(3, FastJsonWebConfig.fastJsonHttpMessageConverter(defaultFastJsonConfig));
+        if (JsonApi.FASTJSON_PRESENT) {
+            com.alibaba.fastjson.support.config.FastJsonConfig fastJsonConfig = (com.alibaba.fastjson.support.config.FastJsonConfig) defaultFastJsonConfig
+                    .getIfAvailable();
+            if (fastJsonConfig != null) {
+                converters.add(3, FastJsonWebConfig.fastJsonHttpMessageConverter(fastJsonConfig));
+            }
+        }
     }
 
     /**

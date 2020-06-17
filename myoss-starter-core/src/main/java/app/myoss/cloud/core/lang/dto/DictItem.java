@@ -21,8 +21,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
-
+import app.myoss.cloud.core.lang.json.JsonApi;
 import lombok.Data;
 
 /**
@@ -81,6 +80,6 @@ public class DictItem<T extends Serializable> implements Serializable {
 
     @Override
     public String toString() {
-        return JSONObject.toJSONString(this);
+        return JsonApi.toJson(this);
     }
 }

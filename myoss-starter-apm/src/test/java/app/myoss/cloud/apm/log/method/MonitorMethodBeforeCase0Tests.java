@@ -37,13 +37,13 @@ import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodBefore;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodProperties;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.MonitorMethodAdvice;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.lang.json.JsonObject;
 
 /**
  * 测试 {@link MonitorMethodBefore} 的基本功能
@@ -128,10 +128,10 @@ public class MonitorMethodBeforeCase0Tests {
                 "[MonitorMethodBefore.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(json);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getJSONArray("args")).isEqualTo(Lists.newArrayList(null, "java.lang.Long"));
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonBefore = JsonApi.fromJson(json);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsJsonArray("args")).isEqualTo(Lists.newArrayList(null, "java.lang.Long"));
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test

@@ -21,8 +21,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
-
+import app.myoss.cloud.core.lang.json.JsonApi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -129,6 +128,6 @@ public class Result<T> implements Serializable {
 
     @Override
     public String toString() {
-        return JSONObject.toJSONString(this);
+        return JsonApi.toJson(this);
     }
 }

@@ -53,8 +53,15 @@
 
         <!-- utils start -->
         <dependency>
+            <!-- 未来考虑移除掉，bug太多 -->
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

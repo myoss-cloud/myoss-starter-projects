@@ -1,0 +1,3 @@
+app.myoss.cloud.core.lang.json.impl.JacksonApi
+app.myoss.cloud.core.lang.json.impl.GsonApi
+app.myoss.cloud.core.lang.json.impl.FastJsonApi

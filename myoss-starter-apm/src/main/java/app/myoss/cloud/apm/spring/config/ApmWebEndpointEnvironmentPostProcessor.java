@@ -38,9 +38,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.util.ClassUtils;
 
-import com.alibaba.fastjson.JSON;
-
 import app.myoss.cloud.core.constants.DeployEnvEnum;
+import app.myoss.cloud.core.lang.json.JsonApi;
 import app.myoss.cloud.core.spring.boot.config.CoreCommonEnvironmentPostProcessor;
 
 /**
@@ -96,7 +95,7 @@ public class ApmWebEndpointEnvironmentPostProcessor
         // 暴露哪些 endpoints: org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointAutoConfiguration#webExposeExcludePropertyEndpointFilter
         map.put("management.endpoints.web.exposure.include", include);
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("config APM WebEndpoint: " + JSON.toJSONString(map));
+            LOGGER.info("config APM WebEndpoint: " + JsonApi.toJson(map));
         }
         CoreCommonEnvironmentPostProcessor.addOrReplace(propertySources, map);
     }

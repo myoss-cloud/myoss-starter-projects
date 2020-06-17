@@ -42,10 +42,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
-import com.alibaba.fastjson.JSON;
-
 import app.myoss.cloud.apm.spring.cloud.sleuth.trace.ApplicationEventTracer;
 import app.myoss.cloud.core.constants.MyossConstants;
+import app.myoss.cloud.core.lang.json.JsonApi;
 import app.myoss.cloud.web.spring.web.servlet.support.EmptyBodyCheckingHttpInputMessage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -137,7 +136,7 @@ public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHan
             if (inputMessage.hasBody()) {
                 requestBody = StreamUtils.copyToString(inputMessage.getBody(), MyossConstants.DEFAULT_CHARSET);
             } else if (!CollectionUtils.isEmpty(servletRequest.getParameterMap())) {
-                requestBody = JSON.toJSONString(servletRequest.getParameterMap());
+                requestBody = JsonApi.toJson(servletRequest.getParameterMap());
             }
         } catch (IOException e) {
             log.error("Could not read document", e);

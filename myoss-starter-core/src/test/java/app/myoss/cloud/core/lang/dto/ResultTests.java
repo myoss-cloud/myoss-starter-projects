@@ -20,8 +20,10 @@ package app.myoss.cloud.core.lang.dto;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import app.myoss.cloud.core.lang.json.JsonApi;
 
 /**
  * {@link Result} 测试类
@@ -37,8 +39,8 @@ public class ResultTests {
         result.setValue(12345L);
         result.setErrorMsg("it's ok");
         result.setErrorCode("NONE");
-        String json = JSON.toJSONString(result);
-        Assert.assertEquals("{\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\",\"success\":true,\"value\":12345}", json);
+        String json = new GsonBuilder().disableHtmlEscaping().create().toJson(result);
+        Assert.assertEquals("{\"value\":12345,\"success\":true,\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\"}", json);
     }
 
     @Test
@@ -47,16 +49,16 @@ public class ResultTests {
         result.setSuccess(false);
         result.setErrorMsg("field value is blank");
         result.setErrorCode("blankValue");
-        String json = JSON.toJSONString(result);
-        Assert.assertEquals("{\"errorCode\":\"blankValue\",\"errorMsg\":\"field value is blank\",\"success\":false}",
+        String json = JsonApi.toJson(result);
+        Assert.assertEquals("{\"success\":false,\"errorCode\":\"blankValue\",\"errorMsg\":\"field value is blank\"}",
                 json);
     }
 
     @Test
     public void test3() {
         Result<Long> result = new Result<>(123456L);
-        String json = JSON.toJSONString(result);
-        Assert.assertEquals("{\"success\":true,\"value\":123456}", json);
+        String json = JsonApi.toJson(result);
+        Assert.assertEquals("{\"value\":123456,\"success\":true}", json);
     }
 
     @Test
@@ -64,9 +66,9 @@ public class ResultTests {
         Result<Long> result = new Result<>(123456L);
         result.addExtraInfo("name", "HanMeiMei");
         result.addExtraInfo("age", 18);
-        String json = JSON.toJSONString(result);
-        Result<Long> actual = JSON.parseObject(json, new TypeReference<Result<Long>>() {
-        });
+        String json = JsonApi.toJson(result);
+        Result<Long> actual = JsonApi.fromJson(json, new TypeToken<Result<Long>>() {
+        }.getType());
         Assert.assertEquals(result, actual);
         Assert.assertEquals(18, result.getExtraInfo("age"));
         Assert.assertEquals("HanMeiMei", result.getExtraInfo("name"));
@@ -81,9 +83,9 @@ public class ResultTests {
         result.setErrorCode("NONE");
         result.addExtraInfo("name", "HanMeiMei");
         result.addExtraInfo("age", 18);
-        String json = JSON.toJSONString(result);
-        Result<Long> actual = JSON.parseObject(json, new TypeReference<Result<Long>>() {
-        });
+        String json = new GsonBuilder().disableHtmlEscaping().create().toJson(result);
+        Result<Long> actual = JsonApi.fromJson(json, new TypeToken<Result<Long>>() {
+        }.getType());
         Assert.assertEquals(result, actual);
     }
 
@@ -91,7 +93,7 @@ public class ResultTests {
     public void constructorTest1() {
         Result<Long> result = new Result<>(6666L);
         String toString = result.toString();
-        String expected = "{\"success\":true,\"value\":6666}";
+        String expected = "{\"value\":6666,\"success\":true}";
         Assert.assertEquals(expected, toString);
     }
 
@@ -105,8 +107,8 @@ public class ResultTests {
         result.addExtraInfo("name", "HanMeiMei");
         result.addExtraInfo("age", 18);
         String toString = result.toString();
-        Result<Long> actual = JSON.parseObject(toString, new TypeReference<Result<Long>>() {
-        });
+        Result<Long> actual = JsonApi.fromJson(toString, new TypeToken<Result<Long>>() {
+        }.getType());
         Assert.assertEquals(result, actual);
     }
 
@@ -117,8 +119,8 @@ public class ResultTests {
         result.addExtraInfo("name", "HanMeiMei");
         result.addExtraInfo("age", 18);
         String toString = result.toString();
-        Result<Long> actual = JSON.parseObject(toString, new TypeReference<Result<Long>>() {
-        });
+        Result<Long> actual = JsonApi.fromJson(toString, new TypeToken<Result<Long>>() {
+        }.getType());
         Assert.assertEquals(result, actual);
     }
 
@@ -126,7 +128,7 @@ public class ResultTests {
     public void constructorTest4() {
         Result<Long> result = new Result<>("NONE", "it's ok");
         String toString = result.toString();
-        String expected = "{\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\",\"success\":false}";
+        String expected = "{\"success\":false,\"errorCode\":\"NONE\",\"errorMsg\":\"it's ok\"}";
         Assert.assertEquals(expected, toString);
     }
 
@@ -137,8 +139,8 @@ public class ResultTests {
         result.addExtraInfo("name", "HanMeiMei");
         result.addExtraInfo("age", 18);
         String toString = result.toString();
-        Result<Long> actual = JSON.parseObject(toString, new TypeReference<Result<Long>>() {
-        });
+        Result<Long> actual = JsonApi.fromJson(toString, new TypeToken<Result<Long>>() {
+        }.getType());
         Assert.assertEquals(result, actual);
     }
 
@@ -149,8 +151,8 @@ public class ResultTests {
         result.addExtraInfo("name", "HanMeiMei");
         result.addExtraInfo("age", 18);
         String toString = result.toString();
-        Result<Long> actual = JSON.parseObject(toString, new TypeReference<Result<Long>>() {
-        });
+        Result<Long> actual = JsonApi.fromJson(toString, new TypeToken<Result<Long>>() {
+        }.getType());
         Assert.assertEquals(result, actual);
     }
 }

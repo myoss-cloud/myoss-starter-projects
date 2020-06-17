@@ -18,10 +18,12 @@
 package app.myoss.cloud.apm.log.method.aspectj;
 
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alibaba.fastjson.JSONObject;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.utils.JacksonMapper;
 
 /**
  * 记录方法入参和返回值的基类
@@ -32,6 +34,8 @@ import com.alibaba.fastjson.JSONObject;
 public abstract class AbstractMonitorMethod {
     @Autowired
     protected MonitorMethodProperties properties;
+    private JacksonMapper             jacksonMapper;
+    private Object                    gson;
 
     /**
      * 转换那些无法被JSON序列化的对象，比如：ServletRequest/ServletResponse
@@ -77,6 +81,30 @@ public abstract class AbstractMonitorMethod {
      * @return JSON 字符串
      */
     protected String toJSONString(Object input) {
-        return JSONObject.toJSONStringWithDateFormat(input, properties.getDateFormat());
+        if (JsonApi.JACKSON_2_PRESENT) {
+            if (jacksonMapper == null) {
+                synchronized (this) {
+                    if (jacksonMapper == null) {
+                        jacksonMapper = new JacksonMapper();
+                        jacksonMapper.getMapper().setDateFormat(new SimpleDateFormat(properties.getDateFormat()));
+                    }
+                }
+            }
+            return jacksonMapper.toJson(input);
+        } else if (JsonApi.GSON_PRESENT) {
+            if (gson == null) {
+                synchronized (this) {
+                    if (gson == null) {
+                        gson = new com.google.gson.GsonBuilder().serializeNulls()
+                                .setDateFormat(properties.getDateFormat())
+                                .create();
+                    }
+                }
+            }
+            return ((com.google.gson.Gson) gson).toJson(input);
+        } else if (JsonApi.FASTJSON_PRESENT) {
+            return com.alibaba.fastjson.JSONObject.toJSONStringWithDateFormat(input, properties.getDateFormat());
+        }
+        throw new UnsupportedOperationException("please add json dependency: gson or fastjson or jackson ");
     }
 }

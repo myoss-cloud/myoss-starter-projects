@@ -18,6 +18,8 @@
 package app.myoss.cloud.apm.log.method.aspectj;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,8 +29,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSONObject;
 
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodAround;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.MonitorMethodAdvice;
@@ -110,7 +110,7 @@ public class MonitorMethodAround extends AbstractMonitorMethod {
         Signature signature = joinPoint.getSignature();
         String methodName = signature.getDeclaringTypeName() + "#" + signature.getName();
         Logger logger = LoggerFactory.getLogger(methodName);
-        JSONObject jsonBefore = new JSONObject();
+        Map<String, Object> jsonBefore = new HashMap<>(3);
         jsonBefore.put("start", startTimeMillis);
         jsonBefore.put("args", convertArgs(joinPoint.getArgs()));
         jsonBefore.put("app", properties.getAppName());
@@ -120,7 +120,7 @@ public class MonitorMethodAround extends AbstractMonitorMethod {
         Object result = joinPoint.proceed();
 
         long costTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-        JSONObject jsonAfter = new JSONObject();
+        Map<String, Object> jsonAfter = new HashMap<>(5);
         jsonAfter.put("start", startTimeMillis);
         jsonAfter.put("end", System.currentTimeMillis());
         jsonAfter.put("cost", costTime);

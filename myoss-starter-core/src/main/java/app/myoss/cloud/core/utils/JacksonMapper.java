@@ -19,7 +19,7 @@ package app.myoss.cloud.core.utils;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import app.myoss.cloud.core.exception.BizRuntimeException;
+import app.myoss.cloud.core.lang.json.JsonObject;
 import lombok.Getter;
 
 /**
@@ -47,11 +48,25 @@ public class JacksonMapper {
     /**
      * {@link SortedMap} 类型转换器
      */
-    public static TypeReference<SortedMap<String, String>> SORTED_MAP_S2S_TYPE_REFERENCE;
+    public static TypeReference<SortedMap<String, String>>     SORTED_MAP_S2S_TYPE_REFERENCE;
+    /**
+     * {@link LinkedHashMap} 类型转换器
+     */
+    public static TypeReference<LinkedHashMap<String, Object>> LINKED_HASH_MAP_S2O_TYPE_REFERENCE;
+    /**
+     * {@link JsonObject} 类型转换器
+     */
+    public static TypeReference<JsonObject>                    JSON_OBJECT_TYPE_REFERENCE;
+
     static {
         SORTED_MAP_S2S_TYPE_REFERENCE = new TypeReference<SortedMap<String, String>>() {
         };
+        LINKED_HASH_MAP_S2O_TYPE_REFERENCE = new TypeReference<LinkedHashMap<String, Object>>() {
+        };
+        JSON_OBJECT_TYPE_REFERENCE = new TypeReference<JsonObject>() {
+        };
     }
+
     @Getter
     private ObjectMapper mapper;
 
@@ -75,6 +90,15 @@ public class JacksonMapper {
         }
         // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    }
+
+    /**
+     * 创建只输出非Null的属性到Json字符串的Mapper,建议在外部接口中使用.
+     *
+     * @return JacksonMapper
+     */
+    public static JacksonMapper nonNullMapper() {
+        return new JacksonMapper(Include.NON_NULL);
     }
 
     /**
@@ -152,14 +176,43 @@ public class JacksonMapper {
     }
 
     /**
+     * 反序列化为Map对象
+     *
+     * @param jsonString json字符串
+     * @param typeReference 目标类型
+     * @param <T> 泛型
+     * @return Map对象
+     */
+    public <T> T fromJson(String jsonString, TypeReference<T> typeReference) {
+        if (StringUtils.isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return mapper.readValue(jsonString, typeReference);
+        } catch (IOException e) {
+            throw new BizRuntimeException("parse json string error:" + jsonString, e);
+        }
+    }
+
+    /**
+     * 反序列化为Map对象
+     *
+     * @param jsonString json字符串
+     * @return Map对象
+     * @see #fromJson(String, TypeReference)
+     */
+    public JsonObject fromJson(String jsonString) {
+        return fromJson(jsonString, JSON_OBJECT_TYPE_REFERENCE);
+    }
+
+    /**
      * JSON转换成Java对象
      *
      * @param json JSON字符串
      * @return Java对象
      */
-    @SuppressWarnings("unchecked")
-    public HashMap<String, Object> json2Map(String json) {
-        return fromJson(json, HashMap.class);
+    public JsonObject json2Map(String json) {
+        return fromJson(json, JsonObject.class);
     }
 
     /**

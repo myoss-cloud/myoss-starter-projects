@@ -18,6 +18,8 @@
 package app.myoss.cloud.apm.log.method.aspectj;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -26,8 +28,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSONObject;
 
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodAfter;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.MonitorMethodAdvice;
@@ -110,7 +110,7 @@ public class MonitorMethodAfter extends AbstractMonitorMethod {
         Signature signature = joinPoint.getSignature();
         String methodName = signature.getDeclaringTypeName() + "#" + signature.getName();
         Logger logger = LoggerFactory.getLogger(methodName);
-        JSONObject jsonAfter = new JSONObject();
+        Map<String, Object> jsonAfter = new HashMap<>(3);
         jsonAfter.put("end", System.currentTimeMillis());
         jsonAfter.put("result", result);
         jsonAfter.put("app", properties.getAppName());

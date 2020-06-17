@@ -22,8 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.google.gson.reflect.TypeToken;
+
+import app.myoss.cloud.core.lang.json.JsonApi;
 
 /**
  * {@link DictItem} 测试类
@@ -55,11 +56,11 @@ public class DictItemTests {
 
         String actual = dictItem.toString();
         Assert.assertEquals(
-                "{\"code\":\"001\",\"extraInfo\":{\"key1\":\"value1\",\"key2\":123},\"name\":\"代码1\",\"value\":1}",
+                "{\"value\":1,\"code\":\"001\",\"name\":\"代码1\",\"extraInfo\":{\"key1\":\"value1\",\"key2\":123}}",
                 actual);
 
-        DictItem<Integer> dictItemNew = JSON.parseObject(actual, new TypeReference<DictItem<Integer>>() {
-        });
+        DictItem<Integer> dictItemNew = JsonApi.fromJson(actual, new TypeToken<DictItem<Integer>>() {
+        }.getType());
         Assert.assertEquals(dictItem, dictItemNew);
     }
 
@@ -69,7 +70,7 @@ public class DictItemTests {
         dictItem.setValue("001");
         dictItem.setCode("001");
         dictItem.setName("代码1");
-        Assert.assertEquals("{\"code\":\"001\",\"name\":\"代码1\",\"value\":\"001\"}", dictItem.toString());
+        Assert.assertEquals("{\"value\":\"001\",\"code\":\"001\",\"name\":\"代码1\"}", dictItem.toString());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class DictItemTests {
         dictItem = new DictItem<>();
         dictItem.setValue("001");
         dictItem.setCode("001");
-        Assert.assertEquals("{\"code\":\"001\",\"value\":\"001\"}", dictItem.toString());
+        Assert.assertEquals("{\"value\":\"001\",\"code\":\"001\"}", dictItem.toString());
 
         dictItem = new DictItem<>();
         dictItem.setCode("001");

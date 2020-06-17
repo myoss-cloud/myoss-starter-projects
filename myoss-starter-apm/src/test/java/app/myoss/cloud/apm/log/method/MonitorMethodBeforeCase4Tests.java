@@ -36,14 +36,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAfter;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAround;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodBefore;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodBefore;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.lang.json.JsonObject;
 
 /**
  * 注解 {@link LogMethodBefore} 放在方法上，测试排除某些入参，转换那些无法被JSON序列化的对象
@@ -84,10 +83,10 @@ public class MonitorMethodBeforeCase4Tests {
                 "[MonitorMethodBefore.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(json);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getJSONArray("args")).containsExactly(name, MockTestHttpServletRequest.class.getName());
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonBefore = JsonApi.fromJson(json);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsJsonArray("args")).containsExactly(name, MockTestHttpServletRequest.class.getName());
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test
@@ -101,10 +100,10 @@ public class MonitorMethodBeforeCase4Tests {
                 "[MonitorMethodBefore.java");
 
         String json = StringUtils.substring(printLog, printLog.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(json);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getJSONArray("args")).containsExactly(name, StringWriter.class.getName());
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonBefore = JsonApi.fromJson(json);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsJsonArray("args")).containsExactly(name, StringWriter.class.getName());
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     // 开启AspectJ

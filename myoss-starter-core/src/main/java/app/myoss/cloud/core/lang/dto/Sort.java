@@ -17,6 +17,7 @@
 
 package app.myoss.cloud.core.lang.dto;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -24,15 +25,39 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.annotation.JSONType;
 import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 
 import app.myoss.cloud.core.lang.dto.Sort.ModelValueDeserializer;
+import app.myoss.cloud.core.lang.dto.Sort.ModelValueJacksonDeserializer;
+import app.myoss.cloud.core.lang.dto.Sort.ModelValueJacksonSerializer;
+import app.myoss.cloud.core.lang.dto.Sort.ModelValueJsonAdapter;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Sort option for queries. You have to provide at least a list of properties to
@@ -42,7 +67,11 @@ import app.myoss.cloud.core.lang.dto.Sort.ModelValueDeserializer;
  * @author Jerry.Chen
  * @since 2018年5月9日 下午3:27:19
  */
+@Slf4j
 @JSONType(deserializer = ModelValueDeserializer.class)
+@JsonAdapter(ModelValueJsonAdapter.class)
+@JsonDeserialize(using = ModelValueJacksonDeserializer.class)
+@JsonSerialize(using = ModelValueJacksonSerializer.class)
 public class Sort implements Iterable<Order>, Serializable {
     /**
      * Default direction
@@ -51,7 +80,9 @@ public class Sort implements Iterable<Order>, Serializable {
 
     private static final long     serialVersionUID  = -6185297542401976741L;
     @JSONField(serialize = false, deserialize = false)
-    private List<Order>           orders;
+    @Expose(serialize = false, deserialize = false)
+    @JsonIgnore
+    private final List<Order>     orders;
 
     /**
      * Creates a new {@link Sort} instance using the given {@link Order}s.
@@ -187,11 +218,11 @@ public class Sort implements Iterable<Order>, Serializable {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(orders);
+        return JsonApi.toJson(orders);
     }
 
     /**
-     * {@link Sort} 反序列化解析器
+     * {@link Sort} fastjson: 反序列化解析器
      */
     public static class ModelValueDeserializer implements ObjectDeserializer {
         @SuppressWarnings("unchecked")
@@ -216,5 +247,71 @@ public class Sort implements Iterable<Order>, Serializable {
         public int getFastMatchToken() {
             return 0;
         }
+    }
+
+    /**
+     * {@link Sort} Gson: 序列化、反序列化解析器
+     */
+    public static class ModelValueJsonAdapter implements JsonDeserializer<Sort>, JsonSerializer<Sort> {
+        @Override
+        public Sort deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonArray jsonArray = json.getAsJsonArray();
+            List<Order> orders = new ArrayList<>(jsonArray.size());
+            for (JsonElement o : jsonArray) {
+                JsonObject item = o.getAsJsonObject();
+                String property = item.get("property").getAsString();
+                String direction = item.get("direction").getAsString();
+                Order order = new Order(Direction.fromStringOrNull(direction), property);
+                orders.add(order);
+            }
+            return new Sort(orders);
+        }
+
+        @Override
+        public JsonElement serialize(Sort src, Type typeOfSrc, JsonSerializationContext context) {
+            List<Order> orders = src.getOrders();
+            return context.serialize(orders);
+        }
+    }
+
+    /**
+     * {@link Sort} Jackson: 反序列化解析器
+     */
+    public static class ModelValueJacksonDeserializer extends com.fasterxml.jackson.databind.JsonDeserializer<Sort> {
+
+        @Override
+        public Sort deserialize(JsonParser jsonParser, DeserializationContext ctxt)
+                throws IOException, JsonProcessingException {
+            ArrayNode node = jsonParser.getCodec().readTree(jsonParser);
+            List<Order> orders = new ArrayList<>(node.size());
+            for (JsonNode json : node) {
+                Order order = new Order(Direction.valueOf(json.get("direction").asText()),
+                        json.get("property").asText());
+                orders.add(order);
+            }
+            return new Sort(orders);
+        }
+
+    }
+
+    /**
+     * {@link Sort} Jackson: 序列化解析器
+     */
+    public static class ModelValueJacksonSerializer extends com.fasterxml.jackson.databind.JsonSerializer<Sort> {
+
+        @Override
+        public void serialize(Sort value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            List<Order> orders = value.getOrders();
+            gen.writeStartArray();
+            for (Order order : orders) {
+                gen.writeStartObject();
+                gen.writeStringField("direction", order.getDirection().name());
+                gen.writeStringField("property", order.getProperty());
+                gen.writeEndObject();
+            }
+            gen.writeEndArray();
+        }
+
     }
 }

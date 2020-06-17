@@ -37,13 +37,13 @@ import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAround;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodProperties;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.MonitorMethodAdvice;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.lang.json.JsonObject;
 
 /**
  * 测试 {@link MonitorMethodAround} 的基本功能
@@ -137,18 +137,18 @@ public class MonitorMethodAroundCase0Tests {
                 "[MonitorMethodAround.java");
 
         String beforeJson = StringUtils.substring(beforeLine, beforeLine.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(beforeJson);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getJSONArray("args")).isEqualTo(Lists.newArrayList(null, "java.lang.Long"));
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonBefore = JsonApi.fromJson(beforeJson);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsJsonArray("args")).isEqualTo(Lists.newArrayList(null, "java.lang.Long"));
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
 
         String afterJson = StringUtils.substring(afterLine, afterLine.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(afterJson);
-        assertThat(jsonAfter.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched");
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(afterJson);
+        assertThat(jsonAfter.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched");
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test

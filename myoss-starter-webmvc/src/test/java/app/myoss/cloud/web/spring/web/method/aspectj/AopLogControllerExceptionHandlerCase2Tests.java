@@ -20,6 +20,7 @@ package app.myoss.cloud.web.spring.web.method.aspectj;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -33,12 +34,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.mock.web.DelegatingServletInputStream;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -60,30 +61,30 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.util.WebUtils;
-
-import com.alibaba.fastjson.JSON;
 
 import app.myoss.cloud.core.constants.MyossConstants;
 import app.myoss.cloud.core.exception.BizRuntimeException;
 import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.web.spring.boot.config.AbstractWebMvcConfigurer;
 import app.myoss.cloud.web.spring.web.method.aspectj.annatation.EnableAopLogController;
 import app.myoss.cloud.web.spring.web.servlet.filter.ReaderBodyHttpServletRequestFilter;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 测试开启自动记录 controller 异常，使用 {@link EnableAopLogController} 开启此功能，使用 FastJson 进行
+ * 测试开启自动记录 controller 异常，使用 {@link EnableAopLogController} 开启此功能，使用 Jackson 进行
  * json 的序列化、反序列化
  *
  * @author Jerry.Chen
- * @since 2019年1月30日 下午3:31:58
+ * @since 2020年6月5日 下午4:50:20
  * @see AopLogControllerExceptionHandler
  * @see EnableAopLogController
  */
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-public class AopLogControllerExceptionHandlerCase1Tests {
+public class AopLogControllerExceptionHandlerCase2Tests {
     @Rule
     public OutputCapture          output = new OutputCapture();
     @Autowired
@@ -154,7 +155,7 @@ public class AopLogControllerExceptionHandlerCase1Tests {
         actions.andDo(MockMvcResultHandlers.print());
         actions.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.content().string(JSON.toJSONString(user)));
+                .andExpect(MockMvcResultMatchers.content().string(JsonApi.toJson(user)));
     }
 
     /**
@@ -432,8 +433,12 @@ public class AopLogControllerExceptionHandlerCase1Tests {
     @EnableAopLogController
     @Controller
     @Configuration
-    @Import(UnitWebAppMvcConfig.class)
-    protected static class Config {
+    @EnableWebMvc
+    protected static class Config extends AbstractWebMvcConfigurer {
+        @Override
+        public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+
+        }
 
         @ResponseBody
         @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

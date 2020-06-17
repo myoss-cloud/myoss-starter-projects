@@ -33,9 +33,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAfter;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodAround;
 import app.myoss.cloud.apm.log.method.aspectj.MonitorMethodBefore;
@@ -43,6 +40,8 @@ import app.myoss.cloud.apm.log.method.aspectj.annotation.EnableAopLogMethod;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodAfter;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodAround;
 import app.myoss.cloud.apm.log.method.aspectj.annotation.LogMethodBefore;
+import app.myoss.cloud.core.lang.json.JsonApi;
+import app.myoss.cloud.core.lang.json.JsonObject;
 
 /**
  * 注解 {@link LogMethodAround}、 {@link LogMethodBefore}、{@link LogMethodAfter}
@@ -91,18 +90,18 @@ public class MonitorMethodAroundCase6Tests {
                 "[MonitorMethodAround.java");
 
         String beforeJson = StringUtils.substring(beforeLine, beforeLine.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(beforeJson);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
-        assertThat(jsonBefore.getJSONArray("args")).isEmpty();
+        JsonObject jsonBefore = JsonApi.fromJson(beforeJson);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
+        assertThat(jsonBefore.getAsJsonArray("args")).isEmpty();
 
         String afterJson = StringUtils.substring(afterLine, afterLine.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(afterJson);
-        assertThat(jsonAfter.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched1");
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(afterJson);
+        assertThat(jsonAfter.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched1");
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test
@@ -124,18 +123,18 @@ public class MonitorMethodAroundCase6Tests {
                 "[MonitorMethodAround.java");
 
         String beforeJson = StringUtils.substring(beforeLine, beforeLine.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(beforeJson);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
-        assertThat(jsonBefore.getJSONArray("args")).isEmpty();
+        JsonObject jsonBefore = JsonApi.fromJson(beforeJson);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
+        assertThat(jsonBefore.getAsJsonArray("args")).isEmpty();
 
         String afterJson = StringUtils.substring(afterLine, afterLine.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(afterJson);
-        assertThat(jsonAfter.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched2");
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(afterJson);
+        assertThat(jsonAfter.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched2");
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     @Test
@@ -158,18 +157,18 @@ public class MonitorMethodAroundCase6Tests {
                 "[MonitorMethodAround.java");
 
         String beforeJson = StringUtils.substring(beforeLine, beforeLine.indexOf(" - {") + 3);
-        JSONObject jsonBefore = JSON.parseObject(beforeJson);
-        assertThat(jsonBefore.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonBefore.getString("app")).isEqualTo("myoss-starter-apm");
-        assertThat(jsonBefore.getJSONArray("args")).containsExactly(name);
+        JsonObject jsonBefore = JsonApi.fromJson(beforeJson);
+        assertThat(jsonBefore.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonBefore.getAsString("app")).isEqualTo("myoss-starter-apm");
+        assertThat(jsonBefore.getAsJsonArray("args")).containsExactly(name);
 
         String afterJson = StringUtils.substring(afterLine, afterLine.indexOf(" - {") + 3);
-        JSONObject jsonAfter = JSON.parseObject(afterJson);
-        assertThat(jsonAfter.getLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
-        assertThat(jsonAfter.getLong("end")).isLessThanOrEqualTo(endTimeMillis);
-        assertThat(jsonAfter.getLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
-        assertThat(jsonAfter.getString("result")).isEqualTo("matched3, " + name);
-        assertThat(jsonAfter.getString("app")).isEqualTo("myoss-starter-apm");
+        JsonObject jsonAfter = JsonApi.fromJson(afterJson);
+        assertThat(jsonAfter.getAsLong("start")).isGreaterThanOrEqualTo(startTimeMillis);
+        assertThat(jsonAfter.getAsLong("end")).isLessThanOrEqualTo(endTimeMillis);
+        assertThat(jsonAfter.getAsLong("cost")).isLessThanOrEqualTo(endTimeMillis - startTimeMillis);
+        assertThat(jsonAfter.getAsString("result")).isEqualTo("matched3, " + name);
+        assertThat(jsonAfter.getAsString("app")).isEqualTo("myoss-starter-apm");
     }
 
     // 开启AspectJ

@@ -51,7 +51,7 @@ public class FastJsonWebConfig {
     public static FastJsonHttpMessageConverter fastJsonHttpMessageConverter(FastJsonConfig fastJsonConfig) {
         FastJsonHttpMessageConverter jsonHttpMessageConverter = new FastJsonHttpMessageConverter();
         jsonHttpMessageConverter.setDefaultCharset(MyossConstants.DEFAULT_CHARSET);
-        List<MediaType> mediaTypes = Lists.newArrayList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON_UTF8);
+        List<MediaType> mediaTypes = Lists.newArrayList(MediaType.APPLICATION_JSON);
         jsonHttpMessageConverter.setSupportedMediaTypes(mediaTypes);
         jsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
         return jsonHttpMessageConverter;

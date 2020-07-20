@@ -26,7 +26,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.OutputCaptureRule;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +51,7 @@ import app.myoss.cloud.core.lang.json.JsonObject;
 @RunWith(SpringRunner.class)
 public class MonitorMethodBeforeCase1Tests {
     @Rule
-    public OutputCapture       output = new OutputCapture();
+    public OutputCaptureRule   output = new OutputCaptureRule();
     @Rule
     public ExpectedException   thrown = ExpectedException.none();
 

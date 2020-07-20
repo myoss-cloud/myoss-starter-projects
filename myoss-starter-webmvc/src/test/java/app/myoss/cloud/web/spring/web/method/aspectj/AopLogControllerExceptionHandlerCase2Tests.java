@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.OutputCaptureRule;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -86,7 +86,7 @@ import lombok.extern.slf4j.Slf4j;
 @WebAppConfiguration
 public class AopLogControllerExceptionHandlerCase2Tests {
     @Rule
-    public OutputCapture          output = new OutputCapture();
+    public OutputCaptureRule      output = new OutputCaptureRule();
     @Autowired
     private WebApplicationContext context;
     private MockMvc               mvc;
@@ -113,10 +113,10 @@ public class AopLogControllerExceptionHandlerCase2Tests {
         ResultActions actions = this.mvc.perform(MockMvcRequestBuilders.post("/user")
                 .characterEncoding("UTF-8")
                 .content(JsonApi.toJson(user))
-                .contentType(MediaType.APPLICATION_JSON_UTF8));
+                .contentType(MediaType.APPLICATION_JSON));
         actions.andDo(MockMvcResultHandlers.print());
         actions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.content().string("OK"));
     }
 
@@ -130,16 +130,16 @@ public class AopLogControllerExceptionHandlerCase2Tests {
         ResultActions actions = this.mvc.perform(MockMvcRequestBuilders.post("/user?key1=value1")
                 .characterEncoding("UTF-8")
                 .content(content)
-                .contentType(MediaType.APPLICATION_JSON_UTF8));
+                .contentType(MediaType.APPLICATION_JSON));
         actions.andDo(MockMvcResultHandlers.print());
         String printLog = this.output.toString();
         Assertions.assertThat(printLog)
                 .contains("[" + ClassUtils.getQualifiedName(AopLogControllerExceptionHandler.class) + "]",
                         "requestUrl: ", "requestMethod: ", "requestBody: ", "contentType: ",
                         "requestUrl: http://localhost/user?key1=value1, requestMethod: POST, requestBody: " + content
-                                + ", contentType: application/json;charset=UTF-8");
+                                + ", contentType: application/json");
         actions.andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("errorMsg").value("We'll be back soon ..."))
                 .andExpect(MockMvcResultMatchers.jsonPath("value").isMap());
     }
@@ -154,7 +154,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
         ResultActions actions = this.mvc.perform(MockMvcRequestBuilders.get("/user/{0}", user.getId()));
         actions.andDo(MockMvcResultHandlers.print());
         actions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.content().string(JsonApi.toJson(user)));
     }
 
@@ -171,7 +171,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: ", "requestMethod: ", "requestBody: ", "contentType: ",
                         "requestUrl: http://localhost/user/1xx, requestMethod: GET, requestBody: null, contentType: null");
         actions.andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("errorMsg").value("We'll be back soon ..."))
                 .andExpect(MockMvcResultMatchers.jsonPath("value.traceId").isString());
     }
@@ -191,7 +191,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: null, requestBody: null, contentType: nul",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -214,7 +214,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: POST, requestBody: hello world, contentType: text/plain",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -240,7 +240,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: POST, requestBody: key=value&name=Jerry, contentType: application/x-www-form-urlencoded",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -265,7 +265,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: GET, requestBody: {\"key\":[\"value\"],\"name\":[\"Jerry\"]}, contentType: null",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -287,7 +287,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: null, requestBody: null, contentType: nul",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -313,7 +313,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: POST, requestBody: hello world, contentType: text/plain",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -328,7 +328,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
         request.setContentType(MediaType.TEXT_PLAIN_VALUE);
         request.setContent("hello world".getBytes(MyossConstants.DEFAULT_CHARSET));
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
         RestClientResponseException restClientResponseException = new RestClientResponseException("mock exception",
                 HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), responseHeaders,
                 "invalid parameter".getBytes(MyossConstants.DEFAULT_CHARSET), MyossConstants.DEFAULT_CHARSET);
@@ -344,7 +344,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "org.springframework.web.client.RestClientResponseException: mock exception, responseBody: invalid parameter ",
                         ExceptionUtils.getStackTrace(restClientResponseException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -372,7 +372,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: POST, requestBody: key=value&name=Jerry, contentType: application/x-www-form-urlencoded",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -416,7 +416,7 @@ public class AopLogControllerExceptionHandlerCase2Tests {
                         "requestUrl: http://localhost, requestMethod: POST, requestBody: null, contentType: text/plain",
                         ExceptionUtils.getStackTrace(bizRuntimeException));
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
+        Assertions.assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         Assertions.assertThat(responseEntity.getBody())
                 .isEqualTo(
                         "{\"success\":false,\"errorCode\":\"systemException\",\"errorMsg\":\"We'll be back soon ...\",\"value\":{\"traceId\":\"null\"}}");
@@ -441,14 +441,14 @@ public class AopLogControllerExceptionHandlerCase2Tests {
         }
 
         @ResponseBody
-        @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+        @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
         public String saveUser(@RequestBody User user) {
             log.info("receiver user is: {}", user);
             return "OK";
         }
 
         @ResponseBody
-        @GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+        @GetMapping(value = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
         public User findUser(@PathVariable("id") Integer id) {
             User user = getUser();
             user.setId(id);

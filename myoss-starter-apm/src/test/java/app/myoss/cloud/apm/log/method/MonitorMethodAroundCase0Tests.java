@@ -33,7 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.OutputCaptureRule;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -55,7 +55,7 @@ import app.myoss.cloud.core.lang.json.JsonObject;
 @SpringBootTest(properties = { "myoss-cloud.log.method.app-name:myoss-starter-apm" })
 public class MonitorMethodAroundCase0Tests {
     @Rule
-    public OutputCapture        output      = new OutputCapture();
+    public OutputCaptureRule    output      = new OutputCaptureRule();
     private MonitorMethodAround methodAfter = new MonitorMethodAround();
 
     @Test

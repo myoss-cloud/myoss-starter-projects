@@ -253,7 +253,7 @@ public class JacksonMapper {
      * @param <T> 泛型
      * @return Java对象
      */
-    public <T> T convert(Object object, TypeReference<?> toValueTypeRef) {
+    public <T> T convert(Object object, TypeReference<T> toValueTypeRef) {
         if (object == null) {
             return null;
         }

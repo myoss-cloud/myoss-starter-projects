@@ -26,9 +26,9 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import brave.internal.HexCodec;
 import brave.internal.Nullable;
 import brave.internal.Platform;
+import brave.internal.codec.HexCodec;
 
 /**
  * 应用事件调用链

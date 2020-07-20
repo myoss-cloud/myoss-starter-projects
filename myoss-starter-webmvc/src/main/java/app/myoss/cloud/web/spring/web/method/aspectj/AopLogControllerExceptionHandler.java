@@ -159,7 +159,7 @@ public class AopLogControllerExceptionHandler extends ResponseEntityExceptionHan
         String errorMsg = properties.getControllerExceptionErrorMsg();
         Object body = "{\"success\":false,\"errorCode\":\"" + errorCode + "\",\"errorMsg\":\"" + errorMsg
                 + "\",\"value\":{\"traceId\":\"" + traceId + "\"}}";
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         return ResponseEntity.status(status).headers(headers).body(body);
     }
 }

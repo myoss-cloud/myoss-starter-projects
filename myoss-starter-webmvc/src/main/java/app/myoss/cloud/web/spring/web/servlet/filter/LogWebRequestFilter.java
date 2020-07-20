@@ -33,7 +33,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import app.myoss.cloud.apm.constants.ApmConstants;
 import app.myoss.cloud.web.utils.IpUtils;
-import brave.internal.HexCodec;
+import brave.internal.codec.HexCodec;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -32,7 +32,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.OutputCaptureRule;
 import org.springframework.util.ClassUtils;
 
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExecutorEngineTest {
     @Rule
-    public OutputCapture     output  = new OutputCapture();
+    public OutputCaptureRule output  = new OutputCaptureRule();
     @Rule
     public ExpectedException thrown  = ExpectedException.none();
     private final Pattern    pattern = Pattern.compile("\\s*|\t|\r|\n|\r\n");

@@ -17,7 +17,6 @@
 
 package app.myoss.cloud.web.http;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +25,6 @@ import java.util.List;
 import org.springframework.util.LinkedMultiValueMap;
 
 import app.myoss.cloud.core.constants.MyossConstants;
-import app.myoss.cloud.core.exception.BizRuntimeException;
 import okio.Buffer;
 
 /**
@@ -534,12 +532,7 @@ public class HttpUrlBuilder {
                 }
 
                 while (!encodedCharBuffer.exhausted()) {
-                    int b;
-                    try {
-                        b = encodedCharBuffer.readByte() & 0xff;
-                    } catch (IOException ex) {
-                        throw new BizRuntimeException(ex);
-                    }
+                    int b = encodedCharBuffer.readByte() & 0xff;
                     out.writeByte('%');
                     out.writeByte(HEX_DIGITS[(b >> 4) & 0xf]);
                     out.writeByte(HEX_DIGITS[b & 0xf]);

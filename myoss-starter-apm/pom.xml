@@ -43,6 +43,12 @@
             <groupId>app.myoss.cloud.boot</groupId>
             <artifactId>myoss-starter-core</artifactId>
         </dependency>
+        <dependency>
+            <!-- 编译 Jackson 代码 -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- myoss cloud dependencies end -->
 
         <!-- spring cloud dependency start -->

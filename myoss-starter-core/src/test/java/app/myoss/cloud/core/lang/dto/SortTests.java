@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.OutputCaptureRule;
 
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
@@ -44,7 +44,7 @@ public class SortTests {
     @Rule
     public ExpectedException exception = ExpectedException.none();
     @Rule
-    public OutputCapture     output    = new OutputCapture();
+    public OutputCaptureRule output    = new OutputCaptureRule();
 
     @Test
     public void checkValueTest1() {

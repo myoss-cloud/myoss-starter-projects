@@ -190,7 +190,7 @@ public class RestUtils {
      * @return 请求结果
      */
     public static String postJson(RestTemplate restTemplate, String url, String requestBody, Object... uriVariables) {
-        return exchange(restTemplate, MediaType.APPLICATION_JSON_UTF8, url, HttpMethod.POST, requestBody, String.class,
+        return exchange(restTemplate, MediaType.APPLICATION_JSON, url, HttpMethod.POST, requestBody, String.class,
                 uriVariables);
     }
 
@@ -207,8 +207,8 @@ public class RestUtils {
     public static String postJson(RestTemplate restTemplate, HttpHeaders httpHeaders, String url, String requestBody,
                                   Object... uriVariables) {
         URI expanded = restTemplate.getUriTemplateHandler().expand(url, uriVariables);
-        return exchange(restTemplate, httpHeaders, MediaType.APPLICATION_JSON_UTF8, expanded, HttpMethod.POST,
-                requestBody, String.class);
+        return exchange(restTemplate, httpHeaders, MediaType.APPLICATION_JSON, expanded, HttpMethod.POST, requestBody,
+                String.class);
     }
 
     /**

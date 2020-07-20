@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.boot.test.rule.OutputCapture;
+import org.springframework.boot.test.system.OutputCaptureRule;
 
 /**
  * {@link Direction} 测试类
@@ -35,7 +35,7 @@ public class DirectionTests {
     @Rule
     public ExpectedException exception = ExpectedException.none();
     @Rule
-    public OutputCapture     output    = new OutputCapture();
+    public OutputCaptureRule output    = new OutputCaptureRule();
 
     @Test
     public void checkValueTest() {
@@ -100,8 +100,9 @@ public class DirectionTests {
         Direction direction = Direction.fromStringOrNull("");
         Assert.assertNull(direction);
         String output = this.output.toString();
-        assertThat(output).contains("IllegalArgumentException").contains(
-                "java.lang.IllegalArgumentException: Invalid value '' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
+        assertThat(output).contains("IllegalArgumentException")
+                .contains(
+                        "java.lang.IllegalArgumentException: Invalid value '' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
     }
 
     @Test
@@ -109,7 +110,8 @@ public class DirectionTests {
         Direction direction = Direction.fromStringOrNull("error");
         Assert.assertNull(direction);
         String output = this.output.toString();
-        assertThat(output).contains("IllegalArgumentException").contains(
-                "java.lang.IllegalArgumentException: Invalid value 'error' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
+        assertThat(output).contains("IllegalArgumentException")
+                .contains(
+                        "java.lang.IllegalArgumentException: Invalid value 'error' for orders given! Has to be either 'desc' or 'asc' (case insensitive).");
     }
 }

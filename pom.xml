@@ -55,6 +55,7 @@
         <!-- myoss cloud -->
         <revision>2.1.11-RC1</revision>
         <myoss-starter-projects.version>${revision}</myoss-starter-projects.version>
+        <swagger.version>1.6.2</swagger.version>
         <!-- myoss cloud -->
     </properties>
 </project>

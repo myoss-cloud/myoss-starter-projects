@@ -38,12 +38,18 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Data
 @EqualsAndHashCode
+@io.swagger.annotations.ApiModel("封装方法返回参数")
 public class Result<T> implements Serializable {
     private static final long   serialVersionUID = -8699167988071027834L;
+    @io.swagger.annotations.ApiModelProperty(value = "结果值", notes = "泛型")
     private T                   value;
+    @io.swagger.annotations.ApiModelProperty("是否成功")
     private boolean             success          = true;
+    @io.swagger.annotations.ApiModelProperty("错误代码")
     private String              errorCode;
+    @io.swagger.annotations.ApiModelProperty("错误信息")
     private String              errorMsg;
+    @io.swagger.annotations.ApiModelProperty("扩展信息")
     private Map<String, Object> extraInfo;
 
     /**

@@ -37,6 +37,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Data
 @EqualsAndHashCode
+@io.swagger.annotations.ApiModel("封装分页查询参数")
 public class Page<T> implements Serializable {
     /**
      * 默认的每页条数为：20
@@ -51,30 +52,40 @@ public class Page<T> implements Serializable {
     /**
      * 每页条数
      */
+    @io.swagger.annotations.ApiModelProperty("每页条数")
     private int                 pageSize          = DEFAULT_PAGE_SIZE;
     /**
      * 第几页，在MySQL中是从0开始，使用的时候需要减一
      */
+    @io.swagger.annotations.ApiModelProperty("第几页，在MySQL中是从0开始，使用的时候需要减一")
     private int                 pageNum           = DEFAULT_PAGE_NUM;
     /**
      * 记录总数
      */
+    @io.swagger.annotations.ApiModelProperty("记录总数")
     private int                 totalCount        = 0;
     /**
      * 分页查询条件参数
      */
+    @io.swagger.annotations.ApiModelProperty(value = "分页查询条件参数", notes = "泛型")
     private T                   param;
     /**
      * 分页排序字段
      */
+    @io.swagger.annotations.ApiModelProperty("分页排序字段")
     private Sort                sort;
     /**
      * 结果列表数据
      */
+    @io.swagger.annotations.ApiModelProperty(value = "结果列表数据", notes = "泛型")
     private List<T>             value;
+    @io.swagger.annotations.ApiModelProperty("是否成功")
     private boolean             success           = true;
+    @io.swagger.annotations.ApiModelProperty("扩展信息")
     private String              errorMsg;
+    @io.swagger.annotations.ApiModelProperty("错误代码")
     private String              errorCode;
+    @io.swagger.annotations.ApiModelProperty("扩展信息")
     private Map<String, Object> extraInfo;
 
     /**

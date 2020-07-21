@@ -32,27 +32,33 @@ import lombok.Data;
  * @since 2018年5月9日 下午4:33:50
  */
 @Data
+@io.swagger.annotations.ApiModel("封装字典选项值")
 public class DictItem<T extends Serializable> implements Serializable {
     private static final long   serialVersionUID = -4979428360062313584L;
     /**
      * 值
      */
+    @io.swagger.annotations.ApiModelProperty("值")
     private T                   value;
     /**
      * 代码
      */
+    @io.swagger.annotations.ApiModelProperty("代码")
     private String              code;
     /**
      * 名称
      */
+    @io.swagger.annotations.ApiModelProperty("名称")
     private String              name;
     /**
      * 描述信息
      */
+    @io.swagger.annotations.ApiModelProperty("描述信息")
     private String              desc;
     /**
      * 扩展信息
      */
+    @io.swagger.annotations.ApiModelProperty("扩展信息")
     private Map<String, Object> extraInfo;
 
     /**

@@ -6,7 +6,7 @@
     <parent>
         <groupId>app.myoss.cloud</groupId>
         <artifactId>myoss-spring-boot-parent</artifactId>
-        <version>2.1.19.RELEASE</version>
+        <version>2.1.22.RELEASE</version>
     </parent>
 
     <groupId>app.myoss.cloud.boot</groupId>
@@ -56,7 +56,6 @@
         <revision>2.1.11-RC2</revision>
         <myoss-starter-projects.version>${revision}</myoss-starter-projects.version>
         <swagger.version>1.6.2</swagger.version>
-        <myoss-cloud.java-code-style.version>2.1.6.RELEASE</myoss-cloud.java-code-style.version>
         <!-- myoss cloud -->
     </properties>
 </project>

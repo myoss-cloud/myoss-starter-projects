@@ -18,18 +18,24 @@
 package app.myoss.cloud.cache.redis;
 
 import java.time.Duration;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Redis 缓存锁服务自动配置
@@ -63,11 +69,23 @@ public class RedisLockServiceAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RedisLockServiceImpl redisLockService(StringRedisTemplate redisTemplate) {
-        // 在应用启动的时候提前初始化 redis 连接池，加快第一次使用的访问速度
-        String key = this.getClass().getName() + ".test";
-        redisTemplate.opsForValue().setIfAbsent(key, "init redis connection", Duration.ofSeconds(10));
-
         TimeUnit timeUnit = redisProperties.getLockTimeUnit();
         return new RedisLockServiceImpl(redisTemplate, timeUnit);
+    }
+
+    @EventListener
+    public void setApplicationContext(ApplicationReadyEvent event) {
+        ConfigurableApplicationContext applicationContext = event.getApplicationContext();
+        Map<String, StringRedisTemplate> stringRedisTemplateMap = applicationContext
+                .getBeansOfType(StringRedisTemplate.class);
+        if (CollectionUtils.isEmpty(stringRedisTemplateMap)) {
+            return;
+        }
+        for (Entry<String, StringRedisTemplate> entry : stringRedisTemplateMap.entrySet()) {
+            StringRedisTemplate redisTemplate = entry.getValue();
+            // 在应用启动的时候提前初始化 redis 连接池，加快第一次使用的访问速度
+            String key = this.getClass().getName() + ".test";
+            redisTemplate.opsForValue().setIfAbsent(key, "init redis connection", Duration.ofSeconds(10));
+        }
     }
 }

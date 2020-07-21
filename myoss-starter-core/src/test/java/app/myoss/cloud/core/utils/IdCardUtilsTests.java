@@ -30,9 +30,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import app.myoss.cloud.core.exception.BizRuntimeException;
 
@@ -43,9 +41,6 @@ import app.myoss.cloud.core.exception.BizRuntimeException;
  * @since 2018年6月1日 上午2:32:26
  */
 public class IdCardUtilsTests {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void testConstructorIsPrivate()
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -191,21 +186,18 @@ public class IdCardUtilsTests {
     @Test
     public void ciyCodeTest1() {
         Map<String, String> cityCode = IdCardUtils.getCityCode();
-        thrown.expect(UnsupportedOperationException.class);
-        cityCode.put("key", "value");
+        Assert.assertThrows((UnsupportedOperationException.class), () -> cityCode.put("key", "value"));
     }
 
     @Test
     public void twFirstCodeTest1() {
         Map<String, Integer> twFirstCode = IdCardUtils.getTwFirstCode();
-        thrown.expect(UnsupportedOperationException.class);
-        twFirstCode.put("key", 1);
+        Assert.assertThrows(UnsupportedOperationException.class, () -> twFirstCode.put("key", 1));
     }
 
     @Test
     public void hkFirstCodeTest1() {
         Map<String, Integer> hkFirstCode = IdCardUtils.getHkFirstCode();
-        thrown.expect(UnsupportedOperationException.class);
-        hkFirstCode.put("key", 1);
+        Assert.assertThrows(UnsupportedOperationException.class, () -> hkFirstCode.put("key", 1));
     }
 }

@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.system.OutputCaptureRule;
 
 /**
@@ -33,9 +32,7 @@ import org.springframework.boot.test.system.OutputCaptureRule;
  */
 public class DirectionTests {
     @Rule
-    public ExpectedException exception = ExpectedException.none();
-    @Rule
-    public OutputCaptureRule output    = new OutputCaptureRule();
+    public OutputCaptureRule output = new OutputCaptureRule();
 
     @Test
     public void checkValueTest() {
@@ -61,20 +58,17 @@ public class DirectionTests {
 
     @Test
     public void fromStringIllegalArgumentExceptionTest1() {
-        exception.expect(IllegalArgumentException.class);
-        Direction.fromString(null);
+        Assert.assertThrows(IllegalArgumentException.class, () -> Direction.fromString(null));
     }
 
     @Test
     public void fromStringIllegalArgumentExceptionTest2() {
-        exception.expect(IllegalArgumentException.class);
-        Direction.fromString("");
+        Assert.assertThrows(IllegalArgumentException.class, () -> Direction.fromString(""));
     }
 
     @Test
     public void fromStringIllegalArgumentExceptionTest3() {
-        exception.expect(IllegalArgumentException.class);
-        Direction.fromString("error");
+        Assert.assertThrows(IllegalArgumentException.class, () -> Direction.fromString("error"));
     }
 
     @Test

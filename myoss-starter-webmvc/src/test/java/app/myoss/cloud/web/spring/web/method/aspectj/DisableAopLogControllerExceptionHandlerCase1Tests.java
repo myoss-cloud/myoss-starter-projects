@@ -17,9 +17,8 @@
 
 package app.myoss.cloud.web.spring.web.method.aspectj;
 
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 public class DisableAopLogControllerExceptionHandlerCase1Tests {
-    @Rule
-    public ExpectedException   thrown = ExpectedException.none();
-
     @Autowired
     private ApplicationContext context;
 
@@ -59,8 +55,8 @@ public class DisableAopLogControllerExceptionHandlerCase1Tests {
 
     @Test
     public void didNotInjectControllerAdvice() {
-        thrown.expect(NoSuchBeanDefinitionException.class);
-        context.getBean(AopLogControllerExceptionHandler.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class,
+                () -> context.getBean(AopLogControllerExceptionHandler.class));
     }
 
     @Slf4j

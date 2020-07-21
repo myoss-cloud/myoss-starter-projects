@@ -17,9 +17,8 @@
 
 package app.myoss.cloud.apm.log.method;
 
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,6 @@ import app.myoss.cloud.apm.log.method.aspectj.annotation.LogUnMonitor;
  */
 @RunWith(SpringRunner.class)
 public class DisableUnMonitorMethodAfterCase1Tests {
-    @Rule
-    public ExpectedException   thrown = ExpectedException.none();
-
     @Autowired
     private ApplicationContext context;
 
@@ -60,20 +56,17 @@ public class DisableUnMonitorMethodAfterCase1Tests {
 
     @Test
     public void didNotInjectMonitorMethodBefore() {
-        thrown.expect(NoSuchBeanDefinitionException.class);
-        context.getBean(MonitorMethodBefore.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> context.getBean(MonitorMethodBefore.class));
     }
 
     @Test
     public void didNotInjectMonitorMethodAfter() {
-        thrown.expect(NoSuchBeanDefinitionException.class);
-        context.getBean(MonitorMethodAfter.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> context.getBean(MonitorMethodAfter.class));
     }
 
     @Test
     public void didNotInjectMonitorMethodAround() {
-        thrown.expect(NoSuchBeanDefinitionException.class);
-        context.getBean(MonitorMethodAround.class);
+        Assert.assertThrows(NoSuchBeanDefinitionException.class, () -> context.getBean(MonitorMethodAround.class));
     }
 
     // 开启AspectJ

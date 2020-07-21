@@ -20,9 +20,8 @@ package app.myoss.cloud.core.lang.dto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.api.Condition;
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * {@link Order} 测试类
@@ -31,8 +30,6 @@ import org.junit.rules.ExpectedException;
  * @since 2018年5月14日 上午11:13:57
  */
 public class OrderTests {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void checkValueTest() {
@@ -61,19 +58,16 @@ public class OrderTests {
 
     @Test
     public void nullPropertyTest1() {
-        exception.expect(IllegalArgumentException.class);
-        new Order(Direction.ASC, null);
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Order(Direction.ASC, null));
     }
 
     @Test
     public void whitespacePropertyTest1() {
-        exception.expect(IllegalArgumentException.class);
-        new Order(Direction.ASC, "");
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Order(Direction.ASC, ""));
     }
 
     @Test
     public void whitespacePropertyTest2() {
-        exception.expect(IllegalArgumentException.class);
-        new Order(Direction.ASC, " ");
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Order(Direction.ASC, " "));
     }
 }

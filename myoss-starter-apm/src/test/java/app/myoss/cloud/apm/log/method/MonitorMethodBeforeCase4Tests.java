@@ -25,7 +25,6 @@ import java.io.Writer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,8 +55,6 @@ import app.myoss.cloud.core.lang.json.JsonObject;
 public class MonitorMethodBeforeCase4Tests {
     @Rule
     public OutputCaptureRule   output = new OutputCaptureRule();
-    @Rule
-    public ExpectedException   thrown = ExpectedException.none();
 
     @Autowired
     private ApplicationContext context;

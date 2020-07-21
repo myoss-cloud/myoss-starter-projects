@@ -36,14 +36,14 @@ public class MonitorControllerProperties {
      * Controller异常时返回的errorCode
      *
      * @see ControllerDefaultErrorAttributes#getErrorAttributes(ServerRequest,
-     *      boolean)
+     *      org.springframework.boot.web.error.ErrorAttributeOptions)
      */
     private String controllerExceptionErrorCode = "systemException";
     /**
      * Controller异常时返回的errorCode
      *
      * @see ControllerDefaultErrorAttributes#getErrorAttributes(ServerRequest,
-     *      boolean)
+     *      org.springframework.boot.web.error.ErrorAttributeOptions)
      */
     private String controllerExceptionErrorMsg  = "We'll be back soon ...";
 }

@@ -25,7 +25,6 @@ import org.assertj.core.data.Index;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.system.OutputCaptureRule;
 
 import com.google.common.collect.Lists;
@@ -42,9 +41,7 @@ import app.myoss.cloud.core.lang.json.JsonApi;
  */
 public class SortTests {
     @Rule
-    public ExpectedException exception = ExpectedException.none();
-    @Rule
-    public OutputCaptureRule output    = new OutputCaptureRule();
+    public OutputCaptureRule output = new OutputCaptureRule();
 
     @Test
     public void checkValueTest1() {
@@ -119,34 +116,29 @@ public class SortTests {
     @Test
     public void emptyOrderIllegalArgumentExceptionTest1() {
         List<Order> orders = Lists.newArrayList();
-        exception.expect(IllegalArgumentException.class);
-        new Sort(orders);
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Sort(orders));
     }
 
     @Test
     public void emptyOrderIllegalArgumentExceptionTest2() {
         List<Order> orders = null;
-        exception.expect(IllegalArgumentException.class);
-        new Sort(orders);
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Sort(orders));
     }
 
     @Test
     public void nullPropertyIllegalArgumentExceptionTest1() {
-        exception.expect(IllegalArgumentException.class);
-        new Sort("id", null);
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Sort("id", null));
     }
 
     @Test
     public void nullPropertyIllegalArgumentExceptionTest2() {
-        exception.expect(IllegalArgumentException.class);
-        new Sort(Direction.DESC, "id", null);
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Sort(Direction.DESC, "id", null));
     }
 
     @Test
     public void nullPropertyIllegalArgumentExceptionTest3() {
-        exception.expect(IllegalArgumentException.class);
         List<String> properties = Lists.newArrayList("id", null);
-        new Sort(Direction.ASC, properties);
+        Assert.assertThrows(IllegalArgumentException.class, () -> new Sort(Direction.ASC, properties));
     }
 
     @Test

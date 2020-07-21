@@ -266,7 +266,7 @@ public final class HttpLoggingInterceptor implements Interceptor {
                 BufferedSource source = responseBody.source();
                 // Buffer the entire body.
                 source.request(Long.MAX_VALUE);
-                Buffer buffer = source.buffer();
+                Buffer buffer = source.getBuffer();
 
                 Long gzippedLength = null;
                 if ("gzip".equalsIgnoreCase(headers.get("Content-Encoding"))) {

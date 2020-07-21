@@ -196,7 +196,7 @@ public class LogWebRequestFilter implements WebFilter {
         Date date = new Date();
 
         // 调用下一个 filter
-        return filterChain.filter(exchange).compose((call) -> filter(exchange, call, startNs, date));
+        return filterChain.filter(exchange).transformDeferred((call) -> filter(exchange, call, startNs, date));
     }
 
     private Mono<Void> filter(ServerWebExchange exchange, Mono<Void> call, long startNs, Date date) {

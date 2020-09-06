@@ -25,6 +25,7 @@ import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,6 +38,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 
 import app.myoss.cloud.core.exception.BizRuntimeException;
 import lombok.AccessLevel;
@@ -304,5 +307,36 @@ public class FileUtil {
      */
     public static Map<String, InputStream> getFilesFromDirectory(String directory) {
         return getFilesFromDirectory(directory, false, false);
+    }
+
+    /**
+     * 读取 "jar包/classpath" 目录下的资源文件
+     *
+     * @param location 资源文件路径
+     * @return InputStream
+     */
+    public static InputStream getResource(String location) {
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        try {
+            return resourceLoader.getResource(location).getInputStream();
+        } catch (IOException e) {
+            throw new BizRuntimeException("get resource failed: " + location, e);
+        }
+    }
+
+    /**
+     * 读取 "jar包/classpath" 目录下的资源文件
+     *
+     * @param location 资源文件路径
+     * @return String
+     */
+    public static String readFileContent(String location) {
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        try {
+            InputStream inputStream = resourceLoader.getResource(location).getInputStream();
+            return StreamUtil.copyToString(inputStream, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new BizRuntimeException("get resource failed: " + location, e);
+        }
     }
 }

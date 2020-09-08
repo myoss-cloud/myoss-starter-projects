@@ -11,7 +11,7 @@
 
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-projects</artifactId>
-    <version>2.1.11-RC3</version>
+    <version>2.1.11.RELEASE</version>
     <packaging>pom</packaging>
 
     <name>myoss-starter-projects</name>
@@ -53,7 +53,7 @@
 
     <properties>
         <!-- myoss cloud -->
-        <revision>2.1.11-RC3</revision>
+        <revision>2.1.11.RELEASE</revision>
         <myoss-starter-projects.version>${revision}</myoss-starter-projects.version>
         <swagger.version>1.6.2</swagger.version>
         <!-- myoss cloud -->

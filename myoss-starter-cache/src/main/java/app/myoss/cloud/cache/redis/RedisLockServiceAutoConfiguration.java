@@ -74,7 +74,7 @@ public class RedisLockServiceAutoConfiguration {
     }
 
     @EventListener
-    public void setApplicationContext(ApplicationReadyEvent event) {
+    public void initRedisConnection(ApplicationReadyEvent event) {
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         Map<String, StringRedisTemplate> stringRedisTemplateMap = applicationContext
                 .getBeansOfType(StringRedisTemplate.class);

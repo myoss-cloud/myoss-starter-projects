@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -229,7 +231,7 @@ public class Sort implements Iterable<Order>, Serializable {
         @Override
         public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
             JSONArray jsonArray = (JSONArray) parser.parse();
-            if (jsonArray == null) {
+            if (CollectionUtils.isEmpty(jsonArray)) {
                 return null;
             }
             List<Order> orders = new ArrayList<>(jsonArray.size());
@@ -257,6 +259,9 @@ public class Sort implements Iterable<Order>, Serializable {
         public Sort deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonArray jsonArray = json.getAsJsonArray();
+            if (jsonArray == null || jsonArray.size() == 0) {
+                return null;
+            }
             List<Order> orders = new ArrayList<>(jsonArray.size());
             for (JsonElement o : jsonArray) {
                 JsonObject item = o.getAsJsonObject();
@@ -284,6 +289,9 @@ public class Sort implements Iterable<Order>, Serializable {
         public Sort deserialize(JsonParser jsonParser, DeserializationContext ctxt)
                 throws IOException, JsonProcessingException {
             ArrayNode node = jsonParser.getCodec().readTree(jsonParser);
+            if (node == null || node.size() == 0) {
+                return null;
+            }
             List<Order> orders = new ArrayList<>(node.size());
             for (JsonNode json : node) {
                 Order order = new Order(Direction.valueOf(json.get("direction").asText()),

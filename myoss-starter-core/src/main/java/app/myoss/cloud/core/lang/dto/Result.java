@@ -136,4 +136,50 @@ public class Result<T> implements Serializable {
     public String toString() {
         return JsonApi.toJson(this);
     }
+
+    /**
+     * 创建成功的返回值
+     *
+     * @param <T> 泛型
+     * @return Result 实例
+     */
+    public static <T> Result<T> ok() {
+        return new Result<>();
+    }
+
+    /**
+     * 创建成功的返回值
+     *
+     * @param value 结果值
+     * @param <T> 泛型
+     * @return Result 实例
+     */
+    public static <T> Result<T> ok(T value) {
+        return new Result<>(value);
+    }
+
+    /**
+     * 创建失败的返回值
+     *
+     * @param <T> 泛型
+     * @return Result 实例
+     */
+    public static <T> Result<T> fail() {
+        Result<T> result = new Result<>();
+        result.setSuccess(false);
+        return result;
+    }
+
+    /**
+     * 创建失败的返回值
+     *
+     * @param value 结果值
+     * @param <T> 泛型
+     * @return Result 实例
+     */
+    public static <T> Result<T> fail(T value) {
+        Result<T> result = new Result<>(value);
+        result.setSuccess(false);
+        return result;
+    }
 }

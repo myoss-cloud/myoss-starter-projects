@@ -72,7 +72,7 @@ public class Page<T> implements Serializable {
     /**
      * 分页排序字段
      */
-    @io.swagger.annotations.ApiModelProperty("分页排序字段")
+    @io.swagger.annotations.ApiModelProperty(value = "分页排序字段（JSON示例：[{ \"property\": \"gmtCreated\", \"direction\": \"DESC\" }]）", example = "[{ \"property\": \"gmtCreated\", \"direction\": \"DESC\" }, { \"property\": \"id\", \"direction\": \"ASC\" }]")
     private Sort                sort;
     /**
      * 结果列表数据

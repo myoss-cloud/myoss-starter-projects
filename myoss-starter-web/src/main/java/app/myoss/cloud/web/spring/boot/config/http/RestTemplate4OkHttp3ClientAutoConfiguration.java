@@ -21,6 +21,7 @@ import static app.myoss.cloud.web.spring.boot.config.FastJsonWebConfig.fastJsonH
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +43,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -187,6 +189,19 @@ public class RestTemplate4OkHttp3ClientAutoConfiguration {
                 FastJsonHttpMessageConverter fastJsonHttpMessageConverter = fastJsonHttpMessageConverter(
                         fastJsonConfig);
                 messageConverters.add(3, fastJsonHttpMessageConverter);
+            }
+        }
+        if (ClassUtils.isPresent("com.fasterxml.jackson.dataformat.xml.XmlMapper",
+                RestTemplate4OkHttp3ClientAutoConfiguration.class.getClassLoader())) {
+            Iterator<HttpMessageConverter<?>> iterator = messageConverters.iterator();
+            while (iterator.hasNext()) {
+                HttpMessageConverter<?> next = iterator.next();
+                if (next instanceof org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter) {
+                    // 将 xml 序列化放到最后处理，会影响 RestUtils 设置请求的 Accept Header 属性
+                    iterator.remove();
+                    messageConverters.add(next);
+                    break;
+                }
             }
         }
         return restTemplate;

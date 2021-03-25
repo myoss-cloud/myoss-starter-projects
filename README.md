@@ -11,9 +11,10 @@
 ## Download
 
 - [maven][1]
-- [the latest JAR][2]  
+- [the latest JAR][2]
 
-[1]: https://repo1.maven.org/maven2/app/myoss/cloud/boot/myoss-starter-projects/  
+[1]: https://repo1.maven.org/maven2/app/myoss/cloud/boot/myoss-starter-projects/
+
 [2]: https://search.maven.org/remote_content?g=app.myoss.cloud.boot&a=myoss-starter-projects&v=LATEST
 
 ## Maven
@@ -22,7 +23,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-projects</artifactId>
-    <version>2.3.0.RELEASE</version>
+    <version>2.3.1.RELEASE</version>
 </dependency>
 ```
 
@@ -30,7 +31,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-core</artifactId>
-    <version>2.3.0.RELEASE</version>
+    <version>2.3.1.RELEASE</version>
 </dependency>
 ```
 
@@ -38,7 +39,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-apm</artifactId>
-    <version>2.3.0.RELEASE</version>
+    <version>2.3.1.RELEASE</version>
 </dependency>
 ```
 
@@ -46,7 +47,7 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-web</artifactId>
-    <version>2.3.0.RELEASE</version>
+    <version>2.3.1.RELEASE</version>
 </dependency>
 ```
 
@@ -54,6 +55,6 @@
 <dependency>
     <groupId>app.myoss.cloud.boot</groupId>
     <artifactId>myoss-starter-cache</artifactId>
-    <version>2.3.0.RELEASE</version>
+    <version>2.3.1.RELEASE</version>
 </dependency>
 ```
